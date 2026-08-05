@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "Versioned public API contract between Questfall application and PocketBase",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Questfall-HQ/questfall-api-contract.git"
+  },
+  "bugs": "https://github.com/Questfall-HQ/questfall-api-contract/issues",
+  "homepage": "https://github.com/Questfall-HQ/questfall-api-contract#readme",
   "exports": {
     ".": "./src/index.js",
     "./contract": "./contract.json",

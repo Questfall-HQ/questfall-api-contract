@@ -22,7 +22,8 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
-Потребители фиксируют Git tag и коммитят `bun.lock`:
+Потребители фиксируют Git tag. Если consumer хранит lockfile в Git, обновление
+контракта должно коммититься вместе с ним:
 
 ```json
 {
@@ -33,7 +34,7 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 ```
 
 ```bash
-bun install --frozen-lockfile
+bun install
 bun run node_modules/@questfall/api-contract/bin/check.mjs --application .
 bun run node_modules/@questfall/api-contract/bin/check.mjs --backend .
 ```
