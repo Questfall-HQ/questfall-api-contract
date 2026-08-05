@@ -1,0 +1,499 @@
+{
+  "name": "Questfall application API contract",
+  "version": "0.1.0",
+  "routes": [
+    {
+      "operation": "auth.me",
+      "method": "GET",
+      "path": "/auth/me",
+      "access": "authenticated",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "Profile" }
+    },
+    {
+      "operation": "auth.email.request",
+      "method": "POST",
+      "path": "/auth/email/request-otp",
+      "access": "public",
+      "request": { "transport": "body", "params": [], "required": ["email"], "optional": [] },
+      "response": { "schema": "OtpRequest" }
+    },
+    {
+      "operation": "auth.email.verify",
+      "method": "POST",
+      "path": "/auth/email/verify-otp",
+      "access": "public",
+      "request": { "transport": "body", "params": [], "required": ["email", "otp"], "optional": [] },
+      "response": { "schema": "AuthSession" }
+    },
+    {
+      "operation": "auth.siwe.challenge",
+      "method": "POST",
+      "path": "/auth/siwe/challenge",
+      "access": "optional",
+      "request": { "transport": "body", "params": [], "required": ["address"], "optional": ["chainId", "domain", "uri"] },
+      "response": { "schema": "SiweChallenge" }
+    },
+    {
+      "operation": "auth.siwe.verify",
+      "method": "POST",
+      "path": "/auth/siwe/verify",
+      "access": "public",
+      "request": { "transport": "body", "params": [], "required": ["challengeId", "signature"], "optional": ["provider"] },
+      "response": { "schema": "AuthSession" }
+    },
+    {
+      "operation": "auth.link.email",
+      "method": "POST",
+      "path": "/auth/link/email",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": ["email"], "optional": [] },
+      "response": { "schema": "EmailLink" }
+    },
+    {
+      "operation": "auth.link.emailPreview",
+      "method": "POST",
+      "path": "/auth/link/email/preview",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
+      "response": { "schema": "EmailLink" }
+    },
+    {
+      "operation": "auth.link.emailVerify",
+      "method": "POST",
+      "path": "/auth/link/email/verify",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
+      "response": { "schema": "Profile" }
+    },
+    {
+      "operation": "auth.link.wallet",
+      "method": "POST",
+      "path": "/auth/link/wallet",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": ["address"], "optional": ["chainId", "domain", "uri"] },
+      "response": { "schema": "SiweChallenge" }
+    },
+    {
+      "operation": "auth.link.walletVerify",
+      "method": "POST",
+      "path": "/auth/link/wallet/verify",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": ["challengeId", "signature"], "optional": ["provider"] },
+      "response": { "schema": "Profile" }
+    },
+    {
+      "operation": "profile.save",
+      "method": "POST",
+      "path": "/settings/profile",
+      "access": "authenticated",
+      "request": { "transport": "body", "params": [], "required": [], "optional": ["name", "avatar", "avatar_media_id", "remove_icon"] },
+      "response": { "schema": "Profile" }
+    },
+    {
+      "operation": "profile.stats",
+      "method": "GET",
+      "path": "/profile/stats",
+      "access": "authenticated",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["activity", "domain", "page", "per_page"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "media.intent",
+      "method": "POST",
+      "path": "/media/uploads/intent",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["kind", "files"], "optional": [] },
+      "response": { "schema": "MediaIntent" }
+    },
+    {
+      "operation": "media.complete",
+      "method": "POST",
+      "path": "/media/uploads/{id}/complete",
+      "access": "verified",
+      "request": { "transport": "none", "params": ["id"], "required": [], "optional": [] },
+      "response": { "schema": "MediaAsset" }
+    },
+    {
+      "operation": "media.access",
+      "method": "GET",
+      "path": "/media/assets/{id}/access",
+      "access": "verified",
+      "request": { "transport": "query", "params": ["id"], "required": [], "optional": ["variant"] },
+      "response": { "schema": "MediaAccess" }
+    },
+    {
+      "operation": "character.levelUp",
+      "method": "POST",
+      "path": "/rpg/character/level-up",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["silver"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "character.attribute",
+      "method": "POST",
+      "path": "/rpg/character/attribute",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["attr"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "character.reset",
+      "method": "POST",
+      "path": "/rpg/character/attributes/reset",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "economy.goldToSilver",
+      "method": "POST",
+      "path": "/economy/gold-to-silver",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["gold"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "inventory.load",
+      "method": "GET",
+      "path": "/inventory/load",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["revision", "count"] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "items.equip",
+      "method": "POST",
+      "path": "/items/equip",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["itemId", "slot"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "items.unequip",
+      "method": "POST",
+      "path": "/items/unequip",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slot"], "optional": ["itemId"] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "items.quote",
+      "method": "POST",
+      "path": "/items/craft/quote",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
+      "response": { "schema": "CraftQuote" }
+    },
+    {
+      "operation": "items.scrap",
+      "method": "POST",
+      "path": "/items/scrap",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "items.upgrade",
+      "method": "POST",
+      "path": "/items/upgrade",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "marketplace.list",
+      "method": "GET",
+      "path": "/marketplace/list",
+      "access": "public",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["q", "slots", "rarities", "wear", "set", "origin", "attr", "target", "min_price", "max_price", "seller", "sort", "page", "perPage"] },
+      "response": { "schema": "Page" }
+    },
+    {
+      "operation": "marketplace.mine",
+      "method": "GET",
+      "path": "/marketplace/mine",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "marketplace.create",
+      "method": "POST",
+      "path": "/marketplace/list",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["itemId", "price"], "optional": ["slot"] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "marketplace.reprice",
+      "method": "POST",
+      "path": "/marketplace/reprice",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["listingId", "price"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "marketplace.cancel",
+      "method": "POST",
+      "path": "/marketplace/cancel",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "marketplace.buy",
+      "method": "POST",
+      "path": "/marketplace/buy",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "marketplace.claim",
+      "method": "POST",
+      "path": "/marketplace/claim",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "lootboxes.open",
+      "method": "POST",
+      "path": "/lootboxes/open",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["boxType"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "lootboxes.check",
+      "method": "POST",
+      "path": "/lootboxes/check",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["openingId", "cardId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "lootboxes.choose",
+      "method": "POST",
+      "path": "/lootboxes/choose",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["openingId", "cardId"], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "lootboxes.buy",
+      "method": "POST",
+      "path": "/lootboxes/buy",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "PlayerEnvelope" }
+    },
+    {
+      "operation": "authorSpaces.mine",
+      "method": "GET",
+      "path": "/author-spaces/mine",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.load",
+      "method": "GET",
+      "path": "/author-spaces/load",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "spaces.load",
+      "method": "GET",
+      "path": "/spaces/load",
+      "access": "optional",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.create",
+      "method": "POST",
+      "path": "/author-spaces/create",
+      "access": "verified",
+      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["avatar", "cover", "avatar_media_id", "cover_media_id"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.update",
+      "method": "POST",
+      "path": "/author-spaces/update",
+      "access": "verified",
+      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.groups.create",
+      "method": "POST",
+      "path": "/author-spaces/groups/create",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug", "name"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.groups.update",
+      "method": "POST",
+      "path": "/author-spaces/groups/update",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["name", "position"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.groups.delete",
+      "method": "POST",
+      "path": "/author-spaces/groups/delete",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.save",
+      "method": "POST",
+      "path": "/author-spaces/quests/save",
+      "access": "verified",
+      "request": { "transport": "multipart", "params": [], "required": ["title", "description"], "optional": ["id", "slug", "type", "instructions", "config", "group", "group_id", "bounty", "duration", "cover", "cover_media_id"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.move",
+      "method": "POST",
+      "path": "/author-spaces/quests/move",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["group", "group_id", "position"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.quote",
+      "method": "POST",
+      "path": "/author-spaces/quests/quote",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": ["bounty", "duration"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.publish",
+      "method": "POST",
+      "path": "/author-spaces/quests/publish",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["bounty", "duration"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.invite",
+      "method": "POST",
+      "path": "/author-spaces/team/invite",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug", "email"], "optional": ["permissions"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.resend",
+      "method": "POST",
+      "path": "/author-spaces/team/resend",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.revoke",
+      "method": "POST",
+      "path": "/author-spaces/team/revoke",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.permissions",
+      "method": "POST",
+      "path": "/author-spaces/team/permissions",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id", "permissions"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.remove",
+      "method": "POST",
+      "path": "/author-spaces/team/remove",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.team.leave",
+      "method": "POST",
+      "path": "/author-spaces/team/leave",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.invites.preview",
+      "method": "GET",
+      "path": "/author-spaces/invites/preview",
+      "access": "public",
+      "request": { "transport": "query", "params": [], "required": ["token"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.invites.accept",
+      "method": "POST",
+      "path": "/author-spaces/invites/accept",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "spaces.follow",
+      "method": "POST",
+      "path": "/spaces/follow",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "spaces.unfollow",
+      "method": "POST",
+      "path": "/spaces/unfollow",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.followers",
+      "method": "GET",
+      "path": "/author-spaces/followers",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["search", "sort", "page"] },
+      "response": { "schema": "Page" }
+    },
+    {
+      "operation": "authorSpaces.submissions",
+      "method": "GET",
+      "path": "/author-spaces/submissions",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["status", "validation", "search", "page"] },
+      "response": { "schema": "Page" }
+    },
+    {
+      "operation": "authorSpaces.analytics",
+      "method": "GET",
+      "path": "/author-spaces/analytics",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["range"] },
+      "response": { "schema": "Object" }
+    }
+  ],
+  "pocketbase": {
+    "collections": {
+      "users": { "auth": true }
+    }
+  }
+}

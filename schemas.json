@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.questfall.xyz/contracts/0.1.0/schemas.json",
+  "$defs": {
+    "Object": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "ApiError": {
+      "type": "object",
+      "required": ["message"],
+      "properties": {
+        "message": { "type": "string" },
+        "status": { "type": ["integer", "null"] },
+        "data": { "type": ["object", "null"], "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "Avatar": {
+      "type": ["object", "null"],
+      "properties": {
+        "type": { "type": "string" },
+        "seed": { "type": "string" },
+        "url": { "type": "string" },
+        "thumb": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "ProfileUser": {
+      "type": "object",
+      "required": ["id", "name", "level", "verify", "email", "wallet"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "level": { "type": "integer", "minimum": 1 },
+        "joined": { "type": ["integer", "string"] },
+        "verify": { "type": "boolean" },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "email": {
+          "type": "object",
+          "required": ["address", "verify"],
+          "properties": {
+            "address": { "type": ["string", "null"] },
+            "verify": { "type": ["integer", "string"] }
+          },
+          "additionalProperties": true
+        },
+        "wallet": {
+          "type": "object",
+          "required": ["address", "verify", "data"],
+          "properties": {
+            "address": { "type": ["string", "null"] },
+            "verify": { "type": ["integer", "string"] },
+            "data": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "Profile": {
+      "type": "object",
+      "required": ["user"],
+      "properties": {
+        "user": { "$ref": "#/$defs/ProfileUser" },
+        "linked": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "AuthRecord": {
+      "type": "object",
+      "required": ["id", "verified"],
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "level": { "type": "integer", "minimum": 1 },
+        "verified": { "type": "boolean" },
+        "wallet": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "AuthSession": {
+      "type": "object",
+      "required": ["token", "record", "method", "user"],
+      "properties": {
+        "token": { "type": "string", "minLength": 1 },
+        "record": { "$ref": "#/$defs/AuthRecord" },
+        "method": { "type": "string" },
+        "user": { "$ref": "#/$defs/ProfileUser" }
+      },
+      "additionalProperties": true
+    },
+    "OtpRequest": {
+      "type": "object",
+      "required": ["email", "sent"],
+      "properties": {
+        "email": { "type": "string" },
+        "sent": { "type": "boolean" },
+        "devCode": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "EmailLink": {
+      "type": "object",
+      "required": ["email", "linked"],
+      "properties": {
+        "email": { "type": "string" },
+        "linked": { "type": "boolean" },
+        "sent": { "type": "boolean" },
+        "expiresAt": { "type": ["integer", "string"] },
+        "devLink": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "SiweChallenge": {
+      "type": "object",
+      "required": ["challengeId", "message"],
+      "properties": {
+        "challengeId": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "expiresAt": { "type": ["integer", "string"] }
+      },
+      "additionalProperties": true
+    },
+    "Item": {
+      "type": "object",
+      "required": ["id", "kind", "slot", "wear", "rarity", "level", "location", "location_ref", "weight"],
+      "properties": {
+        "id": { "type": "string" },
+        "user": { "type": "string" },
+        "kind": { "enum": ["clothing"] },
+        "slot": { "enum": ["head", "chest", "hands", "legs", "feet", "outer"] },
+        "wear": { "type": "string" },
+        "rarity": { "enum": ["a", "b", "c", "d", "e", "f"] },
+        "level": { "type": "integer", "minimum": 1 },
+        "location": { "enum": ["inventory", "equipped", "marketplace"] },
+        "location_ref": { "type": "string" },
+        "weight": { "type": "number", "minimum": 0 },
+        "image": {},
+        "image_url": { "type": "string" },
+        "set": { "type": "string" },
+        "origin": { "type": "string" },
+        "name": { "type": "string" },
+        "aspect": { "type": "object", "additionalProperties": true },
+        "perks": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      },
+      "additionalProperties": true
+    },
+    "InventoryChange": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["op", "item"],
+          "properties": {
+            "op": { "const": "put" },
+            "item": { "$ref": "#/$defs/Item" }
+          },
+          "additionalProperties": true
+        },
+        {
+          "type": "object",
+          "required": ["op", "id"],
+          "properties": {
+            "op": { "const": "delete" },
+            "id": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "InventorySync": {
+      "type": "object",
+      "required": ["revision", "reset", "changes"],
+      "properties": {
+        "revision": { "type": "integer", "minimum": 0 },
+        "reset": { "type": "boolean" },
+        "changes": { "type": "array", "items": { "$ref": "#/$defs/InventoryChange" } }
+      },
+      "additionalProperties": true
+    },
+    "InventorySummary": {
+      "type": "object",
+      "required": ["items", "raw", "used", "capacity", "free", "ignored", "exemption", "overloaded", "percent"],
+      "properties": {
+        "items": { "type": "integer", "minimum": 0 },
+        "raw": { "type": "number" },
+        "used": { "type": "number" },
+        "effective": { "type": "number" },
+        "capacity": { "type": "number" },
+        "free": { "type": "number" },
+        "ignored": { "type": "number" },
+        "exemption": { "type": "integer" },
+        "overloaded": { "type": "boolean" },
+        "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": true
+    },
+    "Inventory": {
+      "type": "object",
+      "required": ["summary", "items", "page", "sync"],
+      "properties": {
+        "summary": { "$ref": "#/$defs/InventorySummary" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/Item" } },
+        "page": { "type": ["object", "null"], "additionalProperties": true },
+        "sync": { "$ref": "#/$defs/InventorySync" }
+      },
+      "additionalProperties": true
+    },
+    "Player": {
+      "type": "object",
+      "required": ["id", "account", "character", "lootboxes"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "level": { "type": "integer", "minimum": 1 },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "account": {
+          "type": "object",
+          "required": ["gold", "silver"],
+          "properties": {
+            "gold": { "type": "integer" },
+            "silver": { "type": "number" }
+          },
+          "additionalProperties": true
+        },
+        "character": {
+          "type": "object",
+          "required": ["level", "experience", "traits", "points", "essence", "shards", "stamina", "systems", "equipment", "inventory", "mining"],
+          "properties": {
+            "level": { "type": "integer", "minimum": 1 },
+            "experience": { "type": "object", "additionalProperties": true },
+            "traits": { "type": "object", "additionalProperties": true },
+            "points": { "type": "object", "additionalProperties": true },
+            "essence": { "type": "integer" },
+            "shards": { "type": "object", "additionalProperties": true },
+            "stamina": { "type": "object", "additionalProperties": true },
+            "systems": { "type": "object", "additionalProperties": true },
+            "equipment": { "type": "object", "additionalProperties": true },
+            "inventory": { "$ref": "#/$defs/Inventory" },
+            "mining": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        },
+        "lootboxes": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "PlayerEnvelope": {
+      "type": "object",
+      "required": ["player"],
+      "properties": {
+        "player": { "$ref": "#/$defs/Player" },
+        "item": { "oneOf": [{ "$ref": "#/$defs/Item" }, { "type": "null" }] },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/Item" } },
+        "ledger": {
+          "type": "object",
+          "properties": { "id": { "type": ["string", "null"] } },
+          "additionalProperties": true
+        },
+        "notices": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      },
+      "additionalProperties": true
+    },
+    "CraftQuote": {
+      "type": "object",
+      "required": ["quote"],
+      "properties": {
+        "quote": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "Page": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": { "type": "array" },
+        "page": { "type": ["object", "integer", "null"], "additionalProperties": true },
+        "total": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "MediaIntent": {
+      "type": "object",
+      "required": ["asset_id", "expires_at", "uploads"],
+      "properties": {
+        "asset_id": { "type": "string" },
+        "expires_at": { "type": "integer" },
+        "uploads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "method", "token", "max", "mime"],
+            "properties": {
+              "name": { "type": "string" },
+              "url": { "type": "string" },
+              "method": { "const": "PUT" },
+              "token": { "type": "string" },
+              "max": { "type": "integer" },
+              "mime": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "MediaAsset": {
+      "type": "object",
+      "required": ["id", "kind", "visibility", "state", "variants", "url", "thumb"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "visibility": { "enum": ["public", "private"] },
+        "state": { "type": "string" },
+        "variants": { "type": "object", "additionalProperties": true },
+        "url": { "type": "string" },
+        "thumb": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "MediaAccess": {
+      "type": "object",
+      "required": ["url", "expires_at"],
+      "properties": {
+        "url": { "type": "string" },
+        "expires_at": { "type": "integer" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

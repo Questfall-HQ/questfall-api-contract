@@ -1,0 +1,22 @@
+{
+  "name": "@questfall/api-contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Versioned public API contract between Questfall application and PocketBase",
+  "exports": {
+    ".": "./src/index.js",
+    "./contract": "./contract.json",
+    "./schemas": "./schemas.json",
+    "./check": "./src/check.mjs",
+    "./validate": "./src/validate.js"
+  },
+  "bin": {
+    "questfall-contract-check": "./bin/check.mjs"
+  },
+  "scripts": {
+    "check": "bun run bin/check.mjs --contract",
+    "test": "bun test",
+    "verify": "bun test && bun run check"
+  }
+}
