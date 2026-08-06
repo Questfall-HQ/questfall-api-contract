@@ -28,7 +28,7 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 ```json
 {
   "devDependencies": {
-    "@questfall/api-contract": "git+https://github.com/Questfall-HQ/questfall-api-contract.git#v0.1.0"
+    "@questfall/api-contract": "git+https://github.com/Questfall-HQ/questfall-api-contract.git#v0.2.0"
   }
 }
 ```

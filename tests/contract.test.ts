@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-    expect(contract.routes.length).toBe(61)
+    expect(contract.routes.length).toBe(63)
   })
 
   test('builds parameterized paths safely', () => {
@@ -24,6 +24,12 @@ describe('contract manifest', () => {
   test('exports stable public schemas', () => {
     expect(schema('Player').required).toContain('character')
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
+    expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
+  })
+
+  test('declares the Author Space accent on create and update', () => {
+    expect(operations['authorSpaces.create'].request.optional).toContain('accent')
+    expect(operations['authorSpaces.update'].request.optional).toContain('accent')
   })
 
   test('validates public response values without runtime dependencies', () => {

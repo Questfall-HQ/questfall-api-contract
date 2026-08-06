@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -319,7 +319,7 @@
       "method": "POST",
       "path": "/author-spaces/create",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["avatar", "cover", "avatar_media_id", "cover_media_id"] },
+      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["accent", "avatar", "cover", "avatar_media_id", "cover_media_id"] },
       "response": { "schema": "Object" }
     },
     {
@@ -327,7 +327,15 @@
       "method": "POST",
       "path": "/author-spaces/update",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
+      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "accent", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.fund",
+      "method": "POST",
+      "path": "/author-spaces/fund",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug", "amount"], "optional": [] },
       "response": { "schema": "Object" }
     },
     {
@@ -368,6 +376,14 @@
       "path": "/author-spaces/quests/move",
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["group", "group_id", "position"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.delete",
+      "method": "POST",
+      "path": "/author-spaces/quests/delete",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
       "response": { "schema": "Object" }
     },
     {
