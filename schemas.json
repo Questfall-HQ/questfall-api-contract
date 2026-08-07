@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.3.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/0.4.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -34,6 +34,11 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 359
+    },
+    "AuthorSpaceCoverOpacity": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
     },
     "ProfileUser": {
       "type": "object",

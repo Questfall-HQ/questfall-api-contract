@@ -26,6 +26,7 @@ describe('contract manifest', () => {
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
     expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
 		expect(schema('AuthorSpaceHue')).toEqual({ type: 'integer', minimum: 0, maximum: 359 })
+		expect(schema('AuthorSpaceCoverOpacity')).toEqual({ type: 'integer', minimum: 0, maximum: 100 })
   })
 
   test('declares the Author Space accent and hue on create and update', () => {
@@ -33,6 +34,8 @@ describe('contract manifest', () => {
     expect(operations['authorSpaces.update'].request.optional).toContain('accent')
 		expect(operations['authorSpaces.create'].request.optional).toContain('hue')
 		expect(operations['authorSpaces.update'].request.optional).toContain('hue')
+		expect(operations['authorSpaces.create'].request.optional).toContain('coverOpacity')
+		expect(operations['authorSpaces.update'].request.optional).toContain('coverOpacity')
   })
 
   test('validates public response values without runtime dependencies', () => {
