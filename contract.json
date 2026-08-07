@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -319,7 +319,7 @@
       "method": "POST",
       "path": "/author-spaces/create",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["accent", "avatar", "cover", "avatar_media_id", "cover_media_id"] },
+      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["accent", "hue", "avatar", "cover", "avatar_media_id", "cover_media_id"] },
       "response": { "schema": "Object" }
     },
     {
@@ -327,7 +327,7 @@
       "method": "POST",
       "path": "/author-spaces/update",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "accent", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
+      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "accent", "hue", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
       "response": { "schema": "Object" }
     },
     {

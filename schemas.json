@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.2.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/0.3.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -29,6 +29,11 @@
     "AuthorSpaceAccent": {
       "type": "string",
       "enum": ["violet", "blue", "cyan", "emerald", "amber", "orange", "rose", "fuchsia"]
+    },
+    "AuthorSpaceHue": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 359
     },
     "ProfileUser": {
       "type": "object",
