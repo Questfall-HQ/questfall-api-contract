@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.6.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/0.7.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -128,6 +128,31 @@
       },
       "additionalProperties": true
     },
+    "QuestRatingAssignment": {
+      "type": "object",
+      "required": ["id", "quest_id", "round_id", "status", "slot", "group", "effective_bounty", "expires", "quest"],
+      "properties": {
+        "id": { "type": "string" },
+        "quest_id": { "type": "string" },
+        "round_id": { "type": "string" },
+        "status": { "enum": ["active", "completed", "expired", "cancelled"] },
+        "slot": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "group": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "effective_bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "expires": { "type": "integer", "minimum": 0 },
+        "quest": {
+          "type": "object",
+          "required": ["id", "title", "ends"],
+          "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" },
+            "ends": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
     "QuestCardAssignment": {
       "type": "object",
       "required": ["id", "slot", "effective_bounty", "expires", "requires_rating"],
@@ -238,6 +263,33 @@
         "quote": { "$ref": "#/$defs/QuestPricingQuote" }
       },
       "additionalProperties": false
+    },
+    "QuestRatingAssignments": {
+      "type": "object",
+      "required": ["server_now", "assignments"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "assignments": { "type": "array", "maxItems": 10, "items": { "$ref": "#/$defs/QuestRatingAssignment" } }
+      },
+      "additionalProperties": true
+    },
+    "QuestCompletion": {
+      "type": "object",
+      "required": ["id", "quest_id", "accepted", "exhausted", "attempt", "attempt_multiplier", "points", "assignment_id", "rating_vote", "idempotent"],
+      "properties": {
+        "id": { "type": "string" },
+        "quest_id": { "type": "string" },
+        "accepted": { "type": "boolean" },
+        "exhausted": { "type": "boolean" },
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "attempt_multiplier": { "enum": [1, 0.8, 0.6, 0.4, 0.2] },
+        "points": { "type": "integer", "minimum": 0 },
+        "assignment_id": { "type": "string" },
+        "rating_vote": { "type": ["integer", "null"], "minimum": 0, "maximum": 10 },
+        "idempotent": { "type": "boolean" },
+        "reward": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
     },
     "ProfileUser": {
       "type": "object",

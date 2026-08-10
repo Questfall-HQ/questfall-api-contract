@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -313,6 +313,22 @@
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["marked", "hidden"] },
       "response": { "schema": "QuestStateMutation" }
+    },
+    {
+      "operation": "quests.ratingAssignments.claim",
+      "method": "POST",
+      "path": "/quests/rating-assignments/claim",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "QuestRatingAssignments" }
+    },
+    {
+      "operation": "quests.complete",
+      "method": "POST",
+      "path": "/quests/complete",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": ["answer", "option", "rating"] },
+      "response": { "schema": "QuestCompletion" }
     },
     {
       "operation": "authorSpaces.mine",
