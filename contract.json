@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -336,7 +336,23 @@
       "path": "/author-spaces/fund",
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["slug", "amount"], "optional": [] },
-      "response": { "schema": "Object" }
+      "response": { "schema": "AuthorSpaceBalanceMutation" }
+    },
+    {
+      "operation": "authorSpaces.balance.history",
+      "method": "GET",
+      "path": "/author-spaces/balance/history",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["page", "per_page"] },
+      "response": { "schema": "AuthorSpaceBalanceHistory" }
+    },
+    {
+      "operation": "spaces.donate",
+      "method": "POST",
+      "path": "/spaces/donate",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug", "amount"], "optional": [] },
+      "response": { "schema": "AuthorSpaceBalanceMutation" }
     },
     {
       "operation": "authorSpaces.groups.create",

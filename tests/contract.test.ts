@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-    expect(contract.routes.length).toBe(63)
+    expect(contract.routes.length).toBe(65)
   })
 
   test('builds parameterized paths safely', () => {
@@ -25,6 +25,7 @@ describe('contract manifest', () => {
     expect(schema('Player').required).toContain('character')
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
     expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
+    expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication'])
 		expect(schema('AuthorSpaceHue')).toEqual({ type: 'integer', minimum: 0, maximum: 359 })
 		expect(schema('AuthorSpaceCoverOpacity')).toEqual({ type: 'integer', minimum: 0, maximum: 100 })
   })

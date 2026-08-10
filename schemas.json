@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.4.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/0.5.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -39,6 +39,64 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 100
+    },
+    "AuthorSpaceBalanceEntryType": {
+      "type": "string",
+      "enum": ["transfer", "donation", "quest_publication"]
+    },
+    "AuthorSpaceBalanceEntry": {
+      "type": "object",
+      "required": ["id", "type", "amount", "actor", "quest", "created"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "$ref": "#/$defs/AuthorSpaceBalanceEntryType" },
+        "amount": { "type": "integer" },
+        "actor": { "type": "object", "additionalProperties": true },
+        "quest": {
+          "type": ["object", "null"],
+          "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "created": { "type": ["integer", "string"] }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceBalancePage": {
+      "type": "object",
+      "required": ["page", "per_page", "total", "pages"],
+      "properties": {
+        "page": { "type": "integer", "minimum": 1 },
+        "per_page": { "type": "integer", "minimum": 1 },
+        "total": { "type": "integer", "minimum": 0 },
+        "pages": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceBalanceHistory": {
+      "type": "object",
+      "required": ["balance", "items", "page"],
+      "properties": {
+        "balance": { "type": "integer", "minimum": 0 },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AuthorSpaceBalanceEntry" }
+        },
+        "page": { "$ref": "#/$defs/AuthorSpaceBalancePage" }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceBalanceMutation": {
+      "type": "object",
+      "required": ["space", "account", "entry"],
+      "properties": {
+        "space": { "type": "object", "additionalProperties": true },
+        "account": { "type": "object", "additionalProperties": true },
+        "entry": { "$ref": "#/$defs/AuthorSpaceBalanceEntry" }
+      },
+      "additionalProperties": true
     },
     "ProfileUser": {
       "type": "object",
