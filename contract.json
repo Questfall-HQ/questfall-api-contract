@@ -331,6 +331,14 @@
       "response": { "schema": "QuestCompletion" }
     },
     {
+      "operation": "mining.league",
+      "method": "GET",
+      "path": "/mining/league",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["scope"] },
+      "response": { "schema": "MiningLeagueOverview" }
+    },
+    {
       "operation": "authorSpaces.mine",
       "method": "GET",
       "path": "/author-spaces/mine",

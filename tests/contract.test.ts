@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(70)
+		expect(contract.routes.length).toBe(71)
   })
 
   test('builds parameterized paths safely', () => {
@@ -28,6 +28,9 @@ describe('contract manifest', () => {
     expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication'])
 		expect(schema('AuthorSpaceHue')).toEqual({ type: 'integer', minimum: 0, maximum: 359 })
 		expect(schema('AuthorSpaceCoverOpacity')).toEqual({ type: 'integer', minimum: 0, maximum: 100 })
+		expect(schema('ShardSet').properties.layout.enum).toEqual(['4x3', '4x4', '5x4'])
+		expect(schema('ShardState').required).toEqual(['active', 'period', 'set', 'progress', 'pieces'])
+		expect(schema('ShardReward').required).toEqual(['count', 'drops', 'lootboxes'])
   })
 
   test('declares the Author Space accent and hue on create and update', () => {
@@ -42,6 +45,14 @@ describe('contract manifest', () => {
   test('validates public response values without runtime dependencies', () => {
     expect(validate('MediaAccess', { url: 'https://media.example/a', expires_at: 1 })).toEqual([])
     expect(validate('MediaAccess', { url: 'https://media.example/a' })).toEqual(['$.expires_at is required'])
+		expect(validate('ShardReward', { count: 2, drops: [{ id: 'p12', index: 11, duplicate: true }], lootboxes: 1 })).toEqual([])
+		expect(validate('ShardState', {
+		active: false,
+		period: '2026-W33',
+		set: null,
+		progress: { unique: 0, required: 0, total: 0, completed: 0 },
+		pieces: {},
+	})).toEqual([])
   })
 })
 

@@ -14,6 +14,7 @@ registry. Поле `private: true` защищает его от случайно
 - transport и обязательные поля request;
 - стабильный response schema для критичных domain objects;
 - canonical public enums для items и inventory sync;
+- публичный mining league overview: период, bracket, ranking, progression и reward history;
 - минимальная PocketBase SDK surface, используемая клиентом.
 
 Контракт не раскрывает внутреннюю PocketBase schema, admin/dev routes,
