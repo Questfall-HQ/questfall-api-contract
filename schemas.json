@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.5.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/0.6.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -97,6 +97,147 @@
         "entry": { "$ref": "#/$defs/AuthorSpaceBalanceEntry" }
       },
       "additionalProperties": true
+    },
+    "QuestType": {
+      "type": "string",
+      "enum": ["text", "quiz", "survey"]
+    },
+    "QuestFeedTab": {
+      "type": "string",
+      "enum": ["welcome", "feed", "followed", "marked", "hidden", "completed"]
+    },
+    "QuestPublicConfig": {
+      "type": "object",
+      "properties": {
+        "prompt": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "QuestAuthor": {
+      "type": "object",
+      "required": ["id", "slug", "name", "accent", "hue", "avatar", "official"],
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "name": { "type": "string" },
+        "accent": { "$ref": "#/$defs/AuthorSpaceAccent" },
+        "hue": { "$ref": "#/$defs/AuthorSpaceHue" },
+        "avatar": { "type": "string" },
+        "official": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "QuestCardAssignment": {
+      "type": "object",
+      "required": ["id", "slot", "effective_bounty", "expires", "requires_rating"],
+      "properties": {
+        "id": { "type": "string" },
+        "slot": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "effective_bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "expires": { "type": "integer", "minimum": 0 },
+        "requires_rating": { "const": true }
+      },
+      "additionalProperties": true
+    },
+    "QuestViewerState": {
+      "type": "object",
+      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment"],
+      "properties": {
+        "marked": { "type": "boolean" },
+        "hidden": { "type": "boolean" },
+        "completed": { "type": "boolean" },
+        "exhausted": { "type": "boolean" },
+        "following": { "type": "boolean" },
+        "assignment": {
+          "oneOf": [
+            { "$ref": "#/$defs/QuestCardAssignment" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuestCard": {
+      "type": "object",
+      "required": ["id", "type", "title", "description", "instructions", "config", "cover", "points", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "$ref": "#/$defs/QuestType" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "instructions": { "type": "string" },
+        "config": { "$ref": "#/$defs/QuestPublicConfig" },
+        "cover": { "type": "string" },
+        "points": { "type": "integer", "minimum": 0 },
+        "rating": { "type": "number", "minimum": 0, "maximum": 10 },
+        "completion_count": { "type": "integer", "minimum": 0 },
+        "published": { "type": "integer", "minimum": 0 },
+        "ends": { "type": "integer", "minimum": 0 },
+        "active": { "type": "boolean" },
+        "placement": { "enum": ["feed", "welcome"] },
+        "author": { "$ref": "#/$defs/QuestAuthor" },
+        "viewer": { "$ref": "#/$defs/QuestViewerState" }
+      },
+      "additionalProperties": true
+    },
+    "QuestFeed": {
+      "type": "object",
+      "required": ["tab", "server_now", "items", "next_cursor"],
+      "properties": {
+        "tab": { "$ref": "#/$defs/QuestFeedTab" },
+        "server_now": { "type": "integer", "minimum": 0 },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/QuestCard" } },
+        "next_cursor": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "QuestStateMutation": {
+      "type": "object",
+      "required": ["id", "viewer"],
+      "properties": {
+        "id": { "type": "string" },
+        "viewer": {
+          "type": "object",
+          "required": ["marked", "hidden", "completed", "exhausted"],
+          "properties": {
+            "marked": { "type": "boolean" },
+            "hidden": { "type": "boolean" },
+            "completed": { "type": "boolean" },
+            "exhausted": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuestPricingQuote": {
+      "type": "object",
+      "required": ["pricing_version", "bounty", "duration", "day", "subtotal", "karma", "discount", "discount_rate", "total", "position", "population", "available"],
+      "properties": {
+        "pricing_version": { "const": "bounty-v1" },
+        "bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "duration": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "day": { "type": "integer", "minimum": 100 },
+        "subtotal": { "type": "integer", "minimum": 100 },
+        "karma": { "type": "number", "minimum": 0, "maximum": 10 },
+        "discount": { "type": "integer", "minimum": 0 },
+        "discount_rate": { "type": "number", "minimum": 0, "maximum": 0.9 },
+        "total": { "type": "integer", "minimum": 1 },
+        "position": { "type": "integer", "minimum": 1 },
+        "population": { "type": "integer", "minimum": 0 },
+        "available": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "QuestPublishResult": {
+      "type": "object",
+      "required": ["quest", "quote"],
+      "properties": {
+        "quest": { "type": "object", "additionalProperties": true },
+        "quote": { "$ref": "#/$defs/QuestPricingQuote" }
+      },
+      "additionalProperties": false
     },
     "ProfileUser": {
       "type": "object",

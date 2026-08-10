@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -291,6 +291,30 @@
       "response": { "schema": "PlayerEnvelope" }
     },
     {
+      "operation": "quests.feed",
+      "method": "GET",
+      "path": "/quests/feed",
+      "access": "optional",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["tab", "cursor", "limit"] },
+      "response": { "schema": "QuestFeed" }
+    },
+    {
+      "operation": "quests.detail",
+      "method": "GET",
+      "path": "/quests/{id}",
+      "access": "optional",
+      "request": { "transport": "none", "params": ["id"], "required": [], "optional": [] },
+      "response": { "schema": "QuestCard" }
+    },
+    {
+      "operation": "quests.state",
+      "method": "POST",
+      "path": "/quests/state",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["marked", "hidden"] },
+      "response": { "schema": "QuestStateMutation" }
+    },
+    {
       "operation": "authorSpaces.mine",
       "method": "GET",
       "path": "/author-spaces/mine",
@@ -407,16 +431,16 @@
       "method": "POST",
       "path": "/author-spaces/quests/quote",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": ["bounty", "duration"] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "body", "params": [], "required": ["slug", "bounty", "duration"], "optional": [] },
+      "response": { "schema": "QuestPricingQuote" }
     },
     {
       "operation": "authorSpaces.quests.publish",
       "method": "POST",
       "path": "/author-spaces/quests/publish",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["bounty", "duration"] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "max_cost"], "optional": ["bounty", "duration"] },
+      "response": { "schema": "QuestPublishResult" }
     },
     {
       "operation": "authorSpaces.team.invite",
