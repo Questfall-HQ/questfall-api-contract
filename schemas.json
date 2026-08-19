@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/0.8.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/1.0.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -30,6 +30,10 @@
       "type": "string",
       "enum": ["violet", "blue", "cyan", "emerald", "amber", "orange", "rose", "fuchsia"]
     },
+    "AuthorSpaceTagColor": {
+      "type": "string",
+      "enum": ["red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose", "slate", "gray"]
+    },
     "AuthorSpaceHue": {
       "type": "integer",
       "minimum": 0,
@@ -39,6 +43,87 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 100
+    },
+    "AuthorSpaceTag": {
+      "type": "object",
+      "required": ["id", "name", "color", "position", "created", "updated"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "color": { "$ref": "#/$defs/AuthorSpaceTagColor" },
+        "position": { "type": "integer", "minimum": 0 },
+        "created": { "type": ["integer", "string"] },
+        "updated": { "type": ["integer", "string"] }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceRatedQuest": {
+      "type": "object",
+      "required": ["id", "title", "cover", "tag_ids", "rating", "rated", "updated"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "cover": { "type": "string" },
+        "tag_ids": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "rating": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "rated": { "type": "integer", "minimum": 0 },
+        "updated": { "type": ["integer", "string"] }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceWorkspace": {
+      "type": "object",
+      "required": ["space", "groups", "quests"],
+      "properties": {
+        "space": { "type": "object", "additionalProperties": true },
+        "groups": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AuthorSpaceTag" }
+        },
+        "quests": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/AuthorSpaceRatedQuest" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceTeamCandidate": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "email_hint"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": {},
+        "avatar_icon": { "type": ["object", "null"] },
+        "email_hint": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpaceTeamSearch": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/AuthorSpaceTeamCandidate" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceTeamAddition": {
+      "type": "object",
+      "required": ["member", "remaining"],
+      "properties": {
+        "member": { "type": "object", "additionalProperties": true },
+        "remaining": { "type": "integer", "minimum": 0, "maximum": 4 }
+      },
+      "additionalProperties": false
     },
     "AuthorSpaceBalanceEntryType": {
       "type": "string",
@@ -100,7 +185,29 @@
     },
     "QuestType": {
       "type": "string",
-      "enum": ["text", "quiz", "survey"]
+      "enum": ["text", "quiz", "survey", "event"]
+    },
+    "QuestRewardKind": {
+      "type": "string",
+      "enum": ["quest_bounty", "gold", "silver", "essence", "lootbox_a", "lootbox_b", "lootbox_c", "lootbox_d", "lootbox_e", "lootbox_f"]
+    },
+    "QuestReward": {
+      "type": "object",
+      "required": ["kind", "amount"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/QuestRewardKind" },
+        "amount": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QuestProgress": {
+      "type": "object",
+      "required": ["current", "target"],
+      "properties": {
+        "current": { "type": "integer", "minimum": 0 },
+        "target": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "additionalProperties": false
     },
     "QuestFeedTab": {
       "type": "string",
@@ -110,7 +217,18 @@
       "type": "object",
       "properties": {
         "prompt": { "type": "string" },
-        "options": { "type": "array", "items": { "type": "string" } }
+        "options": { "type": "array", "items": { "type": "string" } },
+        "event": {
+          "type": "object",
+          "required": ["key", "label", "summary", "route"],
+          "properties": {
+            "key": { "type": "string" },
+            "label": { "type": "string" },
+            "summary": { "type": "string" },
+            "route": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },
@@ -167,13 +285,16 @@
     },
     "QuestViewerState": {
       "type": "object",
-      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment"],
+      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment", "claimable", "claimed", "progress"],
       "properties": {
         "marked": { "type": "boolean" },
         "hidden": { "type": "boolean" },
         "completed": { "type": "boolean" },
         "exhausted": { "type": "boolean" },
         "following": { "type": "boolean" },
+        "claimable": { "type": "boolean" },
+        "claimed": { "type": "boolean" },
+        "progress": { "$ref": "#/$defs/QuestProgress" },
         "assignment": {
           "oneOf": [
             { "$ref": "#/$defs/QuestCardAssignment" },
@@ -185,7 +306,7 @@
     },
     "QuestCard": {
       "type": "object",
-      "required": ["id", "type", "title", "description", "instructions", "config", "cover", "points", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
+      "required": ["id", "type", "title", "description", "instructions", "config", "cover", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
       "properties": {
         "id": { "type": "string" },
         "type": { "$ref": "#/$defs/QuestType" },
@@ -195,6 +316,7 @@
         "config": { "$ref": "#/$defs/QuestPublicConfig" },
         "cover": { "type": "string" },
         "points": { "type": "integer", "minimum": 0 },
+        "reward": { "$ref": "#/$defs/QuestReward" },
         "rating": { "type": "number", "minimum": 0, "maximum": 10 },
         "completion_count": { "type": "integer", "minimum": 0 },
         "published": { "type": "integer", "minimum": 0 },
@@ -352,7 +474,7 @@
     },
     "QuestCompletion": {
       "type": "object",
-      "required": ["id", "quest_id", "accepted", "exhausted", "attempt", "attempt_multiplier", "points", "assignment_id", "rating_vote", "idempotent"],
+      "required": ["id", "quest_id", "accepted", "exhausted", "attempt", "attempt_multiplier", "points", "assignment_id", "rating_vote", "idempotent", "claimable"],
       "properties": {
         "id": { "type": "string" },
         "quest_id": { "type": "string" },
@@ -364,6 +486,7 @@
         "assignment_id": { "type": "string" },
         "rating_vote": { "type": ["integer", "null"], "minimum": 0, "maximum": 10 },
         "idempotent": { "type": "boolean" },
+        "claimable": { "type": "boolean" },
         "reward": {
           "type": "object",
           "properties": {
@@ -372,6 +495,31 @@
           "additionalProperties": true
         },
         "player": { "$ref": "#/$defs/Player" }
+      },
+      "additionalProperties": true
+    },
+    "QuestUpdate": {
+      "type": "object",
+      "required": ["quest_id", "title", "status", "progress", "reward"],
+      "properties": {
+        "quest_id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "enum": ["progress", "claimable", "claimed"] },
+        "progress": { "$ref": "#/$defs/QuestProgress" },
+        "reward": { "$ref": "#/$defs/QuestReward" }
+      },
+      "additionalProperties": true
+    },
+    "QuestRewardClaim": {
+      "type": "object",
+      "required": ["quest_id", "reward", "settlement", "idempotent", "player"],
+      "properties": {
+        "quest_id": { "type": "string" },
+        "reward": { "$ref": "#/$defs/QuestReward" },
+        "settlement": { "type": "object", "additionalProperties": true },
+        "idempotent": { "type": "boolean" },
+        "player": { "$ref": "#/$defs/Player" },
+        "quest_updates": { "type": "array", "items": { "$ref": "#/$defs/QuestUpdate" } }
       },
       "additionalProperties": true
     },
@@ -456,7 +604,24 @@
         "start_level": { "type": "integer", "minimum": 1 },
         "end_level": { "type": "integer", "minimum": 1 },
         "next_level": { "type": "integer", "minimum": 2 },
-        "members": { "type": "integer", "minimum": 1 }
+        "members": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "MiningLeagueSummary": {
+      "type": "object",
+      "required": ["id", "name", "hall", "eligible", "start_level", "end_level", "next_level", "members", "participants", "total_points"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string" },
+        "hall": { "type": "boolean" },
+        "eligible": { "type": "boolean" },
+        "start_level": { "type": "integer", "minimum": 1 },
+        "end_level": { "type": "integer", "minimum": 1 },
+        "next_level": { "type": "integer", "minimum": 2 },
+        "members": { "type": "integer", "minimum": 0 },
+        "participants": { "type": "integer", "minimum": 0 },
+        "total_points": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
@@ -513,13 +678,14 @@
     },
     "MiningLeagueOverview": {
       "type": "object",
-      "required": ["server_now", "scope", "period", "player", "league", "competition", "progress", "counters", "leaderboard", "recent"],
+      "required": ["server_now", "scope", "period", "player", "league", "leagues", "competition", "progress", "counters", "leaderboard", "recent"],
       "properties": {
         "server_now": { "type": "integer", "minimum": 0 },
         "scope": { "$ref": "#/$defs/MiningScope" },
         "period": { "$ref": "#/$defs/MiningLeaguePeriod" },
         "player": { "$ref": "#/$defs/MiningLeaguePlayer" },
         "league": { "$ref": "#/$defs/MiningLeague" },
+		"leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueSummary" } },
 		"competition": { "$ref": "#/$defs/MiningCompetition" },
         "progress": { "$ref": "#/$defs/MiningLeagueProgress" },
         "counters": {
@@ -533,6 +699,95 @@
         },
         "leaderboard": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueUser" } },
         "recent": { "type": "array", "items": { "$ref": "#/$defs/MiningRewardHistory" } }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserEquipment": {
+      "type": "object",
+      "required": ["slot", "item"],
+      "properties": {
+        "slot": { "enum": ["head", "chest", "hands", "legs", "feet", "outer"] },
+        "item": {
+          "oneOf": [
+            { "$ref": "#/$defs/Item" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserMiner": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "level", "mining_power", "quests_7d", "equipment", "systems", "viewer", "position"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "level": { "type": "integer", "minimum": 1 },
+        "mining_power": { "type": "number", "minimum": 0 },
+        "quests_7d": { "type": "integer", "minimum": 0 },
+        "equipment": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/LeagueBrowserEquipment" }
+        },
+        "systems": {
+          "type": "object",
+          "required": ["flow", "focus", "boost", "loot"],
+          "properties": {
+            "flow": { "type": "number", "minimum": 0 },
+            "focus": { "type": "number", "minimum": 0 },
+            "boost": { "type": "number", "minimum": 0 },
+            "loot": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "viewer": { "type": "boolean" },
+        "position": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowser": {
+      "type": "object",
+      "required": ["server_now", "viewer", "league", "leagues", "view", "sort", "direction", "page", "items", "selected"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "viewer": {
+          "type": "object",
+          "required": ["id", "league"],
+          "properties": {
+            "id": { "type": "string" },
+            "league": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "league": { "$ref": "#/$defs/MiningLeague" },
+        "leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueSummary" } },
+        "view": { "enum": ["field", "list"] },
+        "sort": { "enum": ["power", "quests"] },
+        "direction": { "enum": ["asc", "desc"] },
+        "page": {
+          "type": "object",
+          "required": ["number", "per_page", "total", "pages", "has_prev", "has_next"],
+          "properties": {
+            "number": { "type": "integer", "minimum": 1 },
+            "per_page": { "type": "integer", "minimum": 1, "maximum": 50 },
+            "total": { "type": "integer", "minimum": 0 },
+            "pages": { "type": "integer", "minimum": 1 },
+            "has_prev": { "type": "boolean" },
+            "has_next": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/LeagueBrowserMiner" } },
+        "selected": {
+          "oneOf": [
+            { "$ref": "#/$defs/LeagueBrowserMiner" },
+            { "type": "null" }
+          ]
+        }
       },
       "additionalProperties": false
     },
@@ -770,7 +1025,8 @@
           "properties": { "id": { "type": ["string", "null"] } },
           "additionalProperties": true
         },
-        "notices": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        "notices": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "quest_updates": { "type": "array", "items": { "$ref": "#/$defs/QuestUpdate" } }
       },
       "additionalProperties": true
     },

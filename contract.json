@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -331,12 +331,28 @@
       "response": { "schema": "QuestCompletion" }
     },
     {
+      "operation": "quests.rewards.claim",
+      "method": "POST",
+      "path": "/quests/rewards/claim",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": [] },
+      "response": { "schema": "QuestRewardClaim" }
+    },
+    {
       "operation": "mining.league",
       "method": "GET",
       "path": "/mining/league",
       "access": "verified",
       "request": { "transport": "query", "params": [], "required": [], "optional": ["scope"] },
       "response": { "schema": "MiningLeagueOverview" }
+    },
+    {
+      "operation": "mining.leagues",
+      "method": "GET",
+      "path": "/mining/leagues",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["league", "view", "sort", "direction", "page", "per_page", "miner"] },
+      "response": { "schema": "LeagueBrowser" }
     },
     {
       "operation": "authorSpaces.mine",
@@ -352,7 +368,7 @@
       "path": "/author-spaces/load",
       "access": "verified",
       "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "response": { "schema": "AuthorSpaceWorkspace" }
     },
     {
       "operation": "spaces.load",
@@ -407,16 +423,16 @@
       "method": "POST",
       "path": "/author-spaces/groups/create",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "name"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "body", "params": [], "required": ["slug", "name"], "optional": ["color"] },
+      "response": { "schema": "AuthorSpaceTag" }
     },
     {
       "operation": "authorSpaces.groups.update",
       "method": "POST",
       "path": "/author-spaces/groups/update",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["name", "position"] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["name", "color", "position"] },
+      "response": { "schema": "AuthorSpaceTag" }
     },
     {
       "operation": "authorSpaces.groups.delete",
@@ -431,7 +447,7 @@
       "method": "POST",
       "path": "/author-spaces/quests/save",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["title", "description"], "optional": ["id", "slug", "type", "instructions", "config", "group", "group_id", "bounty", "duration", "cover", "cover_media_id"] },
+      "request": { "transport": "multipart", "params": [], "required": ["title", "description"], "optional": ["id", "slug", "type", "instructions", "config", "tag_ids", "group", "group_id", "bounty", "duration", "cover", "cover_media_id"] },
       "response": { "schema": "Object" }
     },
     {
@@ -439,7 +455,7 @@
       "method": "POST",
       "path": "/author-spaces/quests/move",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["group", "group_id", "position"] },
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["tag_ids", "group", "group_id", "position"] },
       "response": { "schema": "Object" }
     },
     {
@@ -467,27 +483,27 @@
       "response": { "schema": "QuestPublishResult" }
     },
     {
-      "operation": "authorSpaces.team.invite",
-      "method": "POST",
-      "path": "/author-spaces/team/invite",
+      "operation": "authorSpaces.team.search",
+      "method": "GET",
+      "path": "/author-spaces/team/search",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "email"], "optional": ["permissions"] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "query", "params": [], "required": ["slug", "q"], "optional": [] },
+      "response": { "schema": "AuthorSpaceTeamSearch" }
     },
     {
-      "operation": "authorSpaces.team.resend",
+      "operation": "authorSpaces.team.add",
       "method": "POST",
-      "path": "/author-spaces/team/resend",
+      "path": "/author-spaces/team/add",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": { "transport": "body", "params": [], "required": ["slug", "user_id"], "optional": ["permissions"] },
+      "response": { "schema": "AuthorSpaceTeamAddition" }
     },
     {
-      "operation": "authorSpaces.team.revoke",
+      "operation": "authorSpaces.team.acknowledge",
       "method": "POST",
-      "path": "/author-spaces/team/revoke",
+      "path": "/author-spaces/team/acknowledge",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
       "response": { "schema": "Object" }
     },
     {
@@ -512,22 +528,6 @@
       "path": "/author-spaces/team/leave",
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
-    },
-    {
-      "operation": "authorSpaces.invites.preview",
-      "method": "GET",
-      "path": "/author-spaces/invites/preview",
-      "access": "public",
-      "request": { "transport": "query", "params": [], "required": ["token"], "optional": [] },
-      "response": { "schema": "Object" }
-    },
-    {
-      "operation": "authorSpaces.invites.accept",
-      "method": "POST",
-      "path": "/author-spaces/invites/accept",
-      "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
       "response": { "schema": "Object" }
     },
     {

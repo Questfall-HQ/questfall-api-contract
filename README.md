@@ -14,8 +14,14 @@ registry. Поле `private: true` защищает его от случайно
 - transport и обязательные поля request;
 - стабильный response schema для критичных domain objects;
 - canonical public enums для items и inventory sync;
-- публичный mining league overview: период, bracket, ranking, progression и reward history;
+- публичный mining league overview: период, weekly league или global season competition, ranking, progression, reward history и каталог лиг с реальными totals по участникам и Mining Points;
 - минимальная PocketBase SDK surface, используемая клиентом.
+
+Текущая surface охватывает auth/profile, live Quest Feed и completion/rating,
+public и owner Author Space flows, media upload lifecycle, player/RPG/economy,
+lootboxes, marketplace и Mining leagues. Chest Shards входят в публичный
+`player`/reward snapshot; admin publishing и settlement routes остаются
+internal и намеренно не попадают в client contract.
 
 Контракт не раскрывает внутреннюю PocketBase schema, admin/dev routes,
 RPG-формулы или реализацию actions. `additionalProperties: true` в schema
@@ -29,7 +35,7 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 ```json
 {
   "devDependencies": {
-    "@questfall/api-contract": "git+https://github.com/Questfall-HQ/questfall-api-contract.git#v0.2.0"
+    "@questfall/api-contract": "git+https://github.com/Questfall-HQ/questfall-api-contract.git#<immutable-tag>"
   }
 }
 ```
@@ -45,6 +51,11 @@ Frontend checker сверяет все `get(...)` / `post(...)` вызовы в 
 Backend checker сверяет объявленный контракт с `routerAdd` в `src/**/*.pb.imba`.
 Оба parser-а fail closed, если синтаксис API surface изменился и больше не
 может быть разобран однозначно.
+
+Конкретный опубликованный tag всегда берётся из `package.json` обоих consumers,
+а не копируется из примера README. Рабочая ветка contract может содержать
+следующую SemVer-версию до публикации; release существует только после создания
+нового неизменяемого Git tag и обновления обоих consumers на один exact tag.
 
 ## Изменение контракта
 
