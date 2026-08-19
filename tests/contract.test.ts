@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(71)
+		expect(contract.routes.length).toBe(73)
   })
 
   test('builds parameterized paths safely', () => {
@@ -43,6 +43,9 @@ describe('contract manifest', () => {
 		expect(schema('LeagueBrowserEquipment').properties.item.oneOf[0].$ref).toBe('#/$defs/Item')
 		expect(schema('LeagueBrowser').properties.page.properties.per_page.maximum).toBe(50)
 		expect(operations['mining.leagues'].request.optional).toContain('sort')
+		expect(operations['mining.rewards.claim'].request.required).toEqual(['idempotency_key'])
+		expect(schema('MiningPayoutScope').enum).toEqual(['week', 'season'])
+		expect(schema('MiningPayoutState').enum).toEqual(['pending', 'claimed'])
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {

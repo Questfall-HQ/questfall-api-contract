@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -353,6 +353,22 @@
       "access": "verified",
       "request": { "transport": "query", "params": [], "required": [], "optional": ["league", "view", "sort", "direction", "page", "per_page", "miner"] },
       "response": { "schema": "LeagueBrowser" }
+    },
+    {
+      "operation": "mining.rewards",
+      "method": "GET",
+      "path": "/mining/rewards",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "MiningRewards" }
+    },
+    {
+      "operation": "mining.rewards.claim",
+      "method": "POST",
+      "path": "/mining/rewards/claim",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["idempotency_key"], "optional": [] },
+      "response": { "schema": "MiningRewardsClaimResult" }
     },
     {
       "operation": "authorSpaces.mine",
