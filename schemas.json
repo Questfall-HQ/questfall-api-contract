@@ -200,6 +200,11 @@
       },
       "additionalProperties": false
     },
+    "QuestChecklist": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "type": "string", "minLength": 1, "maxLength": 120 }
+    },
     "QuestProgress": {
       "type": "object",
       "required": ["current", "target"],
@@ -285,7 +290,7 @@
     },
     "QuestViewerState": {
       "type": "object",
-      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment", "claimable", "claimed", "progress"],
+      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment", "claimable", "claimed", "locked", "current", "lock_reason", "legacy_reconciled", "progress"],
       "properties": {
         "marked": { "type": "boolean" },
         "hidden": { "type": "boolean" },
@@ -294,6 +299,10 @@
         "following": { "type": "boolean" },
         "claimable": { "type": "boolean" },
         "claimed": { "type": "boolean" },
+        "locked": { "type": "boolean" },
+        "current": { "type": "boolean" },
+        "lock_reason": { "type": "string" },
+        "legacy_reconciled": { "type": "boolean" },
         "progress": { "$ref": "#/$defs/QuestProgress" },
         "assignment": {
           "oneOf": [
@@ -306,13 +315,14 @@
     },
     "QuestCard": {
       "type": "object",
-      "required": ["id", "type", "title", "description", "instructions", "config", "cover", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
+      "required": ["id", "type", "title", "description", "instructions", "checklist", "config", "cover", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
       "properties": {
         "id": { "type": "string" },
         "type": { "$ref": "#/$defs/QuestType" },
         "title": { "type": "string" },
         "description": { "type": "string" },
         "instructions": { "type": "string" },
+        "checklist": { "$ref": "#/$defs/QuestChecklist" },
         "config": { "$ref": "#/$defs/QuestPublicConfig" },
         "cover": { "type": "string" },
         "points": { "type": "integer", "minimum": 0 },
@@ -523,6 +533,19 @@
       },
       "additionalProperties": true
     },
+    "WelcomeQuestSync": {
+      "type": "object",
+      "required": ["manifest", "legacy", "legacy_reconciled", "legacy_reconciled_at", "current_quest_id", "quest_updates"],
+      "properties": {
+        "manifest": { "type": "string" },
+        "legacy": { "type": "boolean" },
+        "legacy_reconciled": { "type": "boolean" },
+        "legacy_reconciled_at": { "type": "integer", "minimum": 0 },
+        "current_quest_id": { "type": "string" },
+        "quest_updates": { "type": "array", "items": { "$ref": "#/$defs/QuestUpdate" } }
+      },
+      "additionalProperties": false
+    },
     "MiningScope": {
       "type": "string",
       "enum": ["week", "season"]
@@ -730,24 +753,72 @@
     },
     "MiningRewardsSeriesPoint": {
       "type": "object",
-      "required": ["start", "end", "total", "viewer"],
+      "required": ["start", "end", "total", "viewer", "competition_points", "viewer_points", "cutoff_points", "viewer_rank", "viewer_share", "viewer_rank_shares"],
       "properties": {
         "start": { "type": "integer", "minimum": 0 },
         "end": { "type": "integer", "minimum": 0 },
         "total": { "type": "integer", "minimum": 0 },
-        "viewer": { "type": "integer", "minimum": 0 }
+        "viewer": { "type": "integer", "minimum": 0 },
+        "competition_points": { "type": "integer", "minimum": 0 },
+        "viewer_points": { "type": "integer", "minimum": 0 },
+        "cutoff_points": { "type": "integer", "minimum": 0 },
+        "viewer_rank": { "type": ["integer", "null"], "minimum": 1 },
+        "viewer_share": { "type": "number", "minimum": 0, "maximum": 100 },
+        "viewer_rank_shares": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
     "MiningRewardsQuest": {
       "type": "object",
-      "required": ["id", "title", "points", "completions", "last"],
+      "required": ["id", "title", "cover", "points", "completions", "last"],
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
+        "cover": { "type": "string" },
         "points": { "type": "integer", "minimum": 0 },
         "completions": { "type": "integer", "minimum": 0 },
         "last": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "MiningRewardsLeagueAllocation": {
+      "type": "object",
+      "required": ["id", "name", "points", "participants", "pool_gold"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string" },
+        "points": { "type": "integer", "minimum": 1 },
+        "participants": { "type": "integer", "minimum": 1 },
+        "pool_gold": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "MiningRewardsWeekCompetition": {
+      "type": "object",
+      "required": ["kind", "id", "name", "eligible", "participants", "points", "pool_gold", "active_leagues"],
+      "properties": {
+        "kind": { "const": "league" },
+        "id": { "type": "integer", "minimum": 0 },
+        "name": { "type": "string" },
+        "eligible": { "type": "boolean" },
+        "participants": { "type": "integer", "minimum": 0 },
+        "points": { "type": "integer", "minimum": 0 },
+        "pool_gold": { "type": "integer", "minimum": 0 },
+        "active_leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningRewardsLeagueAllocation" } }
+      },
+      "additionalProperties": false
+    },
+    "MiningRewardsSeasonCompetition": {
+      "type": "object",
+      "required": ["kind", "name", "participants", "qualified", "cutoff_points", "qualified_points", "total_rank_shares"],
+      "properties": {
+        "kind": { "const": "global" },
+        "name": { "type": "string" },
+        "participants": { "type": "integer", "minimum": 0 },
+        "qualified": { "type": "integer", "minimum": 0 },
+        "cutoff_points": { "type": "integer", "minimum": 0 },
+        "qualified_points": { "type": "integer", "minimum": 0 },
+        "total_rank_shares": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
@@ -761,7 +832,12 @@
         "end": { "type": "integer", "minimum": 0 },
         "active": { "type": "boolean" },
         "pool_gold": { "type": "integer", "minimum": 0 },
-        "competition": { "type": "object", "additionalProperties": true },
+        "competition": {
+          "oneOf": [
+            { "$ref": "#/$defs/MiningRewardsWeekCompetition" },
+            { "$ref": "#/$defs/MiningRewardsSeasonCompetition" }
+          ]
+        },
         "viewer": {
           "type": "object",
           "required": ["points", "rank", "projected_gold", "share", "rank_shares"],

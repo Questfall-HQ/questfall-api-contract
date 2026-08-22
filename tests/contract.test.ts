@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(73)
+		expect(contract.routes.length).toBe(74)
   })
 
   test('builds parameterized paths safely', () => {
@@ -46,6 +46,14 @@ describe('contract manifest', () => {
 		expect(operations['mining.rewards.claim'].request.required).toEqual(['idempotency_key'])
 		expect(schema('MiningPayoutScope').enum).toEqual(['week', 'season'])
 		expect(schema('MiningPayoutState').enum).toEqual(['pending', 'claimed'])
+		expect(schema('MiningRewardsPeriod').properties.competition.oneOf).toHaveLength(2)
+		expect(schema('MiningRewardsSeriesPoint').required).toContain('competition_points')
+		expect(schema('MiningRewardsQuest').required).toContain('cover')
+		expect(schema('QuestViewerState').required).toContain('locked')
+		expect(schema('QuestCard').required).toContain('checklist')
+		expect(schema('QuestCard').properties.checklist.$ref).toBe('#/$defs/QuestChecklist')
+		expect(schema('QuestChecklist').maxItems).toBe(5)
+		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {

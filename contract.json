@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -337,6 +337,14 @@
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": [] },
       "response": { "schema": "QuestRewardClaim" }
+    },
+    {
+      "operation": "quests.welcome.sync",
+      "method": "POST",
+      "path": "/quests/welcome/sync",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "WelcomeQuestSync" }
     },
     {
       "operation": "mining.league",
