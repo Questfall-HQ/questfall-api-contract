@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(74)
+		expect(contract.routes.length).toBe(75)
   })
 
   test('builds parameterized paths safely', () => {
@@ -26,12 +26,14 @@ describe('contract manifest', () => {
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
     expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
 		expect(schema('AuthorSpaceTagColor').enum).toEqual(['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose', 'slate', 'gray'])
-    expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication'])
+    expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication', 'reward_settlement'])
 		expect(schema('AuthorSpaceHue')).toEqual({ type: 'integer', minimum: 0, maximum: 359 })
 		expect(schema('AuthorSpaceCoverOpacity')).toEqual({ type: 'integer', minimum: 0, maximum: 100 })
 		expect(schema('AuthorSpaceTag').properties.color.$ref).toBe('#/$defs/AuthorSpaceTagColor')
 		expect(schema('AuthorSpaceRatedQuest').required).toEqual(['id', 'title', 'cover', 'tag_ids', 'rating', 'rated', 'updated'])
 		expect(operations['authorSpaces.load'].response.schema).toBe('AuthorSpaceWorkspace')
+		expect(operations['authorSpaces.rewards'].response.schema).toBe('AuthorSpaceRewards')
+		expect(operations['authorSpaces.rewards'].request.required).toEqual(['slug'])
 		expect(operations['authorSpaces.team.search'].response.schema).toBe('AuthorSpaceTeamSearch')
 		expect(operations['authorSpaces.team.add'].response.schema).toBe('AuthorSpaceTeamAddition')
 		expect(schema('ShardSet').properties.layout.enum).toEqual(['4x3', '4x4', '5x4'])
@@ -75,8 +77,25 @@ describe('contract manifest', () => {
 		set: null,
 		progress: { unique: 0, required: 0, total: 0, completed: 0 },
 		pieces: {},
-	})).toEqual([])
-  })
+		})).toEqual([])
+		expect(validate('AuthorSpaceRewards', {
+			server_now: 1,
+			gold_to_silver: 10,
+			treasury_silver: 0,
+			payouts: [],
+			week: null,
+			season: null,
+		})).toEqual([])
+		expect(validate('AuthorSpaceRewards', {
+			server_now: 1,
+			gold_to_silver: 10,
+			treasury_silver: 0,
+			payouts: [],
+			week: null,
+			season: null,
+			demo_fallback: 12400,
+		})).toEqual(['$.demo_fallback is not allowed'])
+	})
 })
 
 describe('source adapters', () => {

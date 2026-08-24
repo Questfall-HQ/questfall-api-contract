@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -393,6 +393,14 @@
       "access": "verified",
       "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
       "response": { "schema": "AuthorSpaceWorkspace" }
+    },
+    {
+      "operation": "authorSpaces.rewards",
+      "method": "GET",
+      "path": "/author-spaces/rewards",
+      "access": "verified",
+      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
+      "response": { "schema": "AuthorSpaceRewards" }
     },
     {
       "operation": "spaces.load",

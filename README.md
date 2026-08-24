@@ -15,6 +15,7 @@ registry. Поле `private: true` защищает его от случайно
 - стабильный response schema для критичных domain objects;
 - canonical public enums для items и inventory sync;
 - публичный mining league overview: период, weekly league или global season competition, ranking, progression, reward history и каталог лиг с реальными totals по участникам и Mining Points;
+- verified Team-only Author Space rewards read model: независимые weekly/seasonal Gold pools, live projections, settlement receipts и treasury Silver history;
 - минимальная PocketBase SDK surface, используемая клиентом.
 
 Текущая surface охватывает auth/profile, live Quest Feed и completion/rating,
