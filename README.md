@@ -21,7 +21,8 @@ registry. Поле `private: true` защищает его от случайно
 Текущая surface охватывает auth/profile, live Quest Feed и completion/rating,
 public и owner Author Space flows, media upload lifecycle, player/RPG/economy,
 lootboxes, marketplace и Mining leagues. Chest Shards входят в публичный
-`player`/reward snapshot; admin publishing и settlement routes остаются
+`player`/reward snapshot; `player.character.mining` также содержит серверное
+время, Flow window, Mining Power, Boost и совокупный HUD multiplier. Admin publishing и settlement routes остаются
 internal и намеренно не попадают в client contract.
 
 Контракт не раскрывает внутреннюю PocketBase schema, admin/dev routes,

@@ -23,6 +23,9 @@ describe('contract manifest', () => {
 
   test('exports stable public schemas', () => {
     expect(schema('Player').required).toContain('character')
+		expect(schema('Player').properties.character.properties.mining.$ref).toBe('#/$defs/PlayerMining')
+		expect(schema('PlayerMining').required).toEqual(['week', 'season', 'server_now', 'power', 'boost', 'base_multiplier', 'multiplier', 'flow'])
+		expect(schema('PlayerFlow').required).toEqual(['active', 'started_at', 'ends_at', 'bonus', 'focus_minutes'])
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
     expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
 		expect(schema('AuthorSpaceTagColor').enum).toEqual(['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose', 'slate', 'gray'])
@@ -95,6 +98,22 @@ describe('contract manifest', () => {
 			season: null,
 			demo_fallback: 12400,
 		})).toEqual(['$.demo_fallback is not allowed'])
+		expect(validate('PlayerMining', {
+			week: 120,
+			season: 900,
+			server_now: 1_777_000_000_000,
+			power: 20,
+			boost: 1.5,
+			base_multiplier: 1.8,
+			multiplier: 1.98,
+			flow: {
+				active: true,
+				started_at: 1_777_000_000_000,
+				ends_at: 1_777_000_300_000,
+				bonus: 10,
+				focus_minutes: 5,
+			},
+		})).toEqual([])
 	})
 })
 
