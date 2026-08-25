@@ -57,6 +57,7 @@ describe('contract manifest', () => {
 		expect(schema('QuestViewerState').required).toContain('locked')
 		expect(schema('QuestCard').required).toContain('checklist')
 		expect(schema('QuestCard').properties.checklist.$ref).toBe('#/$defs/QuestChecklist')
+		expect(schema('QuestAuthor').required).toContain('karma')
 		expect(schema('QuestChecklist').maxItems).toBe(5)
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 	})

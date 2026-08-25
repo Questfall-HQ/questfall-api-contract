@@ -457,7 +457,7 @@
     },
     "QuestAuthor": {
       "type": "object",
-      "required": ["id", "slug", "name", "accent", "hue", "avatar", "official"],
+      "required": ["id", "slug", "name", "accent", "hue", "avatar", "official", "karma"],
       "properties": {
         "id": { "type": "string" },
         "slug": { "type": "string" },
@@ -465,7 +465,8 @@
         "accent": { "$ref": "#/$defs/AuthorSpaceAccent" },
         "hue": { "$ref": "#/$defs/AuthorSpaceHue" },
         "avatar": { "type": "string" },
-        "official": { "type": "boolean" }
+        "official": { "type": "boolean" },
+        "karma": { "type": "number", "minimum": 0, "maximum": 10 }
       },
       "additionalProperties": true
     },
