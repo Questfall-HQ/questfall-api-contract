@@ -1153,7 +1153,7 @@
     },
     "LeagueBrowserMiner": {
       "type": "object",
-      "required": ["id", "name", "avatar", "avatar_icon", "level", "mining_power", "quests_7d", "equipment", "systems", "viewer", "position"],
+      "required": ["id", "name", "avatar", "avatar_icon", "level", "mining_power", "points", "quests_7d", "equipment", "systems", "viewer", "position"],
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -1161,6 +1161,7 @@
         "avatar_icon": { "$ref": "#/$defs/Avatar" },
         "level": { "type": "integer", "minimum": 1 },
         "mining_power": { "type": "number", "minimum": 0 },
+		"points": { "type": "integer", "minimum": 0 },
         "quests_7d": { "type": "integer", "minimum": 0 },
         "equipment": {
           "type": "array",

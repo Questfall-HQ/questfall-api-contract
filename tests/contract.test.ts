@@ -44,6 +44,8 @@ describe('contract manifest', () => {
 		expect(schema('ShardReward').required).toEqual(['count', 'drops', 'lootboxes'])
 		expect(schema('MiningLeagueOverview').required).toContain('leagues')
 		expect(schema('MiningLeagueSummary').required).toEqual(['id', 'name', 'hall', 'eligible', 'start_level', 'end_level', 'next_level', 'members', 'participants', 'total_points'])
+		expect(schema('LeagueBrowserMiner').required).toContain('points')
+		expect(schema('LeagueBrowserMiner').properties.points).toEqual({ type: 'integer', minimum: 0 })
 		expect(schema('LeagueBrowserMiner').properties.equipment.maxItems).toBe(6)
 		expect(schema('LeagueBrowserEquipment').properties.item.oneOf[0].$ref).toBe('#/$defs/Item')
 		expect(schema('LeagueBrowser').properties.page.properties.per_page.maximum).toBe(50)
