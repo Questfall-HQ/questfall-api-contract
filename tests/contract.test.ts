@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(75)
+		expect(contract.routes.length).toBe(76)
   })
 
   test('builds parameterized paths safely', () => {
@@ -29,7 +29,7 @@ describe('contract manifest', () => {
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
     expect(schema('AuthorSpaceAccent').enum).toEqual(['violet', 'blue', 'cyan', 'emerald', 'amber', 'orange', 'rose', 'fuchsia'])
 		expect(schema('AuthorSpaceTagColor').enum).toEqual(['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose', 'slate', 'gray'])
-    expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication', 'reward_settlement'])
+    expect(schema('AuthorSpaceBalanceEntryType').enum).toEqual(['transfer', 'donation', 'quest_publication'])
 		expect(schema('AuthorSpaceHue')).toEqual({ type: 'integer', minimum: 0, maximum: 359 })
 		expect(schema('AuthorSpaceCoverOpacity')).toEqual({ type: 'integer', minimum: 0, maximum: 100 })
 		expect(schema('AuthorSpaceTag').properties.color.$ref).toBe('#/$defs/AuthorSpaceTagColor')
@@ -37,6 +37,10 @@ describe('contract manifest', () => {
 		expect(operations['authorSpaces.load'].response.schema).toBe('AuthorSpaceWorkspace')
 		expect(operations['authorSpaces.rewards'].response.schema).toBe('AuthorSpaceRewards')
 		expect(operations['authorSpaces.rewards'].request.required).toEqual(['slug'])
+		expect(operations['authorSpaces.rewards.withdraw'].request.required).toEqual(['slug', 'currency', 'idempotency_key'])
+		expect(schema('AuthorRewardCurrency').enum).toEqual(['gold', 'qft'])
+		expect(schema('AuthorRewardPayout').properties.state.enum).toEqual(['pending', 'withdrawn'])
+		expect(schema('AuthorRewardPeriod').properties.pool.$ref).toBe('#/$defs/AuthorRewardAmount')
 		expect(operations['authorSpaces.team.search'].response.schema).toBe('AuthorSpaceTeamSearch')
 		expect(operations['authorSpaces.team.add'].response.schema).toBe('AuthorSpaceTeamAddition')
 		expect(schema('AuthorSpaceTeamCandidate').required).toContain('level')
@@ -53,6 +57,8 @@ describe('contract manifest', () => {
 		expect(schema('LeagueBrowserMiner').properties.points).toEqual({ type: 'integer', minimum: 0 })
 		expect(schema('LeagueBrowserMiner').properties.equipment.maxItems).toBe(6)
 		expect(schema('LeagueBrowserEquipment').properties.item.oneOf[0].$ref).toBe('#/$defs/Item')
+		expect(schema('LeagueBrowser').required).toContain('series')
+		expect(schema('LeagueBrowser').properties.series.items.$ref).toBe('#/$defs/LeagueBrowserSeriesPoint')
 		expect(schema('LeagueBrowser').properties.page.properties.per_page.maximum).toBe(50)
 		expect(schema('LeagueBrowser').properties.sort.enum).toEqual(['power', 'points', 'quests'])
 		expect(operations['mining.leagues'].request.optional).toContain('sort')
@@ -95,17 +101,19 @@ describe('contract manifest', () => {
 		})).toEqual([])
 		expect(validate('AuthorSpaceRewards', {
 			server_now: 1,
-			gold_to_silver: 10,
-			treasury_silver: 0,
+			access: {owner: true},
+			balances: [],
 			payouts: [],
+			withdrawals: [],
 			week: null,
 			season: null,
 		})).toEqual([])
 		expect(validate('AuthorSpaceRewards', {
 			server_now: 1,
-			gold_to_silver: 10,
-			treasury_silver: 0,
+			access: {owner: false},
+			balances: [],
 			payouts: [],
+			withdrawals: [],
 			week: null,
 			season: null,
 			demo_fallback: 12400,

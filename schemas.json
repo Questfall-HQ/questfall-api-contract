@@ -128,7 +128,7 @@
     },
     "AuthorSpaceBalanceEntryType": {
       "type": "string",
-      "enum": ["transfer", "donation", "quest_publication", "reward_settlement"]
+      "enum": ["transfer", "donation", "quest_publication"]
     },
     "AuthorSpaceBalanceEntry": {
       "type": "object",
@@ -146,23 +146,7 @@
           },
           "additionalProperties": true
         },
-        "created": { "type": ["integer", "string"] },
-        "metadata": {
-          "oneOf": [
-            {
-              "type": "object",
-              "required": ["scope", "period", "reward_gold", "credited_silver"],
-              "properties": {
-                "scope": { "enum": ["week", "season"] },
-                "period": { "type": "string" },
-                "reward_gold": { "type": "integer", "minimum": 0 },
-                "credited_silver": { "type": "integer", "minimum": 0 }
-              },
-              "additionalProperties": false
-            },
-            { "type": "null" }
-          ]
-        }
+        "created": { "type": ["integer", "string"] }
       },
       "additionalProperties": true
     },
@@ -204,14 +188,26 @@
       "type": "string",
       "enum": ["week", "season"]
     },
+    "AuthorRewardCurrency": {
+      "type": "string",
+      "enum": ["gold", "qft"]
+    },
+    "AuthorRewardAmount": {
+      "type": "object",
+      "required": ["currency", "amount"],
+      "properties": {
+        "currency": { "$ref": "#/$defs/AuthorRewardCurrency" },
+        "amount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
     "AuthorRewardSettlement": {
       "type": "object",
-      "required": ["settled", "allocated_gold", "unallocated_gold", "credited_silver", "payout_count"],
+      "required": ["settled", "allocated", "unallocated", "payout_count"],
       "properties": {
         "settled": { "type": "integer", "minimum": 0 },
-        "allocated_gold": { "type": "integer", "minimum": 0 },
-        "unallocated_gold": { "type": "integer", "minimum": 0 },
-        "credited_silver": { "type": "integer", "minimum": 0 },
+        "allocated": { "$ref": "#/$defs/AuthorRewardAmount" },
+        "unallocated": { "$ref": "#/$defs/AuthorRewardAmount" },
         "payout_count": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
@@ -233,13 +229,12 @@
     },
     "AuthorRewardPosition": {
       "type": "object",
-      "required": ["score", "karma_band", "rank", "reward_gold", "credited_silver", "quest_count", "completions", "rated_quests", "rating_average", "qualified"],
+      "required": ["score", "karma_band", "rank", "reward", "quest_count", "completions", "rated_quests", "rating_average", "qualified"],
       "properties": {
         "score": { "type": "integer", "minimum": 0 },
         "karma_band": { "type": "integer", "minimum": 0, "maximum": 9 },
         "rank": { "type": ["integer", "null"], "minimum": 1 },
-        "reward_gold": { "type": "integer", "minimum": 0 },
-        "credited_silver": { "type": "integer", "minimum": 0 },
+        "reward": { "$ref": "#/$defs/AuthorRewardAmount" },
         "quest_count": { "type": "integer", "minimum": 0 },
         "completions": { "type": "integer", "minimum": 0 },
         "rated_quests": { "type": "integer", "minimum": 0 },
@@ -250,14 +245,13 @@
     },
     "AuthorRewardLeaderboardEntry": {
       "type": "object",
-      "required": ["space", "score", "karma_band", "rank", "reward_gold", "credited_silver", "quest_count", "completions", "rated_quests", "rating_average", "qualified"],
+      "required": ["space", "score", "karma_band", "rank", "reward", "quest_count", "completions", "rated_quests", "rating_average", "qualified"],
       "properties": {
         "space": { "$ref": "#/$defs/AuthorRewardSpace" },
         "score": { "type": "integer", "minimum": 0 },
         "karma_band": { "type": "integer", "minimum": 0, "maximum": 9 },
         "rank": { "type": ["integer", "null"], "minimum": 1 },
-        "reward_gold": { "type": "integer", "minimum": 0 },
-        "credited_silver": { "type": "integer", "minimum": 0 },
+        "reward": { "$ref": "#/$defs/AuthorRewardAmount" },
         "quest_count": { "type": "integer", "minimum": 0 },
         "completions": { "type": "integer", "minimum": 0 },
         "rated_quests": { "type": "integer", "minimum": 0 },
@@ -287,14 +281,13 @@
     },
     "AuthorRewardKarmaBand": {
       "type": "object",
-      "required": ["id", "weight", "score", "spaces", "pool_gold", "pool_silver"],
+      "required": ["id", "weight", "score", "spaces", "pool"],
       "properties": {
         "id": { "type": "integer", "minimum": 0, "maximum": 9 },
         "weight": { "type": "integer", "minimum": 0, "maximum": 9 },
         "score": { "type": "integer", "minimum": 0 },
         "spaces": { "type": "integer", "minimum": 0 },
-        "pool_gold": { "type": "integer", "minimum": 0 },
-        "pool_silver": { "type": "integer", "minimum": 0 }
+        "pool": { "$ref": "#/$defs/AuthorRewardAmount" }
       },
       "additionalProperties": false
     },
@@ -310,17 +303,17 @@
     },
     "AuthorRewardRankShare": {
       "type": "object",
-      "required": ["rank", "shares", "reward_gold"],
+      "required": ["rank", "shares", "reward"],
       "properties": {
         "rank": { "type": "integer", "minimum": 1 },
         "shares": { "type": "integer", "minimum": 1 },
-        "reward_gold": { "type": "integer", "minimum": 0 }
+        "reward": { "$ref": "#/$defs/AuthorRewardAmount" }
       },
       "additionalProperties": false
     },
     "AuthorRewardConditionalProjection": {
       "type": "object",
-      "required": ["conditional", "assumption", "missing_quests", "projected_rated_quests", "rating_average", "rank", "cutoff", "qualified", "reward_gold", "credited_silver"],
+      "required": ["conditional", "assumption", "missing_quests", "projected_rated_quests", "rating_average", "rank", "cutoff", "qualified", "reward"],
       "properties": {
         "conditional": { "const": true },
         "assumption": { "const": "current_average" },
@@ -330,14 +323,13 @@
         "rank": { "type": "integer", "minimum": 1 },
         "cutoff": { "type": "integer", "minimum": 1 },
         "qualified": { "type": "boolean" },
-        "reward_gold": { "type": "integer", "minimum": 0 },
-        "credited_silver": { "type": "integer", "minimum": 0 }
+        "reward": { "$ref": "#/$defs/AuthorRewardAmount" }
       },
       "additionalProperties": false
     },
     "AuthorRewardPeriod": {
       "type": "object",
-      "required": ["scope", "period", "start", "end", "state", "tracking_start", "pool_gold", "pool_silver", "settlement", "space", "leaderboard", "quests"],
+      "required": ["scope", "period", "start", "end", "state", "tracking_start", "pool", "settlement", "space", "leaderboard", "quests"],
       "properties": {
         "scope": { "$ref": "#/$defs/AuthorRewardScope" },
         "period": { "type": "string" },
@@ -345,8 +337,7 @@
         "end": { "type": "integer", "minimum": 0 },
         "state": { "enum": ["upcoming", "active", "settling", "settled"] },
         "tracking_start": { "type": "integer", "minimum": 0 },
-        "pool_gold": { "type": "integer", "minimum": 1 },
-        "pool_silver": { "type": "integer", "minimum": 10 },
+        "pool": { "$ref": "#/$defs/AuthorRewardAmount" },
         "settlement": { "$ref": "#/$defs/AuthorRewardSettlement" },
         "space": { "$ref": "#/$defs/AuthorRewardPosition" },
         "leaderboard": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardLeaderboardEntry" } },
@@ -365,28 +356,74 @@
     },
     "AuthorRewardPayout": {
       "type": "object",
-      "required": ["id", "scope", "period", "reward_gold", "credited_silver", "score", "rank", "karma_band", "created"],
+      "required": ["id", "scope", "period", "currency", "amount", "state", "withdrawal_id", "score", "rank", "karma_band", "created", "withdrawn"],
       "properties": {
         "id": { "type": "string" },
         "scope": { "$ref": "#/$defs/AuthorRewardScope" },
         "period": { "type": "string" },
-        "reward_gold": { "type": "integer", "minimum": 1 },
-        "credited_silver": { "type": "integer", "minimum": 10 },
+        "currency": { "$ref": "#/$defs/AuthorRewardCurrency" },
+        "amount": { "type": "integer", "minimum": 1 },
+        "state": { "enum": ["pending", "withdrawn"] },
+        "withdrawal_id": { "type": ["string", "null"] },
         "score": { "type": "integer", "minimum": 0 },
         "rank": { "type": "integer", "minimum": 1 },
         "karma_band": { "type": "integer", "minimum": 0, "maximum": 9 },
+        "created": { "type": "integer", "minimum": 0 },
+        "withdrawn": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardBalance": {
+      "type": "object",
+      "required": ["currency", "earned", "available", "withdrawn", "pending_count"],
+      "properties": {
+        "currency": { "$ref": "#/$defs/AuthorRewardCurrency" },
+        "earned": { "type": "integer", "minimum": 0 },
+        "available": { "type": "integer", "minimum": 0 },
+        "withdrawn": { "type": "integer", "minimum": 0 },
+        "pending_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardWithdrawalPayout": {
+      "type": "object",
+      "required": ["id", "scope", "period", "amount"],
+      "properties": {
+        "id": { "type": "string" },
+        "scope": { "$ref": "#/$defs/AuthorRewardScope" },
+        "period": { "type": "string" },
+        "amount": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardWithdrawal": {
+      "type": "object",
+      "required": ["id", "currency", "amount", "count", "payouts", "periods", "created"],
+      "properties": {
+        "id": { "type": "string" },
+        "currency": { "$ref": "#/$defs/AuthorRewardCurrency" },
+        "amount": { "type": "integer", "minimum": 1 },
+        "count": { "type": "integer", "minimum": 1 },
+        "payouts": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardWithdrawalPayout" } },
+        "periods": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
         "created": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
     "AuthorSpaceRewards": {
       "type": "object",
-      "required": ["server_now", "gold_to_silver", "treasury_silver", "payouts", "week", "season"],
+      "required": ["server_now", "access", "balances", "payouts", "withdrawals", "week", "season"],
       "properties": {
         "server_now": { "type": "integer", "minimum": 0 },
-        "gold_to_silver": { "const": 10 },
-        "treasury_silver": { "type": "integer", "minimum": 0 },
+        "access": {
+          "type": "object",
+          "required": ["owner"],
+          "properties": { "owner": { "type": "boolean" } },
+          "additionalProperties": false
+        },
+        "balances": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardBalance" } },
         "payouts": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardPayout" } },
+        "withdrawals": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardWithdrawal" } },
         "week": {
           "oneOf": [
             { "$ref": "#/$defs/AuthorRewardPeriod" },
@@ -399,6 +436,17 @@
             { "type": "null" }
           ]
         }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardWithdrawalResult": {
+      "type": "object",
+      "required": ["idempotent", "withdrawal", "balances", "player"],
+      "properties": {
+        "idempotent": { "type": "boolean" },
+        "withdrawal": { "$ref": "#/$defs/AuthorRewardWithdrawal" },
+        "balances": { "type": "array", "items": { "$ref": "#/$defs/AuthorRewardBalance" } },
+        "player": { "$ref": "#/$defs/Player" }
       },
       "additionalProperties": false
     },
@@ -1186,9 +1234,20 @@
       },
       "additionalProperties": false
     },
+    "LeagueBrowserSeriesPoint": {
+      "type": "object",
+      "required": ["start", "end", "competition_points", "viewer_points"],
+      "properties": {
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 0 },
+        "competition_points": { "type": "integer", "minimum": 0 },
+        "viewer_points": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
     "LeagueBrowser": {
       "type": "object",
-      "required": ["server_now", "viewer", "league", "leagues", "view", "sort", "direction", "page", "items", "selected"],
+      "required": ["server_now", "viewer", "league", "leagues", "series", "view", "sort", "direction", "page", "items", "selected"],
       "properties": {
         "server_now": { "type": "integer", "minimum": 0 },
         "viewer": {
@@ -1202,6 +1261,7 @@
         },
         "league": { "$ref": "#/$defs/MiningLeague" },
         "leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueSummary" } },
+        "series": { "type": "array", "items": { "$ref": "#/$defs/LeagueBrowserSeriesPoint" } },
         "view": { "enum": ["field", "list"] },
         "sort": { "enum": ["power", "points", "quests"] },
         "direction": { "enum": ["asc", "desc"] },

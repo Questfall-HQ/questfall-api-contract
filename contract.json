@@ -403,6 +403,14 @@
       "response": { "schema": "AuthorSpaceRewards" }
     },
     {
+      "operation": "authorSpaces.rewards.withdraw",
+      "method": "POST",
+      "path": "/author-spaces/rewards/withdraw",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["slug", "currency", "idempotency_key"], "optional": [] },
+      "response": { "schema": "AuthorRewardWithdrawalResult" }
+    },
+    {
       "operation": "spaces.load",
       "method": "GET",
       "path": "/spaces/load",
