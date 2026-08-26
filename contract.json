@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "2.4.0",
+  "version": "3.2.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -321,6 +321,14 @@
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": [], "optional": [] },
       "response": { "schema": "QuestRatingAssignments" }
+    },
+    {
+      "operation": "quests.ratings",
+      "method": "GET",
+      "path": "/quests/ratings",
+      "access": "verified",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "QuestRatingHistory" }
     },
     {
       "operation": "quests.complete",

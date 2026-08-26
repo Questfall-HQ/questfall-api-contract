@@ -674,6 +674,119 @@
       },
       "additionalProperties": true
     },
+    "QuestRatingHistoryBoost": {
+      "type": "object",
+      "required": ["before", "after", "delta"],
+      "properties": {
+        "before": { "type": ["number", "null"], "minimum": 0 },
+        "after": { "type": ["number", "null"], "minimum": 0 },
+        "delta": { "type": ["number", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingHistoryAuthor": {
+      "type": "object",
+      "required": ["id", "slug", "name", "accent", "hue", "avatar", "karma"],
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "name": { "type": "string" },
+        "accent": { "$ref": "#/$defs/AuthorSpaceAccent" },
+        "hue": { "$ref": "#/$defs/AuthorSpaceHue" },
+        "avatar": { "type": "string" },
+        "karma": { "type": "number", "minimum": 0, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingHistoryQuest": {
+      "type": "object",
+      "required": ["id", "title", "cover", "author"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "cover": { "type": "string" },
+        "author": { "$ref": "#/$defs/QuestRatingHistoryAuthor" }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingDistributionBin": {
+      "type": "object",
+      "required": ["value", "count"],
+      "properties": {
+        "value": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingRoundProgress": {
+      "type": "object",
+      "required": ["current", "target"],
+      "properties": {
+        "current": { "type": "integer", "minimum": 0 },
+        "target": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingHistoryRound": {
+      "type": "object",
+      "required": ["id", "status", "closed", "progress", "total_votes", "distribution"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "enum": ["open", "closed"] },
+        "closed": { "type": "integer", "minimum": 0 },
+        "progress": { "$ref": "#/$defs/QuestRatingRoundProgress" },
+        "total_votes": { "type": ["integer", "null"], "minimum": 0 },
+        "distribution": {
+          "oneOf": [
+            {
+              "type": "array",
+              "minItems": 11,
+              "maxItems": 11,
+              "items": { "$ref": "#/$defs/QuestRatingDistributionBin" }
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingHistoryItem": {
+      "type": "object",
+      "required": ["id", "status", "vote", "created", "settled_at", "comparison_rating", "distance", "canonical", "boost", "quest", "round"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "enum": ["pending", "settled"] },
+        "vote": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "created": { "type": "integer", "minimum": 0 },
+        "settled_at": { "type": "integer", "minimum": 0 },
+        "comparison_rating": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "distance": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "canonical": { "type": ["boolean", "null"] },
+        "boost": { "$ref": "#/$defs/QuestRatingHistoryBoost" },
+        "quest": { "$ref": "#/$defs/QuestRatingHistoryQuest" },
+        "round": { "$ref": "#/$defs/QuestRatingHistoryRound" }
+      },
+      "additionalProperties": false
+    },
+    "QuestRatingHistory": {
+      "type": "object",
+      "required": ["server_now", "summary", "items"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "summary": {
+          "type": "object",
+          "required": ["mining_boost", "pending", "settled"],
+          "properties": {
+            "mining_boost": { "type": "number", "minimum": 0 },
+            "pending": { "type": "integer", "minimum": 0 },
+            "settled": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/QuestRatingHistoryItem" } }
+      },
+      "additionalProperties": false
+    },
     "ShardSet": {
       "type": "object",
       "required": ["id", "period", "start", "end", "layout", "columns", "rows", "count", "image"],
