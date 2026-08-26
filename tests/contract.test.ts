@@ -49,6 +49,7 @@ describe('contract manifest', () => {
 		expect(schema('LeagueBrowserMiner').properties.equipment.maxItems).toBe(6)
 		expect(schema('LeagueBrowserEquipment').properties.item.oneOf[0].$ref).toBe('#/$defs/Item')
 		expect(schema('LeagueBrowser').properties.page.properties.per_page.maximum).toBe(50)
+		expect(schema('LeagueBrowser').properties.sort.enum).toEqual(['power', 'points', 'quests'])
 		expect(operations['mining.leagues'].request.optional).toContain('sort')
 		expect(operations['mining.rewards.claim'].request.required).toEqual(['idempotency_key'])
 		expect(schema('MiningPayoutScope').enum).toEqual(['week', 'season'])

@@ -1202,7 +1202,7 @@
         "league": { "$ref": "#/$defs/MiningLeague" },
         "leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueSummary" } },
         "view": { "enum": ["field", "list"] },
-        "sort": { "enum": ["power", "quests"] },
+        "sort": { "enum": ["power", "points", "quests"] },
         "direction": { "enum": ["asc", "desc"] },
         "page": {
           "type": "object",
