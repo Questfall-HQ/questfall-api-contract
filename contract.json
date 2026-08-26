@@ -208,7 +208,7 @@
       "path": "/marketplace/list",
       "access": "public",
       "request": { "transport": "query", "params": [], "required": [], "optional": ["q", "slots", "rarities", "wear", "set", "origin", "attr", "target", "min_price", "max_price", "seller", "sort", "page", "perPage"] },
-      "response": { "schema": "Page" }
+      "response": { "schema": "MarketplacePage" }
     },
     {
       "operation": "marketplace.mine",

@@ -94,12 +94,13 @@
     },
     "AuthorSpaceTeamCandidate": {
       "type": "object",
-      "required": ["id", "name", "avatar", "avatar_icon", "email_hint"],
+      "required": ["id", "name", "avatar", "avatar_icon", "level", "email_hint"],
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
         "avatar": {},
         "avatar_icon": { "type": ["object", "null"] },
+        "level": { "type": "integer", "minimum": 1 },
         "email_hint": { "type": "string" }
       },
       "additionalProperties": true
@@ -1498,6 +1499,53 @@
       "required": ["quote"],
       "properties": {
         "quote": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "MarketplaceUser": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "level"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": {},
+        "avatar_icon": { "type": ["object", "null"] },
+        "level": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": true
+    },
+    "MarketplaceListing": {
+      "type": "object",
+      "required": ["id", "seller", "seller_profile"],
+      "properties": {
+        "id": { "type": "string" },
+        "seller": { "type": "string" },
+        "seller_profile": { "$ref": "#/$defs/MarketplaceUser" }
+      },
+      "additionalProperties": true
+    },
+    "MarketplacePage": {
+      "type": "object",
+      "required": ["items", "filters", "page"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/MarketplaceListing" }
+        },
+        "filters": { "type": "object", "additionalProperties": true },
+        "page": {
+          "type": "object",
+          "required": ["page", "per_page", "total", "pages", "has_prev", "has_next"],
+          "properties": {
+            "page": { "type": "integer", "minimum": 1 },
+            "per_page": { "type": "integer", "minimum": 1, "maximum": 100 },
+            "total": { "type": "integer", "minimum": 0 },
+            "pages": { "type": "integer", "minimum": 1 },
+            "has_prev": { "type": "boolean" },
+            "has_next": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": true
     },
