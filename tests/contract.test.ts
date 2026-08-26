@@ -63,6 +63,8 @@ describe('contract manifest', () => {
 		expect(schema('QuestAuthor').required).toContain('karma')
 		expect(schema('QuestChecklist').maxItems).toBe(5)
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
+		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
+		expect(operations['quests.complete'].request.optional).toContain('rating')
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {

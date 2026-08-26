@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -327,7 +327,7 @@
       "method": "POST",
       "path": "/quests/complete",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key", "rating"], "optional": ["answer", "option"] },
+      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": ["answer", "option", "rating"] },
       "response": { "schema": "QuestCompletion" }
     },
     {
