@@ -503,7 +503,7 @@
         "slot": { "type": "integer", "minimum": 1, "maximum": 10 },
         "effective_bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
         "expires": { "type": "integer", "minimum": 0 },
-        "requires_rating": { "const": true }
+        "requires_rating": { "type": "boolean", "description": "True until the selected player records the assignment's single immutable rating vote." }
       },
       "additionalProperties": true
     },
@@ -713,7 +713,7 @@
         "attempt_multiplier": { "enum": [1, 0.8, 0.6, 0.4, 0.2] },
         "points": { "type": "integer", "minimum": 0 },
         "assignment_id": { "type": "string" },
-        "rating_vote": { "type": ["integer", "null"], "minimum": 0, "maximum": 10 },
+        "rating_vote": { "type": ["integer", "null"], "minimum": 0, "maximum": 10, "description": "The assignment's immutable vote, including when this particular quest attempt was rejected; null for ordinary completions." },
         "idempotent": { "type": "boolean" },
         "claimable": { "type": "boolean" },
         "reward": {

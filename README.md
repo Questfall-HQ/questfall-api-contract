@@ -29,6 +29,13 @@ internal и намеренно не попадают в client contract.
 RPG-формулы или реализацию actions. `additionalProperties: true` в schema
 сознательно разрешает additive response fields без breaking release.
 
+В rating-flow поле `rating` у completion обязательно только пока системное
+назначение возвращает `requires_rating: true`. Первая структурно валидная
+попытка фиксирует один неизменяемый голос даже при `accepted: false`, поэтому
+ответ на отклонённую попытку может содержать числовой `rating_vote`. Повторные
+попытки того же назначения идут с `requires_rating: false`; обычные прохождения
+по-прежнему возвращают `rating_vote: null`.
+
 ## Подключение
 
 Потребители фиксируют Git tag. Если consumer хранит lockfile в Git, обновление

@@ -62,6 +62,7 @@ describe('contract manifest', () => {
 		expect(schema('QuestCard').properties.checklist.$ref).toBe('#/$defs/QuestChecklist')
 		expect(schema('QuestAuthor').required).toContain('karma')
 		expect(schema('QuestChecklist').maxItems).toBe(5)
+		expect(schema('QuestCardAssignment').properties.requires_rating.type).toBe('boolean')
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
 		expect(operations['quests.complete'].request.optional).toContain('rating')
@@ -119,6 +120,20 @@ describe('contract manifest', () => {
 				bonus: 10,
 				focus_minutes: 5,
 			},
+		})).toEqual([])
+		expect(validate('QuestCardAssignment', {id: 'assignment', slot: 1, effective_bounty: 100, expires: 1, requires_rating: false})).toEqual([])
+		expect(validate('QuestCompletion', {
+			id: 'submission',
+			quest_id: 'quest',
+			accepted: false,
+			exhausted: false,
+			attempt: 1,
+			attempt_multiplier: 1,
+			points: 0,
+			assignment_id: 'assignment',
+			rating_vote: 7,
+			idempotent: false,
+			claimable: false,
 		})).toEqual([])
 	})
 })
