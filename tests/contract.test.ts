@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(77)
+		expect(contract.routes.length).toBe(78)
   })
 
   test('builds parameterized paths safely', () => {
@@ -76,9 +76,16 @@ describe('contract manifest', () => {
 		expect(schema('QuestViewerState').required).toContain('locked')
 		expect(schema('QuestCard').required).toContain('checklist')
 		expect(schema('QuestCard').properties.checklist.$ref).toBe('#/$defs/QuestChecklist')
+		expect(schema('QuestCard').required).toContain('bounty')
+		expect(schema('QuestCard').required).toContain('base_points')
 		expect(schema('QuestAuthor').required).toContain('karma')
 		expect(schema('QuestChecklist').maxItems).toBe(5)
 		expect(schema('QuestCardAssignment').properties.requires_rating.type).toBe('boolean')
+		expect(operations['quests.feedChanges'].request.required).toEqual(['feed_revision', 'assignment_revision', 'known_ids'])
+		expect(operations['quests.feedChanges'].response.schema).toBe('QuestFeedChanges')
+		expect(schema('QuestFeed').required).toContain('feed_revision')
+		expect(schema('QuestFeedChanges').properties.upsert.items.$ref).toBe('#/$defs/QuestCard')
+		expect(schema('QuestRatingAssignments').required).toContain('cards')
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
 		expect(operations['quests.complete'].request.optional).toContain('rating')

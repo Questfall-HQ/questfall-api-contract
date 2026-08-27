@@ -584,7 +584,7 @@
     },
     "QuestCard": {
       "type": "object",
-      "required": ["id", "type", "title", "description", "instructions", "checklist", "config", "cover", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
+      "required": ["id", "type", "title", "description", "instructions", "checklist", "config", "cover", "bounty", "base_points", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
       "properties": {
         "id": { "type": "string" },
         "type": { "$ref": "#/$defs/QuestType" },
@@ -594,6 +594,8 @@
         "checklist": { "$ref": "#/$defs/QuestChecklist" },
         "config": { "$ref": "#/$defs/QuestPublicConfig" },
         "cover": { "type": "string" },
+        "bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "base_points": { "type": "integer", "minimum": 0 },
         "points": { "type": "integer", "minimum": 0 },
         "reward": { "$ref": "#/$defs/QuestReward" },
         "rating": { "type": "number", "minimum": 0, "maximum": 10 },
@@ -609,12 +611,31 @@
     },
     "QuestFeed": {
       "type": "object",
-      "required": ["tab", "server_now", "items", "next_cursor"],
+      "required": ["tab", "server_now", "feed_revision", "assignment_revision", "items", "next_cursor", "next_assignment_check"],
       "properties": {
         "tab": { "$ref": "#/$defs/QuestFeedTab" },
         "server_now": { "type": "integer", "minimum": 0 },
+        "feed_revision": { "type": "integer", "minimum": 0 },
+        "assignment_revision": { "type": "integer", "minimum": 0 },
         "items": { "type": "array", "items": { "$ref": "#/$defs/QuestCard" } },
-        "next_cursor": { "type": "string" }
+        "next_cursor": { "type": "string" },
+        "next_assignment_check": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "QuestFeedChanges": {
+      "type": "object",
+      "required": ["server_now", "feed_revision", "assignment_revision", "unchanged", "order", "upsert", "remove", "next_cursor", "next_assignment_check"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "feed_revision": { "type": "integer", "minimum": 0 },
+        "assignment_revision": { "type": "integer", "minimum": 0 },
+        "unchanged": { "type": "boolean" },
+        "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+        "upsert": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+        "next_cursor": { "type": "string" },
+        "next_assignment_check": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": true
     },
@@ -667,10 +688,17 @@
     },
     "QuestRatingAssignments": {
       "type": "object",
-      "required": ["server_now", "assignments"],
+      "required": ["server_now", "feed_revision", "assignment_revision", "assignments", "cards", "order", "remove", "next_cursor", "next_assignment_check"],
       "properties": {
         "server_now": { "type": "integer", "minimum": 0 },
-        "assignments": { "type": "array", "maxItems": 10, "items": { "$ref": "#/$defs/QuestRatingAssignment" } }
+        "feed_revision": { "type": "integer", "minimum": 0 },
+        "assignment_revision": { "type": "integer", "minimum": 0 },
+        "assignments": { "type": "array", "maxItems": 10, "items": { "$ref": "#/$defs/QuestRatingAssignment" } },
+        "cards": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+        "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+        "next_cursor": { "type": "string" },
+        "next_assignment_check": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": true
     },
