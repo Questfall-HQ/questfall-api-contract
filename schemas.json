@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/3.4.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/3.6.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -80,7 +80,14 @@
       "type": "object",
       "required": ["space", "groups", "quests"],
       "properties": {
-        "space": { "type": "object", "additionalProperties": true },
+        "space": {
+          "type": "object",
+          "required": ["official"],
+          "properties": {
+            "official": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        },
         "groups": {
           "type": "array",
           "items": { "$ref": "#/$defs/AuthorSpaceTag" }
@@ -714,7 +721,7 @@
     },
     "QuestRatingHistoryAuthor": {
       "type": "object",
-      "required": ["id", "slug", "name", "accent", "hue", "avatar", "karma"],
+      "required": ["id", "slug", "name", "accent", "hue", "avatar", "official", "karma"],
       "properties": {
         "id": { "type": "string" },
         "slug": { "type": "string" },
@@ -722,6 +729,7 @@
         "accent": { "$ref": "#/$defs/AuthorSpaceAccent" },
         "hue": { "$ref": "#/$defs/AuthorSpaceHue" },
         "avatar": { "type": "string" },
+        "official": { "type": "boolean" },
         "karma": { "type": "number", "minimum": 0, "maximum": 10 }
       },
       "additionalProperties": false

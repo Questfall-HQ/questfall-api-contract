@@ -35,6 +35,8 @@ describe('contract manifest', () => {
 		expect(schema('AuthorSpaceTag').properties.color.$ref).toBe('#/$defs/AuthorSpaceTagColor')
 		expect(schema('AuthorSpaceRatedQuest').required).toEqual(['id', 'title', 'cover', 'tag_ids', 'rating', 'rated', 'updated'])
 		expect(operations['authorSpaces.load'].response.schema).toBe('AuthorSpaceWorkspace')
+		expect(schema('AuthorSpaceWorkspace').properties.space.required).toContain('official')
+		expect(schema('AuthorSpaceWorkspace').properties.space.properties.official).toEqual({ type: 'boolean' })
 		expect(operations['authorSpaces.rewards'].response.schema).toBe('AuthorSpaceRewards')
 		expect(operations['authorSpaces.rewards'].request.required).toEqual(['slug'])
 		expect(operations['authorSpaces.rewards.withdraw'].request.required).toEqual(['slug', 'currency', 'idempotency_key'])
@@ -91,6 +93,8 @@ describe('contract manifest', () => {
 		expect(operations['quests.complete'].request.optional).toContain('rating')
 		expect(schema('QuestRatingDistributionBin').required).toContain('users')
 		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
+		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')
+		expect(schema('QuestRatingHistoryAuthor').properties.official).toEqual({ type: 'boolean' })
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {
