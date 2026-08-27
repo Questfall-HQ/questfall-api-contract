@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -512,6 +512,14 @@
       "path": "/author-spaces/quests/move",
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["tag_ids", "group", "group_id", "position"] },
+      "response": { "schema": "Object" }
+    },
+    {
+      "operation": "authorSpaces.quests.duplicate",
+      "method": "POST",
+      "path": "/author-spaces/quests/duplicate",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
       "response": { "schema": "Object" }
     },
     {

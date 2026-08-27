@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(78)
+		expect(contract.routes.length).toBe(79)
   })
 
   test('builds parameterized paths safely', () => {
@@ -48,6 +48,7 @@ describe('contract manifest', () => {
 		expect(schema('AuthorRewardKarmaBand').properties.weight.maximum).toBe(10)
 		expect(operations['authorSpaces.team.search'].response.schema).toBe('AuthorSpaceTeamSearch')
 		expect(operations['authorSpaces.team.add'].response.schema).toBe('AuthorSpaceTeamAddition')
+		expect(operations['authorSpaces.quests.duplicate'].request.required).toEqual(['id'])
 		expect(schema('AuthorSpaceTeamCandidate').required).toContain('level')
 		expect(schema('AuthorSpaceTeamCandidate').properties.level).toEqual({ type: 'integer', minimum: 1 })
 		expect(operations['marketplace.list'].response.schema).toBe('MarketplacePage')
