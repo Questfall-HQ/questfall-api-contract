@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/1.4.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/3.4.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -709,12 +709,25 @@
       },
       "additionalProperties": false
     },
+    "QuestRatingHistoryUser": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "level"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": {},
+        "avatar_icon": { "type": ["object", "null"] },
+        "level": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
     "QuestRatingDistributionBin": {
       "type": "object",
-      "required": ["value", "count"],
+      "required": ["value", "count", "users"],
       "properties": {
         "value": { "type": "integer", "minimum": 0, "maximum": 10 },
-        "count": { "type": "integer", "minimum": 0 }
+        "count": { "type": "integer", "minimum": 0 },
+        "users": { "type": "array", "items": { "$ref": "#/$defs/QuestRatingHistoryUser" } }
       },
       "additionalProperties": false
     },

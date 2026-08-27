@@ -82,6 +82,8 @@ describe('contract manifest', () => {
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
 		expect(operations['quests.complete'].request.optional).toContain('rating')
+		expect(schema('QuestRatingDistributionBin').required).toContain('users')
+		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {
