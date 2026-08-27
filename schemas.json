@@ -795,10 +795,10 @@
         "period": { "type": "string" },
         "start": { "type": "integer", "minimum": 0 },
         "end": { "type": "integer", "minimum": 0 },
-        "layout": { "enum": ["4x3", "4x4", "5x4"] },
-        "columns": { "type": "integer", "minimum": 4, "maximum": 5 },
-        "rows": { "type": "integer", "minimum": 3, "maximum": 4 },
-        "count": { "enum": [12, 16, 20] },
+        "layout": { "enum": ["2x2", "3x2", "3x3", "4x3", "4x4", "5x4"] },
+        "columns": { "type": "integer", "minimum": 2, "maximum": 5 },
+        "rows": { "type": "integer", "minimum": 2, "maximum": 4 },
+        "count": { "enum": [4, 6, 9, 12, 16, 20] },
         "image": {
           "type": "object",
           "required": ["url", "thumb", "width", "height"],
@@ -818,7 +818,7 @@
       "required": ["unique", "required", "total", "completed"],
       "properties": {
         "unique": { "type": "integer", "minimum": 0 },
-        "required": { "enum": [0, 12, 16, 20] },
+        "required": { "enum": [0, 4, 6, 9, 12, 16, 20] },
         "total": { "type": "integer", "minimum": 0 },
         "completed": { "type": "integer", "minimum": 0 }
       },

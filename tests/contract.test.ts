@@ -51,7 +51,9 @@ describe('contract manifest', () => {
 		expect(operations['marketplace.list'].response.schema).toBe('MarketplacePage')
 		expect(schema('MarketplaceUser').required).toContain('level')
 		expect(schema('MarketplaceUser').properties.level).toEqual({ type: 'integer', minimum: 1 })
-		expect(schema('ShardSet').properties.layout.enum).toEqual(['4x3', '4x4', '5x4'])
+		expect(schema('ShardSet').properties.layout.enum).toEqual(['2x2', '3x2', '3x3', '4x3', '4x4', '5x4'])
+		expect(schema('ShardSet').properties.count.enum).toEqual([4, 6, 9, 12, 16, 20])
+		expect(schema('ShardProgress').properties.required.enum).toEqual([0, 4, 6, 9, 12, 16, 20])
 		expect(schema('ShardState').required).toEqual(['active', 'period', 'set', 'progress', 'pieces'])
 		expect(schema('ShardReward').required).toEqual(['count', 'drops', 'lootboxes'])
 		expect(schema('MiningLeagueOverview').required).toContain('leagues')
@@ -101,6 +103,17 @@ describe('contract manifest', () => {
 		set: null,
 		progress: { unique: 0, required: 0, total: 0, completed: 0 },
 		pieces: {},
+		})).toEqual([])
+		expect(validate('ShardState', {
+		active: true,
+		period: '2026-W36',
+		set: {
+			id: 'set', period: '2026-W36', start: 1, end: 2,
+			layout: '3x2', columns: 3, rows: 2, count: 6,
+			image: {url: 'https://media.example/set', thumb: 'https://media.example/thumb', width: 1200, height: 800},
+		},
+		progress: {unique: 1, required: 6, total: 1, completed: 0},
+		pieces: {p01: 1},
 		})).toEqual([])
 		expect(validate('AuthorSpaceRewards', {
 			server_now: 1,
