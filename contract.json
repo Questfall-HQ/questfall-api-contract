@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "3.7.0",
+  "version": "4.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -377,6 +377,14 @@
       "access": "verified",
       "request": { "transport": "query", "params": [], "required": [], "optional": ["league", "view", "sort", "direction", "page", "per_page", "miner"] },
       "response": { "schema": "LeagueBrowser" }
+    },
+    {
+      "operation": "mining.leagues.catalog",
+      "method": "GET",
+      "path": "/mining/leagues/catalog",
+      "access": "public",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "MiningLeagueCatalog" }
     },
     {
       "operation": "mining.rewards",

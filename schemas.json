@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/3.6.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/4.0.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1049,30 +1049,34 @@
     },
     "MiningLeague": {
       "type": "object",
-      "required": ["id", "name", "hall", "eligible", "start_level", "end_level", "next_level", "members"],
+      "required": ["id", "name", "hall", "eligible", "open", "frontier", "start_level", "end_level", "next_level", "members"],
       "properties": {
         "id": { "type": "integer", "minimum": 0 },
         "name": { "type": "string" },
         "hall": { "type": "boolean" },
         "eligible": { "type": "boolean" },
+        "open": { "type": "boolean" },
+        "frontier": { "type": "boolean" },
         "start_level": { "type": "integer", "minimum": 1 },
-        "end_level": { "type": "integer", "minimum": 1 },
-        "next_level": { "type": "integer", "minimum": 2 },
+        "end_level": { "type": ["integer", "null"], "minimum": 1 },
+        "next_level": { "type": ["integer", "null"], "minimum": 2 },
         "members": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
     "MiningLeagueSummary": {
       "type": "object",
-      "required": ["id", "name", "hall", "eligible", "start_level", "end_level", "next_level", "members", "participants", "total_points"],
+      "required": ["id", "name", "hall", "eligible", "open", "frontier", "start_level", "end_level", "next_level", "members", "participants", "total_points"],
       "properties": {
         "id": { "type": "integer", "minimum": 0 },
         "name": { "type": "string" },
         "hall": { "type": "boolean" },
         "eligible": { "type": "boolean" },
+        "open": { "type": "boolean" },
+        "frontier": { "type": "boolean" },
         "start_level": { "type": "integer", "minimum": 1 },
-        "end_level": { "type": "integer", "minimum": 1 },
-        "next_level": { "type": "integer", "minimum": 2 },
+        "end_level": { "type": ["integer", "null"], "minimum": 1 },
+        "next_level": { "type": ["integer", "null"], "minimum": 2 },
         "members": { "type": "integer", "minimum": 0 },
         "participants": { "type": "integer", "minimum": 0 },
         "total_points": { "type": "integer", "minimum": 0 }
@@ -1096,10 +1100,20 @@
       "required": ["level", "next", "remaining", "percent", "destination"],
       "properties": {
         "level": { "type": "integer", "minimum": 1 },
-        "next": { "type": "integer", "minimum": 2 },
-        "remaining": { "type": "integer", "minimum": 0 },
-        "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "next": { "type": ["integer", "null"], "minimum": 2 },
+        "remaining": { "type": ["integer", "null"], "minimum": 0 },
+        "percent": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
         "destination": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "MiningLeagueCatalog": {
+      "type": "object",
+      "required": ["server_now", "frontier", "leagues"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "frontier": { "type": "integer", "minimum": 1 },
+        "leagues": { "type": "array", "items": { "$ref": "#/$defs/MiningLeagueSummary" } }
       },
       "additionalProperties": false
     },

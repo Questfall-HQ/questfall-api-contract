@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(79)
+		expect(contract.routes.length).toBe(80)
   })
 
   test('builds parameterized paths safely', () => {
@@ -60,7 +60,9 @@ describe('contract manifest', () => {
 		expect(schema('ShardState').required).toEqual(['active', 'period', 'set', 'progress', 'pieces'])
 		expect(schema('ShardReward').required).toEqual(['count', 'drops', 'lootboxes'])
 		expect(schema('MiningLeagueOverview').required).toContain('leagues')
-		expect(schema('MiningLeagueSummary').required).toEqual(['id', 'name', 'hall', 'eligible', 'start_level', 'end_level', 'next_level', 'members', 'participants', 'total_points'])
+		expect(schema('MiningLeagueSummary').required).toEqual(['id', 'name', 'hall', 'eligible', 'open', 'frontier', 'start_level', 'end_level', 'next_level', 'members', 'participants', 'total_points'])
+		expect(operations['mining.leagues.catalog'].response.schema).toBe('MiningLeagueCatalog')
+		expect(schema('MiningLeagueSummary').properties.end_level.type).toEqual(['integer', 'null'])
 		expect(schema('LeagueBrowserMiner').required).toContain('points')
 		expect(schema('LeagueBrowserMiner').properties.points).toEqual({ type: 'integer', minimum: 0 })
 		expect(schema('LeagueBrowserMiner').properties.equipment.maxItems).toBe(6)
