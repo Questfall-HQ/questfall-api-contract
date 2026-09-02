@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(80)
+		expect(contract.routes.length).toBe(99)
   })
 
   test('builds parameterized paths safely', () => {
@@ -94,6 +94,25 @@ describe('contract manifest', () => {
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
 		expect(operations['quests.complete'].request.optional).toContain('rating')
+		expect(operations['quests.complete'].request.optional).toContain('proof_url')
+		expect(operations['quests.complete'].request.optional).toContain('proof_media_ids')
+		expect(schema('QuestType').enum).toContain('transaction')
+		expect(schema('QuestCompletion').required).toContain('status')
+		expect(operations['moderation.assignments.claim'].response.schema).toBe('ModerationAssignmentResult')
+		expect(operations['moderation.witness.switch'].request.required).toEqual(['assignment_id'])
+		expect(operations['moderation.profiles.report'].request.required).toEqual(['id', 'category', 'explanation'])
+		expect(operations['moderation.spaces.report'].request.required).toEqual(['id', 'category', 'explanation'])
+		expect(operations['moderation.cases.appeal'].response.schema).toBe('ModerationAppealMutation')
+		expect(operations['moderation.domains.resolve'].response.schema).toBe('EffectiveDomainTrust')
+		expect(schema('ModerationCaseKind').enum).toContain('profile_report')
+		expect(schema('ModerationCaseKind').enum).toContain('space_report')
+		expect(schema('DomainTrustState').enum).toEqual(['unknown', 'pending', 'safe', 'rejected', 'risky'])
+		expect(schema('QuestCard').properties.moderation_state.$ref).toBe('#/$defs/QuestModerationState')
+		expect(schema('PublicMiniProfile').required).toContain('moderation_status')
+		expect(schema('ModeratorState').required).toContain('witness_available')
+		expect(operations['profile.save'].request.optional).toContain('feed_authored')
+		expect(schema('ProfilePreferences').required).toEqual(['feed_authored'])
+		expect(schema('ProfileUser').properties.preferences.$ref).toBe('#/$defs/ProfilePreferences')
 		expect(schema('QuestRatingDistributionBin').required).toContain('users')
 		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
 		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')
@@ -172,6 +191,7 @@ describe('contract manifest', () => {
 			quest_id: 'quest',
 			accepted: false,
 			exhausted: false,
+			status: 'rejected',
 			attempt: 1,
 			attempt_multiplier: 1,
 			points: 0,

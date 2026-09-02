@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/4.0.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/4.2.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -460,7 +460,7 @@
     },
     "QuestType": {
       "type": "string",
-      "enum": ["text", "quiz", "survey", "event"]
+      "enum": ["text", "quiz", "survey", "question", "action", "transaction", "event"]
     },
     "QuestRewardKind": {
       "type": "string",
@@ -493,11 +493,32 @@
       "type": "string",
       "enum": ["welcome", "feed", "followed", "marked", "hidden", "completed"]
     },
+    "DomainTrustState": {
+      "type": "string",
+      "enum": ["unknown", "pending", "safe", "rejected", "risky"]
+    },
+    "QuestDomainLinkState": {
+      "type": "object",
+      "required": ["url", "host", "state", "warning", "blocked"],
+      "properties": {
+        "url": { "type": "string" },
+        "host": { "type": "string" },
+        "state": { "$ref": "#/$defs/DomainTrustState" },
+        "warning": { "type": "boolean" },
+        "blocked": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
     "QuestPublicConfig": {
       "type": "object",
       "properties": {
         "prompt": { "type": "string" },
         "options": { "type": "array", "items": { "type": "string" } },
+        "target_links": { "type": "array", "minItems": 1, "maxItems": 5, "items": { "type": "string", "format": "uri" } },
+        "link_states": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/QuestDomainLinkState" } },
+        "allowed_domains": { "type": "array", "minItems": 1, "maxItems": 5, "items": { "type": "string" } },
+        "network": { "type": "string" },
+        "evidence": { "type": "string" },
         "event": {
           "type": "object",
           "required": ["key", "label", "summary", "route"],
@@ -566,11 +587,14 @@
     },
     "QuestViewerState": {
       "type": "object",
-      "required": ["marked", "hidden", "completed", "exhausted", "following", "assignment", "claimable", "claimed", "locked", "current", "lock_reason", "legacy_reconciled", "progress"],
+      "required": ["marked", "hidden", "completed", "pending", "exhausted", "following", "assignment", "claimable", "claimed", "locked", "current", "lock_reason", "legacy_reconciled", "progress"],
       "properties": {
         "marked": { "type": "boolean" },
         "hidden": { "type": "boolean" },
         "completed": { "type": "boolean" },
+        "pending": { "type": "boolean" },
+        "submission_status": { "enum": ["none", "pending", "accepted", "rejected"] },
+        "moderation_stage": { "enum": ["none", "witnessing", "judging", "accepted", "rejected", "paused"] },
         "exhausted": { "type": "boolean" },
         "following": { "type": "boolean" },
         "claimable": { "type": "boolean" },
@@ -610,11 +634,16 @@
         "published": { "type": "integer", "minimum": 0 },
         "ends": { "type": "integer", "minimum": 0 },
         "active": { "type": "boolean" },
+        "moderation_state": { "$ref": "#/$defs/QuestModerationState" },
         "placement": { "enum": ["feed", "welcome"] },
         "author": { "$ref": "#/$defs/QuestAuthor" },
         "viewer": { "$ref": "#/$defs/QuestViewerState" }
       },
       "additionalProperties": true
+    },
+    "QuestModerationState": {
+      "type": "string",
+      "enum": ["clear", "suspended"]
     },
     "QuestFeed": {
       "type": "object",
@@ -913,12 +942,236 @@
       },
       "additionalProperties": false
     },
+    "ModerationDomain": {
+      "type": "object",
+      "required": ["host", "status", "created", "updated"],
+      "properties": {
+        "host": { "type": "string" },
+        "status": { "enum": ["pending", "safe", "risky", "rejected"] },
+        "revision": { "type": "integer", "minimum": 0 },
+        "review_after": { "type": "integer", "minimum": 0 },
+        "created": { "type": "integer", "minimum": 0 },
+        "updated": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "EffectiveDomainTrust": {
+      "type": "object",
+      "required": ["host", "state", "matched_rule", "revision", "warning", "blocked"],
+      "properties": {
+        "host": { "type": "string" },
+        "state": { "$ref": "#/$defs/DomainTrustState" },
+        "matched_rule": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 0 },
+        "warning": { "type": "boolean" },
+        "blocked": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "ModerationCaseKind": {
+      "type": "string",
+      "enum": ["witness", "judge", "domain_proposal", "domain_report", "quest_report", "completion_report", "profile_report", "space_report"]
+    },
+    "ModerationCaseMode": {
+      "type": "string",
+      "enum": ["initial", "appeal", "review"]
+    },
+    "ModerationReason": {
+      "type": "string",
+      "enum": [
+        "phishing", "wallet_drainer", "malware", "scam", "impersonation", "other_security",
+        "scam_phishing", "illegal_harmful", "harassment_hate", "sexual_content", "privacy_doxxing", "spam", "other_policy",
+        "identity_mismatch", "fabricated_evidence", "source_manipulation", "dangerous_link", "sexual_illegal", "other_abuse"
+      ]
+    },
+    "ModerationTargetSnapshot": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["domain", "quest", "submission", "profile", "space"] },
+        "id": { "type": "string" },
+        "revision": { "type": "integer", "minimum": 0 },
+        "moderation_revision": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "ModerationEvidenceSnapshot": {
+      "type": "object",
+      "properties": {
+        "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
+        "category": { "$ref": "#/$defs/ModerationReason" },
+        "reason": { "type": "string", "minLength": 12, "maxLength": 2000 },
+        "excluded": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "ModerationProgress": {
+      "type": "object",
+      "required": ["stage", "status", "groups_resolved", "groups_total"],
+      "properties": {
+        "stage": { "enum": ["witnessing", "judging", "report", "resolved", "paused"] },
+        "status": { "enum": ["queued", "open", "paused", "resolved", "cancelled"] },
+        "groups_resolved": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "groups_total": { "type": "integer", "minimum": 0, "maximum": 5 }
+      },
+      "additionalProperties": true
+    },
+    "ModerationAssignment": {
+      "type": "object",
+      "required": ["id", "kind", "instructions", "proof_url", "proof_media", "progress", "created"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/ModerationCaseKind" },
+        "mode": { "$ref": "#/$defs/ModerationCaseMode" },
+        "level": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "category": { "type": "string" },
+        "explanation": { "type": "string" },
+        "policy_version": { "type": "string" },
+        "target_revision": { "type": "integer", "minimum": 0 },
+        "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
+        "snapshot": { "$ref": "#/$defs/ModerationEvidenceSnapshot" },
+        "instructions": { "type": "string" },
+        "proof_url": { "type": "string" },
+        "proof_media": { "type": "array", "maxItems": 4, "items": { "type": "string" } },
+        "progress": { "$ref": "#/$defs/ModerationProgress" },
+        "created": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "ModeratorState": {
+      "type": "object",
+      "required": ["silver", "eligible", "bypass_cost", "witness_credits", "witness_available", "real_count", "honeypot_count", "yes_count", "no_count"],
+      "properties": {
+        "silver": { "type": "integer" },
+        "eligible": { "type": "boolean" },
+        "bypass_cost": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "witness_credits": { "type": "integer", "minimum": 0 },
+        "witness_available": { "type": "boolean" },
+        "real_count": { "type": "integer", "minimum": 0 },
+        "honeypot_count": { "type": "integer", "minimum": 0 },
+        "yes_count": { "type": "integer", "minimum": 0 },
+        "no_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "ModerationSummary": {
+      "type": "object",
+      "required": ["state", "assignment"],
+      "properties": {
+        "state": { "$ref": "#/$defs/ModeratorState" },
+        "assignment": { "oneOf": [{ "$ref": "#/$defs/ModerationAssignment" }, { "type": "null" }] }
+      },
+      "additionalProperties": true
+    },
+    "ModerationAssignmentResult": {
+      "type": "object",
+      "required": ["state", "assignment"],
+      "properties": {
+        "state": { "$ref": "#/$defs/ModeratorState" },
+        "assignment": { "oneOf": [{ "$ref": "#/$defs/ModerationAssignment" }, { "type": "null" }] }
+      },
+      "additionalProperties": true
+    },
+    "ModerationMutation": {
+      "type": "object",
+      "required": ["ok", "state"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "resolved": { "type": "boolean" },
+        "outcome": { "enum": ["unknown", "approve", "reject"] },
+        "state": { "$ref": "#/$defs/ModeratorState" },
+        "assignment": { "oneOf": [{ "$ref": "#/$defs/ModerationAssignment" }, { "type": "null" }] }
+      },
+      "additionalProperties": true
+    },
+    "ModerationAppealMutation": {
+      "type": "object",
+      "required": ["ok", "case_id", "root_case_id", "mode", "level", "status", "stake"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "case_id": { "type": "string" },
+        "root_case_id": { "type": "string" },
+        "mode": { "const": "appeal" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "status": { "enum": ["queued", "open"] },
+        "stake": { "enum": [1000, 10000] }
+      },
+      "additionalProperties": true
+    },
+    "ModerationReviewMutation": {
+      "type": "object",
+      "required": ["ok", "case_id", "mode", "status", "stake", "target_type", "target_revision"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "case_id": { "type": "string" },
+        "mode": { "const": "review" },
+        "status": { "enum": ["queued", "open"] },
+        "stake": { "const": 1000 },
+        "target_type": { "enum": ["profile", "space", "domain"] },
+        "target_revision": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "ModerationDecision": {
+      "type": "object",
+      "required": ["id", "mode", "level", "status", "outcome", "created", "resolved", "deadline"],
+      "properties": {
+        "id": { "type": "string" },
+        "mode": { "$ref": "#/$defs/ModerationCaseMode" },
+        "level": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "status": { "enum": ["queued", "open", "paused", "resolved", "cancelled"] },
+        "outcome": { "enum": ["unknown", "approve", "reject"] },
+        "created": { "type": "integer", "minimum": 0 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "deadline": { "type": "integer", "minimum": 0 },
+        "stake": { "type": "integer", "minimum": 0 },
+        "appellant": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "ModerationDecisionChain": {
+      "type": "object",
+      "required": ["root_case_id", "kind", "category", "explanation", "target", "current_outcome", "current_case_id", "deadline", "can_appeal", "can_review", "decisions"],
+      "properties": {
+        "root_case_id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/ModerationCaseKind" },
+        "category": { "type": "string" },
+        "explanation": { "type": "string" },
+        "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
+        "current_outcome": { "enum": ["unknown", "approve", "reject"] },
+        "current_case_id": { "type": "string" },
+        "deadline": { "type": "integer", "minimum": 0 },
+        "can_appeal": { "type": "boolean" },
+        "next_appeal_level": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "next_appeal_stake": { "type": "integer", "minimum": 0 },
+        "can_review": { "type": "boolean" },
+        "review_stake": { "type": "integer", "minimum": 0 },
+        "decisions": { "type": "array", "items": { "$ref": "#/$defs/ModerationDecision" } }
+      },
+      "additionalProperties": false
+    },
+    "ModerationHistory": {
+      "type": "object",
+      "required": ["items", "next_cursor"],
+      "properties": {
+        "items": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "chains": { "type": "array", "items": { "$ref": "#/$defs/ModerationDecisionChain" } },
+        "next_cursor": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "ModerationDomains": {
+      "type": "object",
+      "required": ["items"],
+      "properties": { "items": { "type": "array", "items": { "$ref": "#/$defs/ModerationDomain" } } },
+      "additionalProperties": true
+    },
     "QuestCompletion": {
       "type": "object",
-      "required": ["id", "quest_id", "accepted", "exhausted", "attempt", "attempt_multiplier", "points", "assignment_id", "rating_vote", "idempotent", "claimable"],
+      "required": ["id", "quest_id", "status", "accepted", "exhausted", "attempt", "attempt_multiplier", "points", "assignment_id", "rating_vote", "idempotent", "claimable"],
       "properties": {
         "id": { "type": "string" },
         "quest_id": { "type": "string" },
+        "status": { "enum": ["pending", "accepted", "rejected"] },
         "accepted": { "type": "boolean" },
         "exhausted": { "type": "boolean" },
         "attempt": { "type": "integer", "minimum": 1, "maximum": 5 },
@@ -1465,6 +1718,14 @@
       },
       "additionalProperties": false
     },
+    "ProfilePreferences": {
+      "type": "object",
+      "required": ["feed_authored"],
+      "properties": {
+        "feed_authored": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
     "ProfileUser": {
       "type": "object",
       "required": ["id", "name", "level", "verify", "email", "wallet"],
@@ -1476,6 +1737,7 @@
         "verify": { "type": "boolean" },
         "avatar": { "$ref": "#/$defs/Avatar" },
         "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "preferences": { "$ref": "#/$defs/ProfilePreferences" },
         "email": {
           "type": "object",
           "required": ["address", "verify"],
@@ -1495,6 +1757,21 @@
           },
           "additionalProperties": true
         }
+      },
+      "additionalProperties": true
+    },
+    "PublicMiniProfile": {
+      "type": "object",
+      "required": ["id", "name", "level", "moderation_status", "moderation_revision", "status_message"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "type": "string" },
+        "level": { "type": "integer", "minimum": 1 },
+        "moderation_status": { "enum": ["active", "restricted"] },
+        "moderation_revision": { "type": "integer", "minimum": 0 },
+        "status_message": { "type": "string" }
       },
       "additionalProperties": true
     },
