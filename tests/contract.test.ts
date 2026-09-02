@@ -120,6 +120,8 @@ describe('contract manifest', () => {
 		expect(schema('ModerationAssignment').properties.account.maxLength).toBe(128)
 		expect(schema('ModerationProgress').required).toContain('consensus_percent')
 		expect(schema('ModerationProgress').properties.consensus_percent).toMatchObject({type: 'integer', minimum: 0, maximum: 100})
+		expect(schema('ModerationProgress').properties.groups_resolved).toBeUndefined()
+		expect(schema('ModerationProgress').properties.groups_total).toBeUndefined()
 		expect(schema('QuestRatingDistributionBin').required).toContain('users')
 		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
 		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')

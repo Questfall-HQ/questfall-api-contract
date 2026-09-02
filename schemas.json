@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/4.3.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/5.0.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1022,13 +1022,11 @@
     },
     "ModerationProgress": {
       "type": "object",
-      "required": ["stage", "status", "consensus_percent", "groups_resolved", "groups_total"],
+      "required": ["stage", "status", "consensus_percent"],
       "properties": {
         "stage": { "enum": ["witnessing", "judging", "report", "resolved", "paused"] },
         "status": { "enum": ["queued", "open", "paused", "resolved", "cancelled"] },
-        "consensus_percent": { "type": "integer", "minimum": 0, "maximum": 100 },
-        "groups_resolved": { "type": "integer", "minimum": 0, "maximum": 5 },
-        "groups_total": { "type": "integer", "minimum": 0, "maximum": 5 }
+        "consensus_percent": { "type": "integer", "minimum": 0, "maximum": 100 }
       },
       "additionalProperties": true
     },
