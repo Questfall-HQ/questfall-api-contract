@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(99)
+		expect(contract.routes.length).toBe(100)
   })
 
   test('builds parameterized paths safely', () => {
@@ -96,6 +96,7 @@ describe('contract manifest', () => {
 		expect(operations['quests.complete'].request.optional).toContain('rating')
 		expect(operations['quests.complete'].request.optional).toContain('proof_url')
 		expect(operations['quests.complete'].request.optional).toContain('proof_media_ids')
+		expect(operations['quests.complete'].request.optional).toContain('platform_account')
 		expect(schema('QuestType').enum).toContain('transaction')
 		expect(schema('QuestCompletion').required).toContain('status')
 		expect(operations['moderation.assignments.claim'].response.schema).toBe('ModerationAssignmentResult')
@@ -104,6 +105,8 @@ describe('contract manifest', () => {
 		expect(operations['moderation.spaces.report'].request.required).toEqual(['id', 'category', 'explanation'])
 		expect(operations['moderation.cases.appeal'].response.schema).toBe('ModerationAppealMutation')
 		expect(operations['moderation.domains.resolve'].response.schema).toBe('EffectiveDomainTrust')
+		expect(operations['moderation.domains.favicon'].response.schema).toBe('DomainFavicon')
+		expect(schema('ModerationDomain').properties.favicon.$ref).toBe('#/$defs/DomainFavicon')
 		expect(schema('ModerationCaseKind').enum).toContain('profile_report')
 		expect(schema('ModerationCaseKind').enum).toContain('space_report')
 		expect(schema('DomainTrustState').enum).toEqual(['unknown', 'pending', 'safe', 'rejected', 'risky'])
@@ -113,6 +116,10 @@ describe('contract manifest', () => {
 		expect(operations['profile.save'].request.optional).toContain('feed_authored')
 		expect(schema('ProfilePreferences').required).toEqual(['feed_authored'])
 		expect(schema('ProfileUser').properties.preferences.$ref).toBe('#/$defs/ProfilePreferences')
+		expect(schema('ProfileUser').properties.platform_accounts.$ref).toBe('#/$defs/PlatformAccounts')
+		expect(schema('ModerationAssignment').properties.account.maxLength).toBe(128)
+		expect(schema('ModerationProgress').required).toContain('consensus_percent')
+		expect(schema('ModerationProgress').properties.consensus_percent).toMatchObject({type: 'integer', minimum: 0, maximum: 100})
 		expect(schema('QuestRatingDistributionBin').required).toContain('users')
 		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
 		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')

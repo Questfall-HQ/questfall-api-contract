@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -351,7 +351,7 @@
       "method": "POST",
       "path": "/quests/complete",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": ["answer", "option", "rating", "proof_url", "proof_media_ids"] },
+      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": ["answer", "option", "rating", "proof_url", "proof_media_ids", "platform_account"] },
       "response": { "schema": "QuestCompletion" }
     },
     {
@@ -433,6 +433,14 @@
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["host"], "optional": ["explanation"] },
       "response": { "schema": "ModerationMutation" }
+    },
+    {
+      "operation": "moderation.domains.favicon",
+      "method": "POST",
+      "path": "/moderation/domains/favicon",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["host"], "optional": [] },
+      "response": { "schema": "DomainFavicon" }
     },
     {
       "operation": "moderation.domains.report",

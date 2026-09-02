@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/4.2.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/4.3.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -948,12 +948,23 @@
       "properties": {
         "host": { "type": "string" },
         "status": { "enum": ["pending", "safe", "risky", "rejected"] },
+        "favicon": { "$ref": "#/$defs/DomainFavicon" },
         "revision": { "type": "integer", "minimum": 0 },
         "review_after": { "type": "integer", "minimum": 0 },
         "created": { "type": "integer", "minimum": 0 },
         "updated": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": true
+    },
+    "DomainFavicon": {
+      "type": "object",
+      "required": ["state", "url", "checked"],
+      "properties": {
+        "state": { "enum": ["pending", "ready", "missing", "failed"] },
+        "url": { "type": "string" },
+        "checked": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
     },
     "EffectiveDomainTrust": {
       "type": "object",
@@ -981,7 +992,7 @@
       "enum": [
         "phishing", "wallet_drainer", "malware", "scam", "impersonation", "other_security",
         "scam_phishing", "illegal_harmful", "harassment_hate", "sexual_content", "privacy_doxxing", "spam", "other_policy",
-        "identity_mismatch", "fabricated_evidence", "source_manipulation", "dangerous_link", "sexual_illegal", "other_abuse"
+        "dangerous_link", "sexual_illegal", "other_abuse"
       ]
     },
     "ModerationTargetSnapshot": {
@@ -1000,16 +1011,22 @@
         "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
         "category": { "$ref": "#/$defs/ModerationReason" },
         "reason": { "type": "string", "minLength": 12, "maxLength": 2000 },
-        "excluded": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+        "excluded": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "domain": { "type": "string" },
+        "platform_account": { "type": "string", "maxLength": 128 },
+        "participant": { "type": "string" },
+        "participant_id": { "type": "string" },
+        "trusted": { "type": "boolean" }
       },
       "additionalProperties": true
     },
     "ModerationProgress": {
       "type": "object",
-      "required": ["stage", "status", "groups_resolved", "groups_total"],
+      "required": ["stage", "status", "consensus_percent", "groups_resolved", "groups_total"],
       "properties": {
         "stage": { "enum": ["witnessing", "judging", "report", "resolved", "paused"] },
         "status": { "enum": ["queued", "open", "paused", "resolved", "cancelled"] },
+        "consensus_percent": { "type": "integer", "minimum": 0, "maximum": 100 },
         "groups_resolved": { "type": "integer", "minimum": 0, "maximum": 5 },
         "groups_total": { "type": "integer", "minimum": 0, "maximum": 5 }
       },
@@ -1030,6 +1047,13 @@
         "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
         "snapshot": { "$ref": "#/$defs/ModerationEvidenceSnapshot" },
         "instructions": { "type": "string" },
+        "domain": { "type": "string" },
+        "platform": { "type": "string" },
+        "domain_status": { "enum": ["pending", "safe", "risky", "rejected", ""] },
+        "favicon": { "$ref": "#/$defs/DomainFavicon" },
+        "trusted": { "type": "boolean" },
+        "account": { "type": "string", "maxLength": 128 },
+        "participant": { "type": "string" },
         "proof_url": { "type": "string" },
         "proof_media": { "type": "array", "maxItems": 4, "items": { "type": "string" } },
         "progress": { "$ref": "#/$defs/ModerationProgress" },
@@ -1718,6 +1742,15 @@
       },
       "additionalProperties": false
     },
+    "PlatformAccounts": {
+      "type": "object",
+      "propertyNames": { "type": "string", "minLength": 1, "maxLength": 253 },
+      "additionalProperties": {
+        "type": "array",
+        "maxItems": 8,
+        "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
     "ProfilePreferences": {
       "type": "object",
       "required": ["feed_authored"],
@@ -1737,6 +1770,7 @@
         "verify": { "type": "boolean" },
         "avatar": { "$ref": "#/$defs/Avatar" },
         "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "platform_accounts": { "$ref": "#/$defs/PlatformAccounts" },
         "preferences": { "$ref": "#/$defs/ProfilePreferences" },
         "email": {
           "type": "object",
