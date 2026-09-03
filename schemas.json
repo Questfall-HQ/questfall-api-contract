@@ -698,7 +698,7 @@
       "type": "object",
       "required": ["pricing_version", "bounty", "duration", "day", "subtotal", "karma", "discount", "discount_rate", "total", "position", "population", "available"],
       "properties": {
-        "pricing_version": { "const": "bounty-v1" },
+        "pricing_version": { "enum": ["bounty-v1", "bounty-v2"] },
         "bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
         "duration": { "type": "integer", "minimum": 1, "maximum": 30 },
         "day": { "type": "integer", "minimum": 100 },
@@ -709,16 +709,79 @@
         "total": { "type": "integer", "minimum": 1 },
         "position": { "type": "integer", "minimum": 1 },
         "population": { "type": "integer", "minimum": 0 },
-        "available": { "type": "integer", "minimum": 0 }
+        "available": { "type": "integer", "minimum": 0 },
+        "mode": { "enum": ["activate", "reactivate", "extend"] },
+        "pricing_revision": { "type": "integer", "minimum": 0 },
+        "continued": { "type": "boolean" },
+        "start_day": { "type": "integer", "minimum": 1 },
+        "end_day": { "type": "integer", "minimum": 1 },
+        "price_floor_day": { "const": 30 },
+        "first_day_price": { "type": "integer", "minimum": 0 },
+        "last_day_price": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "pricing_version": { "const": "bounty-v2" } }, "required": ["pricing_version"] },
+          "then": { "required": ["mode", "pricing_revision", "continued", "start_day", "end_day", "price_floor_day", "first_day_price", "last_day_price"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "QuestPublication": {
+      "type": "object",
+      "required": ["id", "sequence", "status", "end_reason", "bounty", "starts", "ends", "closed", "completion_count", "rating"],
+      "properties": {
+        "id": { "type": "string" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "status": { "enum": ["active", "ended", "stopped", "banned"] },
+        "end_reason": { "type": "string" },
+        "bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "starts": { "type": "integer", "minimum": 0 },
+        "ends": { "type": "integer", "minimum": 0 },
+        "closed": { "type": "integer", "minimum": 0 },
+        "completion_count": { "type": "integer", "minimum": 0 },
+        "rating": { "type": "number", "minimum": 0, "maximum": 10 }
       },
       "additionalProperties": false
     },
     "QuestPublishResult": {
       "type": "object",
-      "required": ["quest", "quote"],
+      "required": ["quest", "quote", "feed_revision"],
       "properties": {
         "quest": { "type": "object", "additionalProperties": true },
-        "quote": { "$ref": "#/$defs/QuestPricingQuote" }
+        "publication": { "$ref": "#/$defs/QuestPublication" },
+        "quote": { "$ref": "#/$defs/QuestPricingQuote" },
+        "feed_revision": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "QuestUnpublishQuote": {
+      "type": "object",
+      "required": ["pricing_version", "pricing_revision", "quest_id", "publication_id", "refund", "spent", "refundable_days", "current_day", "next_day_starts", "ends", "available"],
+      "properties": {
+        "pricing_version": { "const": "bounty-v2" },
+        "pricing_revision": { "type": "integer", "minimum": 0 },
+        "quest_id": { "type": "string" },
+        "publication_id": { "type": "string" },
+        "refund": { "type": "integer", "minimum": 0 },
+        "spent": { "type": "integer", "minimum": 0 },
+        "refundable_days": { "type": "integer", "minimum": 0 },
+        "current_day": { "type": "integer", "minimum": 0 },
+        "next_day_starts": { "type": "integer", "minimum": 0 },
+        "ends": { "type": "integer", "minimum": 0 },
+        "available": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "QuestUnpublishResult": {
+      "type": "object",
+      "required": ["quest", "publication", "refund", "available", "feed_revision"],
+      "properties": {
+        "quest": { "type": "object", "additionalProperties": true },
+        "publication": { "$ref": "#/$defs/QuestPublication" },
+        "refund": { "type": "integer", "minimum": 0 },
+        "available": { "type": "integer", "minimum": 0 },
+        "feed_revision": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },

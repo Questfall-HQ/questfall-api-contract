@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(100)
+		expect(contract.routes.length).toBe(103)
   })
 
   test('builds parameterized paths safely', () => {
@@ -49,6 +49,14 @@ describe('contract manifest', () => {
 		expect(operations['authorSpaces.team.search'].response.schema).toBe('AuthorSpaceTeamSearch')
 		expect(operations['authorSpaces.team.add'].response.schema).toBe('AuthorSpaceTeamAddition')
 		expect(operations['authorSpaces.quests.duplicate'].request.required).toEqual(['id'])
+		expect(operations['authorSpaces.quests.quote'].request.optional).toContain('id')
+		expect(operations['authorSpaces.quests.extend'].request.required).toEqual(['id', 'duration', 'pricing_version', 'pricing_revision', 'max_cost', 'idempotency_key'])
+		expect(operations['authorSpaces.quests.unpublishQuote'].response.schema).toBe('QuestUnpublishQuote')
+		expect(operations['authorSpaces.quests.unpublish'].response.schema).toBe('QuestUnpublishResult')
+		expect(schema('QuestPricingQuote').properties.pricing_version.enum).toEqual(['bounty-v1', 'bounty-v2'])
+		expect(schema('QuestPricingQuote').properties.mode.enum).toEqual(['activate', 'reactivate', 'extend'])
+		expect(schema('QuestPublishResult').required).toContain('feed_revision')
+		expect(schema('QuestUnpublishResult').required).toContain('feed_revision')
 		expect(schema('AuthorSpaceTeamCandidate').required).toContain('level')
 		expect(schema('AuthorSpaceTeamCandidate').properties.level).toEqual({ type: 'integer', minimum: 1 })
 		expect(operations['marketplace.list'].response.schema).toBe('MarketplacePage')
