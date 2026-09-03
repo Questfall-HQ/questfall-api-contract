@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.1.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.2.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -702,11 +702,11 @@
         "bounty": { "type": "integer", "minimum": 1, "maximum": 1000 },
         "duration": { "type": "integer", "minimum": 1, "maximum": 30 },
         "day": { "type": "integer", "minimum": 100 },
-        "subtotal": { "type": "integer", "minimum": 100 },
+        "subtotal": { "type": "integer", "minimum": 0 },
         "karma": { "type": "number", "minimum": 0, "maximum": 10 },
         "discount": { "type": "integer", "minimum": 0 },
-        "discount_rate": { "type": "number", "minimum": 0, "maximum": 0.9 },
-        "total": { "type": "integer", "minimum": 1 },
+        "discount_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "total": { "type": "integer", "minimum": 0 },
         "position": { "type": "integer", "minimum": 1 },
         "population": { "type": "integer", "minimum": 0 },
         "available": { "type": "integer", "minimum": 0 },
