@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(100)
+		expect(contract.routes.length).toBe(103)
   })
 
   test('builds parameterized paths safely', () => {
@@ -49,6 +49,14 @@ describe('contract manifest', () => {
 		expect(operations['authorSpaces.team.search'].response.schema).toBe('AuthorSpaceTeamSearch')
 		expect(operations['authorSpaces.team.add'].response.schema).toBe('AuthorSpaceTeamAddition')
 		expect(operations['authorSpaces.quests.duplicate'].request.required).toEqual(['id'])
+		expect(operations['authorSpaces.quests.quote'].request.optional).toContain('id')
+		expect(operations['authorSpaces.quests.extend'].request.required).toEqual(['id', 'duration', 'pricing_version', 'pricing_revision', 'max_cost', 'idempotency_key'])
+		expect(operations['authorSpaces.quests.unpublishQuote'].response.schema).toBe('QuestUnpublishQuote')
+		expect(operations['authorSpaces.quests.unpublish'].response.schema).toBe('QuestUnpublishResult')
+		expect(schema('QuestPricingQuote').properties.pricing_version.enum).toEqual(['bounty-v1', 'bounty-v2'])
+		expect(schema('QuestPricingQuote').properties.mode.enum).toEqual(['activate', 'reactivate', 'extend'])
+		expect(schema('QuestPublishResult').required).toContain('feed_revision')
+		expect(schema('QuestUnpublishResult').required).toContain('feed_revision')
 		expect(schema('AuthorSpaceTeamCandidate').required).toContain('level')
 		expect(schema('AuthorSpaceTeamCandidate').properties.level).toEqual({ type: 'integer', minimum: 1 })
 		expect(operations['marketplace.list'].response.schema).toBe('MarketplacePage')
@@ -101,23 +109,42 @@ describe('contract manifest', () => {
 		expect(schema('QuestCompletion').required).toContain('status')
 		expect(operations['moderation.assignments.claim'].response.schema).toBe('ModerationAssignmentResult')
 		expect(operations['moderation.witness.switch'].request.required).toEqual(['assignment_id'])
+		expect(operations['moderation.completions.report'].request.required).toEqual(['assignment_id'])
 		expect(operations['moderation.profiles.report'].request.required).toEqual(['id', 'category', 'explanation'])
 		expect(operations['moderation.spaces.report'].request.required).toEqual(['id', 'category', 'explanation'])
 		expect(operations['moderation.cases.appeal'].response.schema).toBe('ModerationAppealMutation')
 		expect(operations['moderation.domains.resolve'].response.schema).toBe('EffectiveDomainTrust')
 		expect(operations['moderation.domains.favicon'].response.schema).toBe('DomainFavicon')
 		expect(schema('ModerationDomain').properties.favicon.$ref).toBe('#/$defs/DomainFavicon')
+		expect(schema('ModerationDomain').required).toEqual(expect.arrayContaining(['added_by', 'consensus', 'history']))
+		expect(schema('ModerationDomain').properties.added_by.$ref).toBe('#/$defs/ModerationDomainAddedBy')
+		expect(schema('ModerationDomain').properties.consensus.$ref).toBe('#/$defs/ModerationDomainConsensus')
+		expect(schema('ModerationDomain').properties.history.items.$ref).toBe('#/$defs/ModerationDomainDecision')
+		expect(schema('ModerationDomainAddedBy').properties.kind.enum).toEqual(['system', 'team', 'community'])
+		expect(schema('ModerationDomainConsensus').properties.source.enum).toEqual(['system', 'team', 'community'])
+		expect(schema('ModerationDomainConsensus').properties.progress.maximum).toBe(100)
+		expect(schema('ModerationDomainVoteSplit').required).toEqual(['approve', 'reject'])
+		expect(schema('ModerationDomainDecision').properties.result.enum).toEqual(['pending', 'safe', 'suspicious', 'blocked'])
 		expect(schema('ModerationCaseKind').enum).toContain('profile_report')
 		expect(schema('ModerationCaseKind').enum).toContain('space_report')
-		expect(schema('DomainTrustState').enum).toEqual(['unknown', 'pending', 'safe', 'rejected', 'risky'])
+		expect(schema('DomainTrustState').enum).toEqual(['unknown', 'pending', 'safe', 'suspicious', 'blocked'])
 		expect(schema('QuestCard').properties.moderation_state.$ref).toBe('#/$defs/QuestModerationState')
 		expect(schema('PublicMiniProfile').required).toContain('moderation_status')
 		expect(schema('ModeratorState').required).toContain('witness_available')
+		expect(schema('ModeratorState').properties.real_count).toBeUndefined()
+		expect(schema('ModeratorState').properties.honeypot_count).toBeUndefined()
+		expect(schema('ModeratorState').properties.yes_count).toBeUndefined()
+		expect(schema('ModeratorState').properties.no_count).toBeUndefined()
 		expect(operations['profile.save'].request.optional).toContain('feed_authored')
 		expect(schema('ProfilePreferences').required).toEqual(['feed_authored'])
 		expect(schema('ProfileUser').properties.preferences.$ref).toBe('#/$defs/ProfilePreferences')
 		expect(schema('ProfileUser').properties.platform_accounts.$ref).toBe('#/$defs/PlatformAccounts')
 		expect(schema('ModerationAssignment').properties.account.maxLength).toBe(128)
+		expect(schema('ModerationAssignment').required).toContain('reportable')
+		expect(schema('ModerationAssignment').properties.snapshot).toBeUndefined()
+		expect(schema('ModerationAssignment').properties.case_id).toBeUndefined()
+		expect(schema('ModerationAssignment').properties.root_case_id).toBeUndefined()
+		expect(schema('ModerationAssignment').properties.submission_id).toBeUndefined()
 		expect(schema('ModerationProgress').required).toContain('consensus_percent')
 		expect(schema('ModerationProgress').properties.consensus_percent).toMatchObject({type: 'integer', minimum: 0, maximum: 100})
 		expect(schema('ModerationProgress').properties.groups_resolved).toBeUndefined()
@@ -208,6 +235,40 @@ describe('contract manifest', () => {
 			rating_vote: 7,
 			idempotent: false,
 			claimable: false,
+		})).toEqual([])
+		expect(validate('ModerationDomain', {
+			host: 'example.com',
+			status: 'pending',
+			added_by: {kind: 'community', name: 'Mira North'},
+			consensus: {
+				source: 'community', kind: 'domain_proposal', mode: 'initial', status: 'open', outcome: 'unknown',
+				category: 'trusted_platform', progress: 50, split: {approve:67, reject:33}, created: 1, resolved: 0,
+			},
+			history: [{
+				source: 'community', kind: 'domain_proposal', mode: 'initial', status: 'open', outcome: 'unknown',
+				category: 'trusted_platform', progress: 50, split: {approve:67, reject:33}, result: 'pending', created: 1, resolved: 0,
+			}],
+			created: 1,
+			updated: 1,
+		})).toEqual([])
+		expect(validate('ModerationDomainConsensus', {
+			source: 'community', kind: 'domain_proposal', mode: 'initial', status: 'open', outcome: 'unknown',
+			category: 'trusted_platform', progress: 50, split: {approve:67, reject:33}, created: 1, resolved: 0, participants: 2,
+		})).toEqual(['$.participants is not allowed'])
+		expect(validate('ModerationDomain', {
+			host: 'seed.example',
+			status: 'safe',
+			added_by: {kind: 'system', name: 'Questfall system'},
+			consensus: {
+				source: 'system', kind: 'seed', mode: 'seed', status: 'resolved', outcome: 'approve',
+				category: '', progress: 100, split: null, created: 1, resolved: 1,
+			},
+			history: [{
+				source: 'system', kind: 'seed', mode: 'seed', status: 'resolved', outcome: 'approve',
+				category: '', progress: 100, split: null, result: 'safe', created: 1, resolved: 1,
+			}],
+			created: 1,
+			updated: 1,
 		})).toEqual([])
 	})
 })

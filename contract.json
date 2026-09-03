@@ -455,7 +455,7 @@
       "method": "POST",
       "path": "/moderation/completions/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["submission_id"], "optional": ["category", "explanation", "reason"] },
+      "request": { "transport": "body", "params": [], "required": ["assignment_id"], "optional": ["category", "explanation", "reason"] },
       "response": { "schema": "ModerationMutation" }
     },
     {
@@ -703,7 +703,7 @@
       "method": "POST",
       "path": "/author-spaces/quests/quote",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "bounty", "duration"], "optional": [] },
+      "request": { "transport": "body", "params": [], "required": ["slug", "bounty", "duration"], "optional": ["id"] },
       "response": { "schema": "QuestPricingQuote" }
     },
     {
@@ -711,8 +711,32 @@
       "method": "POST",
       "path": "/author-spaces/quests/publish",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "max_cost"], "optional": ["bounty", "duration"] },
+      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "max_cost"], "optional": ["bounty", "duration", "pricing_revision", "idempotency_key"] },
       "response": { "schema": "QuestPublishResult" }
+    },
+    {
+      "operation": "authorSpaces.quests.extend",
+      "method": "POST",
+      "path": "/author-spaces/quests/extend",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id", "duration", "pricing_version", "pricing_revision", "max_cost", "idempotency_key"], "optional": [] },
+      "response": { "schema": "QuestPublishResult" }
+    },
+    {
+      "operation": "authorSpaces.quests.unpublishQuote",
+      "method": "POST",
+      "path": "/author-spaces/quests/unpublish/quote",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
+      "response": { "schema": "QuestUnpublishQuote" }
+    },
+    {
+      "operation": "authorSpaces.quests.unpublish",
+      "method": "POST",
+      "path": "/author-spaces/quests/unpublish",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "pricing_revision", "min_refund", "idempotency_key"], "optional": [] },
+      "response": { "schema": "QuestUnpublishResult" }
     },
     {
       "operation": "authorSpaces.team.search",
