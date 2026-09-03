@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.2.0",
+  "version": "6.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -363,6 +363,14 @@
       "response": { "schema": "ModerationMutation" }
     },
     {
+      "operation": "moderation.guest.preview",
+      "method": "GET",
+      "path": "/moderation/guest",
+      "access": "public",
+      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "response": { "schema": "ModerationGuestPreview" }
+    },
+    {
       "operation": "moderation.summary",
       "method": "GET",
       "path": "/moderation/summary",
@@ -375,7 +383,7 @@
       "method": "POST",
       "path": "/moderation/assignments/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": [], "optional": [] },
+      "request": { "transport": "body", "params": [], "required": [], "optional": ["case_id"] },
       "response": { "schema": "ModerationAssignmentResult" }
     },
     {
@@ -534,7 +542,7 @@
       "operation": "mining.leagues",
       "method": "GET",
       "path": "/mining/leagues",
-      "access": "verified",
+      "access": "public",
       "request": { "transport": "query", "params": [], "required": [], "optional": ["league", "view", "sort", "direction", "page", "per_page", "miner"] },
       "response": { "schema": "LeagueBrowser" }
     },
@@ -550,7 +558,7 @@
       "operation": "mining.rewards",
       "method": "GET",
       "path": "/mining/rewards",
-      "access": "verified",
+      "access": "public",
       "request": { "transport": "query", "params": [], "required": [], "optional": [] },
       "response": { "schema": "MiningRewards" }
     },

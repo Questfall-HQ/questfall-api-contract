@@ -1227,6 +1227,23 @@
       },
       "additionalProperties": true
     },
+    "ModerationGuestCase": {
+      "type": "object",
+      "required": ["case_id", "assignment"],
+      "properties": {
+        "case_id": { "type": "string", "minLength": 1 },
+        "assignment": { "$ref": "#/$defs/ModerationAssignment" }
+      },
+      "additionalProperties": false
+    },
+    "ModerationGuestPreview": {
+      "type": "object",
+      "required": ["case"],
+      "properties": {
+        "case": { "oneOf": [{ "$ref": "#/$defs/ModerationGuestCase" }, { "type": "null" }] }
+      },
+      "additionalProperties": false
+    },
     "ModerationAssignmentResult": {
       "type": "object",
       "required": ["state", "assignment"],

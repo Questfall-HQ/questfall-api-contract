@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(103)
+		expect(contract.routes.length).toBe(104)
   })
 
   test('builds parameterized paths safely', () => {
@@ -83,6 +83,8 @@ describe('contract manifest', () => {
 		expect(schema('LeagueBrowser').properties.page.properties.per_page.maximum).toBe(50)
 		expect(schema('LeagueBrowser').properties.sort.enum).toEqual(['power', 'points', 'quests'])
 		expect(operations['mining.leagues'].request.optional).toContain('sort')
+		expect(operations['mining.leagues'].access).toBe('public')
+		expect(operations['mining.rewards'].access).toBe('public')
 		expect(operations['mining.rewards.claim'].request.required).toEqual(['idempotency_key'])
 		expect(schema('MiningPayoutScope').enum).toEqual(['week', 'season'])
 		expect(schema('MiningPayoutState').enum).toEqual(['pending', 'claimed'])
@@ -111,6 +113,9 @@ describe('contract manifest', () => {
 		expect(schema('QuestType').enum).toContain('transaction')
 		expect(schema('QuestCompletion').required).toContain('status')
 		expect(operations['moderation.assignments.claim'].response.schema).toBe('ModerationAssignmentResult')
+		expect(operations['moderation.assignments.claim'].request.optional).toContain('case_id')
+		expect(operations['moderation.guest.preview'].access).toBe('public')
+		expect(operations['moderation.guest.preview'].response.schema).toBe('ModerationGuestPreview')
 		expect(operations['moderation.witness.switch'].request.required).toEqual(['assignment_id'])
 		expect(operations['moderation.completions.report'].request.required).toEqual(['assignment_id'])
 		expect(operations['moderation.profiles.report'].request.required).toEqual(['id', 'category', 'explanation'])
