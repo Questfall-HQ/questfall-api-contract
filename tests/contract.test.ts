@@ -171,6 +171,8 @@ describe('contract manifest', () => {
 		expect(schema('ModerationProgress').properties.groups_total).toBeUndefined()
 		expect(schema('QuestRatingDistributionBin').required).toContain('users')
 		expect(schema('QuestRatingDistributionBin').properties.users.items.$ref).toBe('#/$defs/QuestRatingHistoryUser')
+		expect(schema('QuestRatingHistoryRound').required).toContain('rating')
+		expect(schema('QuestRatingHistoryRound').properties.rating).toEqual({ type: ['number', 'null'], minimum: 0, maximum: 10 })
 		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')
 		expect(schema('QuestRatingHistoryAuthor').properties.official).toEqual({ type: 'boolean' })
 	})

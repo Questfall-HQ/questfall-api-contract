@@ -36,10 +36,11 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 попытки того же назначения идут с `requires_rating: false`; обычные прохождения
 по-прежнему возвращают `rating_vote: null`.
 
-После закрытия rating round каждый bin в `quests.ratings` содержит `users` —
-безопасные публичные профили ровно тех canonical voters, которые входят в его
-`count`. До публикации финального рейтинга distribution и личности остаются
-`null`.
+После закрытия rating round `quests.ratings` возвращает итоговый `round.rating`,
+который включает все canonical votes, а каждый distribution bin содержит
+`users` — безопасные публичные профили ровно тех canonical voters, которые
+входят в его `count`. До публикации финального рейтинга `rating`, distribution
+и личности остаются `null`.
 
 ## Подключение
 

@@ -925,11 +925,12 @@
     },
     "QuestRatingHistoryRound": {
       "type": "object",
-      "required": ["id", "status", "closed", "progress", "total_votes", "distribution"],
+      "required": ["id", "status", "closed", "rating", "progress", "total_votes", "distribution"],
       "properties": {
         "id": { "type": "string" },
         "status": { "enum": ["open", "closed"] },
         "closed": { "type": "integer", "minimum": 0 },
+        "rating": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
         "progress": { "$ref": "#/$defs/QuestRatingRoundProgress" },
         "total_votes": { "type": ["integer", "null"], "minimum": 0 },
         "distribution": {
