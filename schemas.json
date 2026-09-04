@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.4.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.5.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1175,6 +1175,19 @@
       },
       "additionalProperties": false
     },
+    "ModerationParticipant": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "level"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "$ref": "#/$defs/Avatar" },
+        "level": { "type": "integer", "minimum": 1 },
+        "moderation_status": { "enum": ["active", "restricted"] }
+      },
+      "additionalProperties": true
+    },
     "ModerationAssignment": {
       "type": "object",
       "required": ["id", "kind", "reportable", "instructions", "proof_url", "proof_media", "progress", "pricing", "created", "expires"],
@@ -1190,6 +1203,9 @@
         "target_revision": { "type": "integer", "minimum": 0 },
         "target": { "$ref": "#/$defs/ModerationTargetSnapshot" },
         "instructions": { "type": "string" },
+        "participant_instructions": { "type": "string" },
+        "quest_title": { "type": "string" },
+        "quest_cover": { "type": "string" },
         "domain": { "type": "string" },
         "platform": { "type": "string" },
         "domain_status": { "enum": ["pending", "safe", "suspicious", "blocked", ""] },
@@ -1197,6 +1213,12 @@
         "trusted": { "type": "boolean" },
         "account": { "type": "string", "maxLength": 128 },
         "participant": { "type": "string" },
+        "participant_profile": {
+          "anyOf": [
+            { "$ref": "#/$defs/ModerationParticipant" },
+            { "type": "null" }
+          ]
+        },
         "proof_url": { "type": "string" },
         "proof_media": { "type": "array", "maxItems": 4, "items": { "type": "string" } },
         "progress": { "$ref": "#/$defs/ModerationProgress" },
