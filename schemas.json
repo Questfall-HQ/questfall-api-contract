@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.5.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.6.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -585,6 +585,55 @@
       },
       "additionalProperties": true
     },
+    "QuestAttempt": {
+      "type": "object",
+      "required": ["attempt", "status", "answer", "points", "created", "resolved", "proof_url", "platform_account"],
+      "properties": {
+        "attempt": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "status": { "enum": ["pending", "accepted", "rejected"] },
+        "answer": { "type": ["string", "integer", "null"] },
+        "points": { "type": "integer", "minimum": 0 },
+        "created": { "type": "integer", "minimum": 0 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "proof_url": { "type": "string" },
+        "platform_account": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "QuestVoteResult": {
+      "type": "object",
+      "required": ["index", "label", "count", "percent"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "label": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "QuestOutcomeStats": {
+      "type": "object",
+      "required": ["participants", "completed", "rate", "first_try", "votes"],
+      "properties": {
+        "participants": { "type": "integer", "minimum": 1 },
+        "completed": { "type": "integer", "minimum": 0 },
+        "rate": { "type": "number", "minimum": 0, "maximum": 100 },
+        "first_try": { "type": "integer", "minimum": 0 },
+        "votes": { "type": "array", "items": { "$ref": "#/$defs/QuestVoteResult" } }
+      },
+      "additionalProperties": false
+    },
+    "QuestOutcome": {
+      "type": "object",
+      "required": ["finished_at", "correct", "attempts", "stats"],
+      "properties": {
+        "finished_at": { "type": "integer", "minimum": 0 },
+        "correct": { "type": ["string", "integer", "null"] },
+        "attempts": { "type": "array", "minItems": 1, "maxItems": 5, "items": { "$ref": "#/$defs/QuestAttempt" } },
+        "stats": { "$ref": "#/$defs/QuestOutcomeStats" }
+      },
+      "additionalProperties": false
+    },
     "QuestViewerState": {
       "type": "object",
       "required": ["marked", "hidden", "completed", "pending", "exhausted", "following", "assignment", "claimable", "claimed", "locked", "current", "lock_reason", "legacy_reconciled", "progress"],
@@ -604,6 +653,12 @@
         "lock_reason": { "type": "string" },
         "legacy_reconciled": { "type": "boolean" },
         "progress": { "$ref": "#/$defs/QuestProgress" },
+        "outcome": {
+          "oneOf": [
+            { "$ref": "#/$defs/QuestOutcome" },
+            { "type": "null" }
+          ]
+        },
         "assignment": {
           "oneOf": [
             { "$ref": "#/$defs/QuestCardAssignment" },
