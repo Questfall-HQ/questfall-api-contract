@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.2.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.4.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1162,9 +1162,11 @@
     },
     "ModerationPriceQuote": {
       "type": "object",
-      "required": ["window_revision", "rate_bps", "reward", "penalty", "bypass_cost", "witness_cost"],
+      "required": ["window_revision", "starts", "ends", "rate_bps", "reward", "penalty", "bypass_cost", "witness_cost"],
       "properties": {
         "window_revision": { "type": "integer", "minimum": 1 },
+        "starts": { "type": "integer", "minimum": 0 },
+        "ends": { "type": "integer", "minimum": 0 },
         "rate_bps": { "type": "integer", "minimum": 10000 },
         "reward": { "type": "integer" },
         "penalty": { "type": "integer" },
@@ -1241,6 +1243,15 @@
       "required": ["case"],
       "properties": {
         "case": { "oneOf": [{ "$ref": "#/$defs/ModerationGuestCase" }, { "type": "null" }] }
+      },
+      "additionalProperties": false
+    },
+    "ModerationGuestIntent": {
+      "type": "object",
+      "required": ["token", "expires"],
+      "properties": {
+        "token": { "type": "string", "minLength": 3 },
+        "expires": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },

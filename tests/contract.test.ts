@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(104)
+		expect(contract.routes.length).toBe(106)
   })
 
   test('builds parameterized paths safely', () => {
@@ -142,7 +142,7 @@ describe('contract manifest', () => {
 		expect(schema('ModeratorState').required).toContain('pricing')
 		expect(schema('ModeratorState').properties.bypass_cost.maximum).toBeUndefined()
 		expect(schema('ModerationPricingWindow').properties.rate_bps.minimum).toBe(10000)
-		expect(schema('ModerationPriceQuote').required).toEqual(['window_revision', 'rate_bps', 'reward', 'penalty', 'bypass_cost', 'witness_cost'])
+		expect(schema('ModerationPriceQuote').required).toEqual(['window_revision', 'starts', 'ends', 'rate_bps', 'reward', 'penalty', 'bypass_cost', 'witness_cost'])
 		expect(schema('ModeratorState').properties.real_count).toBeUndefined()
 		expect(schema('ModeratorState').properties.honeypot_count).toBeUndefined()
 		expect(schema('ModeratorState').properties.yes_count).toBeUndefined()

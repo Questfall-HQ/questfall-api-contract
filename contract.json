@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.3.0",
+  "version": "6.4.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -369,6 +369,22 @@
       "access": "public",
       "request": { "transport": "none", "params": [], "required": [], "optional": [] },
       "response": { "schema": "ModerationGuestPreview" }
+    },
+    {
+      "operation": "moderation.guest.intents.issue",
+      "method": "POST",
+      "path": "/moderation/guest/intents",
+      "access": "public",
+      "request": { "transport": "body", "params": [], "required": ["case_id", "approve"], "optional": [] },
+      "response": { "schema": "ModerationGuestIntent" }
+    },
+    {
+      "operation": "moderation.guest.intents.redeem",
+      "method": "POST",
+      "path": "/moderation/guest/intents/redeem",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
+      "response": { "schema": "ModerationMutation" }
     },
     {
       "operation": "moderation.summary",
