@@ -12,7 +12,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(106)
+		expect(contract.routes.length).toBe(107)
   })
 
   test('builds parameterized paths safely', () => {
@@ -106,6 +106,9 @@ describe('contract manifest', () => {
 		expect(operations['quests.feedChanges'].response.schema).toBe('QuestFeedChanges')
 		expect(schema('QuestFeed').required).toContain('feed_revision')
 		expect(schema('QuestFeedChanges').properties.upsert.items.$ref).toBe('#/$defs/QuestCard')
+		expect(operations['quests.feedViewer'].request.required).toEqual(['feed_revision', 'known_ids', 'limit'])
+		expect(operations['quests.feedViewer'].response.schema).toBe('QuestFeedViewer')
+		expect(schema('QuestFeedViewer').properties.patches.items.$ref).toBe('#/$defs/QuestFeedViewerPatch')
 		expect(schema('QuestRatingAssignments').required).toContain('cards')
 		expect(operations['quests.welcome.sync'].response.schema).toBe('WelcomeQuestSync')
 		expect(operations['quests.complete'].request.required).toEqual(['id', 'idempotency_key'])
@@ -175,6 +178,10 @@ describe('contract manifest', () => {
 		expect(schema('QuestRatingHistoryRound').properties.rating).toEqual({ type: ['number', 'null'], minimum: 0, maximum: 10 })
 		expect(schema('QuestRatingHistoryAuthor').required).toContain('official')
 		expect(schema('QuestRatingHistoryAuthor').properties.official).toEqual({ type: 'boolean' })
+		expect(operations['quests.ratings'].request.optional).toEqual(['limit', 'cursor'])
+		expect(schema('QuestRatingHistory').required).toContain('next_cursor')
+		expect(schema('QuestRatingHistory').properties.summary.required).toContain('average_deviation')
+		expect(schema('QuestRatingHistory').properties.summary.required).toContain('closest')
 	})
 
   test('declares the Author Space accent and hue on create and update', () => {

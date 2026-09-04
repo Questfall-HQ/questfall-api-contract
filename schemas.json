@@ -730,6 +730,33 @@
       },
       "additionalProperties": true
     },
+    "QuestFeedViewerPatch": {
+      "type": "object",
+      "required": ["id", "points", "reward", "viewer"],
+      "properties": {
+        "id": { "type": "string" },
+        "points": { "type": "integer", "minimum": 0 },
+        "reward": { "$ref": "#/$defs/QuestReward" },
+        "viewer": { "$ref": "#/$defs/QuestViewerState" }
+      },
+      "additionalProperties": false
+    },
+    "QuestFeedViewer": {
+      "type": "object",
+      "required": ["server_now", "feed_revision", "assignment_revision", "next_assignment_check", "next_cursor", "order", "patches", "upsert", "remove"],
+      "properties": {
+        "server_now": { "type": "integer", "minimum": 0 },
+        "feed_revision": { "type": "integer", "minimum": 0 },
+        "assignment_revision": { "type": "integer", "minimum": 0 },
+        "next_assignment_check": { "type": "integer", "minimum": 0 },
+        "next_cursor": { "type": "string" },
+        "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+        "patches": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestFeedViewerPatch" } },
+        "upsert": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
     "QuestStateMutation": {
       "type": "object",
       "required": ["id", "viewer"],
@@ -965,22 +992,40 @@
       },
       "additionalProperties": false
     },
+    "QuestRatingHistoryClosest": {
+      "type": "object",
+      "required": ["id", "title", "distance"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "distance": { "type": "number", "minimum": 0, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
     "QuestRatingHistory": {
       "type": "object",
-      "required": ["server_now", "summary", "items"],
+      "required": ["server_now", "summary", "items", "next_cursor"],
       "properties": {
         "server_now": { "type": "integer", "minimum": 0 },
         "summary": {
           "type": "object",
-          "required": ["mining_boost", "pending", "settled"],
+          "required": ["mining_boost", "pending", "settled", "average_deviation", "closest"],
           "properties": {
             "mining_boost": { "type": "number", "minimum": 0 },
             "pending": { "type": "integer", "minimum": 0 },
-            "settled": { "type": "integer", "minimum": 0 }
+            "settled": { "type": "integer", "minimum": 0 },
+            "average_deviation": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+            "closest": {
+              "oneOf": [
+                { "$ref": "#/$defs/QuestRatingHistoryClosest" },
+                { "type": "null" }
+              ]
+            }
           },
           "additionalProperties": false
         },
-        "items": { "type": "array", "items": { "$ref": "#/$defs/QuestRatingHistoryItem" } }
+        "items": { "type": "array", "items": { "$ref": "#/$defs/QuestRatingHistoryItem" } },
+        "next_cursor": { "type": "string" }
       },
       "additionalProperties": false
     },

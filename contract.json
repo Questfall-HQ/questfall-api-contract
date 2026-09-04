@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.6.0",
+  "version": "6.8.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -315,6 +315,14 @@
       "response": { "schema": "QuestFeedChanges" }
     },
     {
+      "operation": "quests.feedViewer",
+      "method": "POST",
+      "path": "/quests/feed/viewer",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["feed_revision", "known_ids", "limit"], "optional": [] },
+      "response": { "schema": "QuestFeedViewer" }
+    },
+    {
       "operation": "quests.detail",
       "method": "GET",
       "path": "/quests/{id}",
@@ -343,7 +351,7 @@
       "method": "GET",
       "path": "/quests/ratings",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["limit", "cursor"] },
       "response": { "schema": "QuestRatingHistory" }
     },
     {
