@@ -1,867 +1,2031 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.9.0",
+  "version": "6.10.0",
   "routes": [
     {
       "operation": "auth.me",
       "method": "GET",
       "path": "/auth/me",
       "access": "authenticated",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "Profile" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "Profile"
+      }
     },
     {
       "operation": "auth.email.request",
       "method": "POST",
       "path": "/auth/email/request-otp",
       "access": "public",
-      "request": { "transport": "body", "params": [], "required": ["email"], "optional": [] },
-      "response": { "schema": "OtpRequest" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "email"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "OtpRequest"
+      }
     },
     {
       "operation": "auth.email.verify",
       "method": "POST",
       "path": "/auth/email/verify-otp",
       "access": "public",
-      "request": { "transport": "body", "params": [], "required": ["email", "otp"], "optional": [] },
-      "response": { "schema": "AuthSession" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "email",
+          "otp"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthSession"
+      }
     },
     {
       "operation": "auth.siwe.challenge",
       "method": "POST",
       "path": "/auth/siwe/challenge",
       "access": "optional",
-      "request": { "transport": "body", "params": [], "required": ["address"], "optional": ["chainId", "domain", "uri"] },
-      "response": { "schema": "SiweChallenge" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "address"
+        ],
+        "optional": [
+          "chainId",
+          "domain",
+          "uri"
+        ]
+      },
+      "response": {
+        "schema": "SiweChallenge"
+      }
     },
     {
       "operation": "auth.siwe.verify",
       "method": "POST",
       "path": "/auth/siwe/verify",
       "access": "public",
-      "request": { "transport": "body", "params": [], "required": ["challengeId", "signature"], "optional": ["provider"] },
-      "response": { "schema": "AuthSession" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "challengeId",
+          "signature"
+        ],
+        "optional": [
+          "provider"
+        ]
+      },
+      "response": {
+        "schema": "AuthSession"
+      }
     },
     {
       "operation": "auth.link.email",
       "method": "POST",
       "path": "/auth/link/email",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": ["email"], "optional": [] },
-      "response": { "schema": "EmailLink" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "email"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "EmailLink"
+      }
     },
     {
       "operation": "auth.link.emailPreview",
       "method": "POST",
       "path": "/auth/link/email/preview",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
-      "response": { "schema": "EmailLink" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "EmailLink"
+      }
     },
     {
       "operation": "auth.link.emailVerify",
       "method": "POST",
       "path": "/auth/link/email/verify",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
-      "response": { "schema": "Profile" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Profile"
+      }
     },
     {
       "operation": "auth.link.wallet",
       "method": "POST",
       "path": "/auth/link/wallet",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": ["address"], "optional": ["chainId", "domain", "uri"] },
-      "response": { "schema": "SiweChallenge" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "address"
+        ],
+        "optional": [
+          "chainId",
+          "domain",
+          "uri"
+        ]
+      },
+      "response": {
+        "schema": "SiweChallenge"
+      }
     },
     {
       "operation": "auth.link.walletVerify",
       "method": "POST",
       "path": "/auth/link/wallet/verify",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": ["challengeId", "signature"], "optional": ["provider"] },
-      "response": { "schema": "Profile" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "challengeId",
+          "signature"
+        ],
+        "optional": [
+          "provider"
+        ]
+      },
+      "response": {
+        "schema": "Profile"
+      }
     },
     {
       "operation": "profile.save",
       "method": "POST",
       "path": "/settings/profile",
       "access": "authenticated",
-      "request": { "transport": "body", "params": [], "required": [], "optional": ["name", "avatar", "avatar_media_id", "remove_icon", "feed_authored"] },
-      "response": { "schema": "Profile" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": [
+          "name",
+          "avatar",
+          "avatar_media_id",
+          "remove_icon",
+          "feed_authored"
+        ]
+      },
+      "response": {
+        "schema": "Profile"
+      }
     },
     {
       "operation": "profile.stats",
       "method": "GET",
       "path": "/profile/stats",
       "access": "authenticated",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["activity", "domain", "page", "per_page"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "activity",
+          "domain",
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "profiles.public",
       "method": "GET",
       "path": "/profiles/{id}",
       "access": "optional",
-      "request": { "transport": "none", "params": ["id"], "required": [], "optional": [] },
-      "response": { "schema": "PublicMiniProfile" }
+      "request": {
+        "transport": "none",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "PublicMiniProfile"
+      }
     },
     {
       "operation": "media.intent",
       "method": "POST",
       "path": "/media/uploads/intent",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["kind", "files"], "optional": [] },
-      "response": { "schema": "MediaIntent" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "kind",
+          "files"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "MediaIntent"
+      }
     },
     {
       "operation": "media.complete",
       "method": "POST",
       "path": "/media/uploads/{id}/complete",
       "access": "verified",
-      "request": { "transport": "none", "params": ["id"], "required": [], "optional": [] },
-      "response": { "schema": "MediaAsset" }
+      "request": {
+        "transport": "none",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "MediaAsset"
+      }
     },
     {
       "operation": "media.access",
       "method": "GET",
       "path": "/media/assets/{id}/access",
       "access": "verified",
-      "request": { "transport": "query", "params": ["id"], "required": [], "optional": ["variant"] },
-      "response": { "schema": "MediaAccess" }
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "variant"
+        ]
+      },
+      "response": {
+        "schema": "MediaAccess"
+      }
     },
     {
       "operation": "character.levelUp",
       "method": "POST",
       "path": "/rpg/character/level-up",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["silver"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "silver"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "character.attribute",
       "method": "POST",
       "path": "/rpg/character/attribute",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["attr"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "attr"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "character.reset",
       "method": "POST",
       "path": "/rpg/character/attributes/reset",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "economy.goldToSilver",
       "method": "POST",
       "path": "/economy/gold-to-silver",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["gold"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "gold"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "inventory.load",
       "method": "GET",
       "path": "/inventory/load",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["revision", "count"] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "revision",
+          "count"
+        ]
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "items.equip",
       "method": "POST",
       "path": "/items/equip",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["itemId", "slot"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "slot"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "items.unequip",
       "method": "POST",
       "path": "/items/unequip",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slot"], "optional": ["itemId"] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slot"
+        ],
+        "optional": [
+          "itemId"
+        ]
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "items.quote",
       "method": "POST",
       "path": "/items/craft/quote",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
-      "response": { "schema": "CraftQuote" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "CraftQuote"
+      }
     },
     {
       "operation": "items.scrap",
       "method": "POST",
       "path": "/items/scrap",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "items.upgrade",
       "method": "POST",
       "path": "/items/upgrade",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["itemId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "marketplace.list",
       "method": "GET",
       "path": "/marketplace/list",
       "access": "public",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["q", "slots", "rarities", "wear", "set", "origin", "attr", "target", "min_price", "max_price", "seller", "sort", "page", "perPage"] },
-      "response": { "schema": "MarketplacePage" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "q",
+          "slots",
+          "rarities",
+          "wear",
+          "set",
+          "origin",
+          "attr",
+          "target",
+          "min_price",
+          "max_price",
+          "seller",
+          "sort",
+          "page",
+          "perPage"
+        ]
+      },
+      "response": {
+        "schema": "MarketplacePage"
+      }
     },
     {
       "operation": "marketplace.mine",
       "method": "GET",
       "path": "/marketplace/mine",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "marketplace.create",
       "method": "POST",
       "path": "/marketplace/list",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["itemId", "price"], "optional": ["slot"] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "price"
+        ],
+        "optional": [
+          "slot"
+        ]
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "marketplace.reprice",
       "method": "POST",
       "path": "/marketplace/reprice",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["listingId", "price"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "listingId",
+          "price"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "marketplace.cancel",
       "method": "POST",
       "path": "/marketplace/cancel",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "listingId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "marketplace.buy",
       "method": "POST",
       "path": "/marketplace/buy",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "listingId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "marketplace.claim",
       "method": "POST",
       "path": "/marketplace/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["listingId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "listingId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "lootboxes.open",
       "method": "POST",
       "path": "/lootboxes/open",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["boxType"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "boxType"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "lootboxes.check",
       "method": "POST",
       "path": "/lootboxes/check",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["openingId", "cardId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "openingId",
+          "cardId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "lootboxes.choose",
       "method": "POST",
       "path": "/lootboxes/choose",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["openingId", "cardId"], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "openingId",
+          "cardId"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "lootboxes.buy",
       "method": "POST",
       "path": "/lootboxes/buy",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "PlayerEnvelope" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerEnvelope"
+      }
     },
     {
       "operation": "quests.feed",
       "method": "GET",
       "path": "/quests/feed",
       "access": "optional",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["tab", "cursor", "limit", "notice_mode"] },
-      "response": { "schema": "QuestFeed" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "tab",
+          "cursor",
+          "limit",
+          "notice_mode",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestFeed"
+      }
     },
     {
       "operation": "quests.feedChanges",
       "method": "POST",
       "path": "/quests/feed/changes",
       "access": "optional",
-      "request": { "transport": "body", "params": [], "required": ["feed_revision", "assignment_revision", "known_ids"], "optional": ["assignment_ids", "limit", "notice_mode", "notice_ack_ids"] },
-      "response": { "schema": "QuestFeedChanges" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "feed_revision",
+          "assignment_revision",
+          "known_ids"
+        ],
+        "optional": [
+          "assignment_ids",
+          "limit",
+          "notice_mode",
+          "notice_ack_ids",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestFeedChanges"
+      }
     },
     {
       "operation": "quests.feedViewer",
       "method": "POST",
       "path": "/quests/feed/viewer",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["feed_revision", "known_ids", "limit"], "optional": [] },
-      "response": { "schema": "QuestFeedViewer" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "feed_revision",
+          "known_ids",
+          "limit"
+        ],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestFeedViewer"
+      }
     },
     {
       "operation": "quests.detail",
       "method": "GET",
       "path": "/quests/{id}",
       "access": "optional",
-      "request": { "transport": "none", "params": ["id"], "required": [], "optional": [] },
-      "response": { "schema": "QuestCard" }
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestCard"
+      }
     },
     {
       "operation": "quests.state",
       "method": "POST",
       "path": "/quests/state",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["marked", "hidden"] },
-      "response": { "schema": "QuestStateMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "marked",
+          "hidden",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestStateMutation"
+      }
     },
     {
       "operation": "quests.ratingAssignments.claim",
       "method": "POST",
       "path": "/quests/rating-assignments/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": [], "optional": ["known_ids", "assignment_ids", "limit"] },
-      "response": { "schema": "QuestRatingAssignments" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": [
+          "known_ids",
+          "assignment_ids",
+          "limit",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestRatingAssignments"
+      }
     },
     {
       "operation": "quests.ratings",
       "method": "GET",
       "path": "/quests/ratings",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["limit", "cursor"] },
-      "response": { "schema": "QuestRatingHistory" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "limit",
+          "cursor"
+        ]
+      },
+      "response": {
+        "schema": "QuestRatingHistory"
+      }
     },
     {
       "operation": "quests.complete",
       "method": "POST",
       "path": "/quests/complete",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": ["answer", "option", "rating", "proof_url", "proof_media_ids", "platform_account", "publication_id"] },
-      "response": { "schema": "QuestCompletion" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "idempotency_key"
+        ],
+        "optional": [
+          "answer",
+          "option",
+          "rating",
+          "proof_url",
+          "proof_media_ids",
+          "platform_account",
+          "publication_id",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestCompletion"
+      }
     },
     {
       "operation": "quests.report",
       "method": "POST",
       "path": "/quests/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["category", "explanation", "reason"] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "category",
+          "explanation",
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.guest.preview",
       "method": "GET",
       "path": "/moderation/guest",
       "access": "public",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "ModerationGuestPreview" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationGuestPreview"
+      }
     },
     {
       "operation": "moderation.guest.intents.issue",
       "method": "POST",
       "path": "/moderation/guest/intents",
       "access": "public",
-      "request": { "transport": "body", "params": [], "required": ["case_id", "approve"], "optional": [] },
-      "response": { "schema": "ModerationGuestIntent" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "case_id",
+          "approve"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationGuestIntent"
+      }
     },
     {
       "operation": "moderation.guest.intents.redeem",
       "method": "POST",
       "path": "/moderation/guest/intents/redeem",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["token"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.summary",
       "method": "GET",
       "path": "/moderation/summary",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "ModerationSummary" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationSummary"
+      }
     },
     {
       "operation": "moderation.assignments.claim",
       "method": "POST",
       "path": "/moderation/assignments/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": [], "optional": ["case_id"] },
-      "response": { "schema": "ModerationAssignmentResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": [
+          "case_id",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationAssignmentResult"
+      }
     },
     {
       "operation": "moderation.votes",
       "method": "POST",
       "path": "/moderation/votes",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["assignment_id", "approve"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id",
+          "approve"
+        ],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.bypass",
       "method": "POST",
       "path": "/moderation/bypass",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["assignment_id"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.witness.prepay",
       "method": "POST",
       "path": "/moderation/witness/prepay",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.witness.switch",
       "method": "POST",
       "path": "/moderation/witness/switch",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["assignment_id"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id"
+        ],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.history",
       "method": "GET",
       "path": "/moderation/history",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["cursor", "limit"] },
-      "response": { "schema": "ModerationHistory" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "cursor",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "ModerationHistory"
+      }
     },
     {
       "operation": "moderation.domains",
       "method": "GET",
       "path": "/moderation/domains",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["status"] },
-      "response": { "schema": "ModerationDomains" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "status"
+        ]
+      },
+      "response": {
+        "schema": "ModerationDomains"
+      }
     },
     {
       "operation": "moderation.domains.propose",
       "method": "POST",
       "path": "/moderation/domains/propose",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["host"], "optional": ["explanation"] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "host"
+        ],
+        "optional": [
+          "explanation"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.domains.favicon",
       "method": "POST",
       "path": "/moderation/domains/favicon",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["host"], "optional": [] },
-      "response": { "schema": "DomainFavicon" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "host"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "DomainFavicon"
+      }
     },
     {
       "operation": "moderation.domains.report",
       "method": "POST",
       "path": "/moderation/domains/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["host"], "optional": ["category", "explanation", "reason"] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "host"
+        ],
+        "optional": [
+          "category",
+          "explanation",
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.completions.report",
       "method": "POST",
       "path": "/moderation/completions/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["assignment_id"], "optional": ["category", "explanation", "reason"] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id"
+        ],
+        "optional": [
+          "category",
+          "explanation",
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.profiles.report",
       "method": "POST",
       "path": "/moderation/profiles/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "category", "explanation"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "category",
+          "explanation"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.spaces.report",
       "method": "POST",
       "path": "/moderation/spaces/report",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "category", "explanation"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "category",
+          "explanation"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.cases.support",
       "method": "POST",
       "path": "/moderation/cases/support",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["case_id", "category", "explanation"], "optional": [] },
-      "response": { "schema": "ModerationMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "case_id",
+          "category",
+          "explanation"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
     },
     {
       "operation": "moderation.cases.appeal",
       "method": "POST",
       "path": "/moderation/cases/appeal",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["case_id"], "optional": [] },
-      "response": { "schema": "ModerationAppealMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "case_id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationAppealMutation"
+      }
     },
     {
       "operation": "moderation.reviews.create",
       "method": "POST",
       "path": "/moderation/reviews",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["target_type"], "optional": ["id", "target_id", "host"] },
-      "response": { "schema": "ModerationReviewMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "target_type"
+        ],
+        "optional": [
+          "id",
+          "target_id",
+          "host"
+        ]
+      },
+      "response": {
+        "schema": "ModerationReviewMutation"
+      }
     },
     {
       "operation": "moderation.domains.resolve",
       "method": "GET",
       "path": "/moderation/domains/resolve",
       "access": "public",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["host", "url"] },
-      "response": { "schema": "EffectiveDomainTrust" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "host",
+          "url"
+        ]
+      },
+      "response": {
+        "schema": "EffectiveDomainTrust"
+      }
     },
     {
       "operation": "quests.rewards.claim",
       "method": "POST",
       "path": "/quests/rewards/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "idempotency_key"], "optional": [] },
-      "response": { "schema": "QuestRewardClaim" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestRewardClaim"
+      }
     },
     {
       "operation": "quests.welcome.sync",
       "method": "POST",
       "path": "/quests/welcome/sync",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "WelcomeQuestSync" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "WelcomeQuestSync"
+      }
     },
     {
       "operation": "mining.league",
       "method": "GET",
       "path": "/mining/league",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["scope"] },
-      "response": { "schema": "MiningLeagueOverview" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "scope"
+        ]
+      },
+      "response": {
+        "schema": "MiningLeagueOverview"
+      }
     },
     {
       "operation": "mining.leagues",
       "method": "GET",
       "path": "/mining/leagues",
       "access": "public",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["league", "view", "sort", "direction", "page", "per_page", "miner"] },
-      "response": { "schema": "LeagueBrowser" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "league",
+          "view",
+          "sort",
+          "direction",
+          "page",
+          "per_page",
+          "miner"
+        ]
+      },
+      "response": {
+        "schema": "LeagueBrowser"
+      }
     },
     {
       "operation": "mining.leagues.catalog",
       "method": "GET",
       "path": "/mining/leagues/catalog",
       "access": "public",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "MiningLeagueCatalog" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "MiningLeagueCatalog"
+      }
     },
     {
       "operation": "mining.rewards",
       "method": "GET",
       "path": "/mining/rewards",
       "access": "public",
-      "request": { "transport": "query", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "MiningRewards" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "MiningRewards"
+      }
     },
     {
       "operation": "mining.rewards.claim",
       "method": "POST",
       "path": "/mining/rewards/claim",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["idempotency_key"], "optional": [] },
-      "response": { "schema": "MiningRewardsClaimResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "MiningRewardsClaimResult"
+      }
     },
     {
       "operation": "authorSpaces.mine",
       "method": "GET",
       "path": "/author-spaces/mine",
       "access": "verified",
-      "request": { "transport": "none", "params": [], "required": [], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.load",
       "method": "GET",
       "path": "/author-spaces/load",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "AuthorSpaceWorkspace" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "AuthorSpaceWorkspace"
+      }
     },
     {
       "operation": "authorSpaces.rewards",
       "method": "GET",
       "path": "/author-spaces/rewards",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "AuthorSpaceRewards" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceRewards"
+      }
     },
     {
       "operation": "authorSpaces.rewards.withdraw",
       "method": "POST",
       "path": "/author-spaces/rewards/withdraw",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "currency", "idempotency_key"], "optional": [] },
-      "response": { "schema": "AuthorRewardWithdrawalResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "currency",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorRewardWithdrawalResult"
+      }
     },
     {
       "operation": "spaces.load",
       "method": "GET",
       "path": "/spaces/load",
       "access": "optional",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.create",
       "method": "POST",
       "path": "/author-spaces/create",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["name", "description"], "optional": ["accent", "hue", "coverOpacity", "avatar", "cover", "avatar_media_id", "cover_media_id"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "multipart",
+        "params": [],
+        "required": [
+          "name",
+          "description"
+        ],
+        "optional": [
+          "accent",
+          "hue",
+          "coverOpacity",
+          "avatar",
+          "cover",
+          "avatar_media_id",
+          "cover_media_id"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.update",
       "method": "POST",
       "path": "/author-spaces/update",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["slug"], "optional": ["name", "description", "accent", "hue", "coverOpacity", "avatar", "cover", "avatar_media_id", "cover_media_id", "remove_avatar", "remove_cover"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "multipart",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "name",
+          "description",
+          "accent",
+          "hue",
+          "coverOpacity",
+          "avatar",
+          "cover",
+          "avatar_media_id",
+          "cover_media_id",
+          "remove_avatar",
+          "remove_cover"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.fund",
       "method": "POST",
       "path": "/author-spaces/fund",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "amount"], "optional": [] },
-      "response": { "schema": "AuthorSpaceBalanceMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "amount"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceBalanceMutation"
+      }
     },
     {
       "operation": "authorSpaces.balance.history",
       "method": "GET",
       "path": "/author-spaces/balance/history",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["page", "per_page"] },
-      "response": { "schema": "AuthorSpaceBalanceHistory" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "AuthorSpaceBalanceHistory"
+      }
     },
     {
       "operation": "spaces.donate",
       "method": "POST",
       "path": "/spaces/donate",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "amount"], "optional": [] },
-      "response": { "schema": "AuthorSpaceBalanceMutation" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "amount"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceBalanceMutation"
+      }
     },
     {
       "operation": "authorSpaces.groups.create",
       "method": "POST",
       "path": "/author-spaces/groups/create",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "name"], "optional": ["color"] },
-      "response": { "schema": "AuthorSpaceTag" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "name"
+        ],
+        "optional": [
+          "color"
+        ]
+      },
+      "response": {
+        "schema": "AuthorSpaceTag"
+      }
     },
     {
       "operation": "authorSpaces.groups.update",
       "method": "POST",
       "path": "/author-spaces/groups/update",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["name", "color", "position"] },
-      "response": { "schema": "AuthorSpaceTag" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "name",
+          "color",
+          "position"
+        ]
+      },
+      "response": {
+        "schema": "AuthorSpaceTag"
+      }
     },
     {
       "operation": "authorSpaces.groups.delete",
       "method": "POST",
       "path": "/author-spaces/groups/delete",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.quests.save",
       "method": "POST",
       "path": "/author-spaces/quests/save",
       "access": "verified",
-      "request": { "transport": "multipart", "params": [], "required": ["title", "description"], "optional": ["id", "slug", "type", "instructions", "config", "tag_ids", "group", "group_id", "bounty", "duration", "cover", "cover_media_id"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "multipart",
+        "params": [],
+        "required": [
+          "title",
+          "description"
+        ],
+        "optional": [
+          "id",
+          "slug",
+          "type",
+          "instructions",
+          "config",
+          "tag_ids",
+          "group",
+          "group_id",
+          "bounty",
+          "duration",
+          "cover",
+          "cover_media_id",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.quests.move",
       "method": "POST",
       "path": "/author-spaces/quests/move",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": ["tag_ids", "group", "group_id", "position"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "tag_ids",
+          "group",
+          "group_id",
+          "position"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.quests.duplicate",
       "method": "POST",
       "path": "/author-spaces/quests/duplicate",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.quests.delete",
       "method": "POST",
       "path": "/author-spaces/quests/delete",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.quests.quote",
       "method": "POST",
       "path": "/author-spaces/quests/quote",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "bounty", "duration"], "optional": ["id"] },
-      "response": { "schema": "QuestPricingQuote" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "bounty",
+          "duration"
+        ],
+        "optional": [
+          "id"
+        ]
+      },
+      "response": {
+        "schema": "QuestPricingQuote"
+      }
     },
     {
       "operation": "authorSpaces.quests.publish",
       "method": "POST",
       "path": "/author-spaces/quests/publish",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "max_cost"], "optional": ["bounty", "duration", "pricing_revision", "idempotency_key"] },
-      "response": { "schema": "QuestPublishResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "pricing_version",
+          "max_cost"
+        ],
+        "optional": [
+          "bounty",
+          "duration",
+          "pricing_revision",
+          "idempotency_key"
+        ]
+      },
+      "response": {
+        "schema": "QuestPublishResult"
+      }
     },
     {
       "operation": "authorSpaces.quests.extend",
       "method": "POST",
       "path": "/author-spaces/quests/extend",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "duration", "pricing_version", "pricing_revision", "max_cost", "idempotency_key"], "optional": [] },
-      "response": { "schema": "QuestPublishResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "duration",
+          "pricing_version",
+          "pricing_revision",
+          "max_cost",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestPublishResult"
+      }
     },
     {
       "operation": "authorSpaces.quests.unpublishQuote",
       "method": "POST",
       "path": "/author-spaces/quests/unpublish/quote",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "QuestUnpublishQuote" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestUnpublishQuote"
+      }
     },
     {
       "operation": "authorSpaces.quests.unpublish",
       "method": "POST",
       "path": "/author-spaces/quests/unpublish",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "pricing_version", "pricing_revision", "min_refund", "idempotency_key"], "optional": [] },
-      "response": { "schema": "QuestUnpublishResult" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "pricing_version",
+          "pricing_revision",
+          "min_refund",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestUnpublishResult"
+      }
     },
     {
       "operation": "authorSpaces.team.search",
       "method": "GET",
       "path": "/author-spaces/team/search",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug", "q"], "optional": [] },
-      "response": { "schema": "AuthorSpaceTeamSearch" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug",
+          "q"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceTeamSearch"
+      }
     },
     {
       "operation": "authorSpaces.team.add",
       "method": "POST",
       "path": "/author-spaces/team/add",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug", "user_id"], "optional": ["permissions"] },
-      "response": { "schema": "AuthorSpaceTeamAddition" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug",
+          "user_id"
+        ],
+        "optional": [
+          "permissions"
+        ]
+      },
+      "response": {
+        "schema": "AuthorSpaceTeamAddition"
+      }
     },
     {
       "operation": "authorSpaces.team.acknowledge",
       "method": "POST",
       "path": "/author-spaces/team/acknowledge",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.team.permissions",
       "method": "POST",
       "path": "/author-spaces/team/permissions",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id", "permissions"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "permissions"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.team.remove",
       "method": "POST",
       "path": "/author-spaces/team/remove",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["id"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.team.leave",
       "method": "POST",
       "path": "/author-spaces/team/leave",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "spaces.follow",
       "method": "POST",
       "path": "/spaces/follow",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "spaces.unfollow",
       "method": "POST",
       "path": "/spaces/unfollow",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["slug"], "optional": [] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Object"
+      }
     },
     {
       "operation": "authorSpaces.followers",
       "method": "GET",
       "path": "/author-spaces/followers",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["search", "sort", "page"] },
-      "response": { "schema": "Page" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "search",
+          "sort",
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "Page"
+      }
     },
     {
       "operation": "authorSpaces.submissions",
       "method": "GET",
       "path": "/author-spaces/submissions",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["status", "validation", "search", "page"] },
-      "response": { "schema": "Page" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "status",
+          "validation",
+          "search",
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "Page"
+      }
     },
     {
       "operation": "authorSpaces.analytics",
       "method": "GET",
       "path": "/author-spaces/analytics",
       "access": "verified",
-      "request": { "transport": "query", "params": [], "required": ["slug"], "optional": ["range"] },
-      "response": { "schema": "Object" }
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "range"
+        ]
+      },
+      "response": {
+        "schema": "Object"
+      }
     }
   ],
   "pocketbase": {
     "collections": {
-      "users": { "auth": true }
+      "users": {
+        "auth": true
+      }
     }
   }
 }

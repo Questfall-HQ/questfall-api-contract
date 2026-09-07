@@ -44,6 +44,30 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Screenshot и content_version=1
+
+Новые клиенты согласуют поддержку `content_version=1` в затронутых запросах
+Фида, деталей/выполнения, авторской формы и назначения/голоса модерации.
+`QuestType` и `ModerationCaseKind` включают `screenshot`. Требуется ровно
+`screenshot_count` (1–5) private `submission_image` IDs, без ссылки/аккаунта.
+Общий evidence shape расширен до пяти; Action по-прежнему требует 1–4.
+
+`QuestContentDocument` — `{version:1,content:{type:"doc",content:[...]}}`.
+Изображения содержат `media_id` и `caption`, никогда URL или binary.
+`player_document` публичный, `moderator_document` доступен только команде
+автора и назначенному модератору. Media purposes разделены на публичный
+`quest_instruction_image` и приватный `moderator_instruction_image`.
+Сопутствующий `content_media` содержит разрешённые в этом ответе media assets;
+подписанные URL не являются частью сохранённого документа.
+
+Без content_version=1 сервер не выдаёт Screenshot и задания с изображениями
+в инструкциях. Текстовое сохранение старым клиентом не может затереть v1.
+Публикации и moderation snapshots неизменяемы относительно нового черновика.
+Screenshot consensus: +20/−40 Silver до общего рыночного множителя, без
+Witness Credit, включая controls; Action Witness → Judge не меняется.
+
+### Установка
+
 Потребители фиксируют Git tag. Если consumer хранит lockfile в Git, обновление
 контракта должно коммититься вместе с ним:
 

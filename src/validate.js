@@ -29,6 +29,13 @@ function resolve(reference) {
 function inspect(rule, value, at, failures) {
   if (rule.$ref) return inspect(resolve(rule.$ref), value, at, failures)
 
+  for (const candidate of rule.allOf || []) inspect(candidate, value, at, failures)
+  if (rule.anyOf && !rule.anyOf.some(candidate => {
+    const nested = []
+    inspect(candidate, value, at, nested)
+    return nested.length === 0
+  })) failures.push(`${at} must match at least one schema`)
+
   if (rule.oneOf) {
     const candidates = rule.oneOf.map(candidate => {
       const nested = []
@@ -60,6 +67,23 @@ function inspect(rule, value, at, failures) {
 
   if (typeof value === 'string' && rule.minLength !== undefined && value.length < rule.minLength) {
     failures.push(`${at} must contain at least ${rule.minLength} characters`)
+  }
+  if (typeof value === 'string' && rule.maxLength !== undefined && value.length > rule.maxLength) {
+    failures.push(`${at} must contain at most ${rule.maxLength} characters`)
+  }
+  if (typeof value === 'string' && rule.pattern && !new RegExp(rule.pattern).test(value)) {
+    failures.push(`${at} must match ${rule.pattern}`)
+  }
+  if (Array.isArray(value) && rule.minItems !== undefined && value.length < rule.minItems) {
+    failures.push(`${at} must contain at least ${rule.minItems} items`)
+  }
+  if (Array.isArray(value) && rule.prefixItems) {
+    rule.prefixItems.forEach((candidate, index) => {
+      if (index < value.length) inspect(candidate, value[index], `${at}[${index}]`, failures)
+    })
+  }
+  if (Array.isArray(value) && rule.uniqueItems && new Set(value.map(item => JSON.stringify(item))).size !== value.length) {
+    failures.push(`${at} must contain unique items`)
   }
   if (typeof value === 'number' && rule.minimum !== undefined && value < rule.minimum) {
     failures.push(`${at} must be at least ${rule.minimum}`)
