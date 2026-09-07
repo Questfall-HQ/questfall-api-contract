@@ -634,6 +634,18 @@
       },
       "additionalProperties": false
     },
+    "QuestAttemptState": {
+      "type": "object",
+      "description": "The authenticated viewer's next attempt against the selected immutable publication. Counts reset on a new publication; successful stable-quest completion remains terminal. A next value of 0 means no attempt is currently available.",
+      "required": ["used", "remaining", "next", "multiplier"],
+      "properties": {
+        "used": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "remaining": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "next": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "multiplier": { "enum": [0, 0.2, 0.4, 0.6, 0.8, 1] }
+      },
+      "additionalProperties": false
+    },
     "QuestViewerState": {
       "type": "object",
       "required": ["marked", "hidden", "completed", "pending", "exhausted", "following", "assignment", "claimable", "claimed", "locked", "current", "lock_reason", "legacy_reconciled", "progress"],
@@ -653,6 +665,7 @@
         "lock_reason": { "type": "string" },
         "legacy_reconciled": { "type": "boolean" },
         "progress": { "$ref": "#/$defs/QuestProgress" },
+        "attempt": { "$ref": "#/$defs/QuestAttemptState" },
         "outcome": {
           "oneOf": [
             { "$ref": "#/$defs/QuestOutcome" },
@@ -673,6 +686,7 @@
       "required": ["id", "type", "title", "description", "instructions", "checklist", "config", "cover", "bounty", "base_points", "points", "reward", "rating", "completion_count", "published", "ends", "active", "placement", "author", "viewer"],
       "properties": {
         "id": { "type": "string" },
+        "publication_id": { "type": "string", "description": "Immutable publication used for this card's content and attempt state; empty for Welcome or legacy quests without a publication." },
         "type": { "$ref": "#/$defs/QuestType" },
         "title": { "type": "string" },
         "description": { "type": "string" },
@@ -710,7 +724,8 @@
         "assignment_revision": { "type": "integer", "minimum": 0 },
         "items": { "type": "array", "items": { "$ref": "#/$defs/QuestCard" } },
         "next_cursor": { "type": "string" },
-        "next_assignment_check": { "type": "integer", "minimum": 0 }
+        "next_assignment_check": { "type": "integer", "minimum": 0 },
+        "quest_updates": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestResolutionNotice" } }
       },
       "additionalProperties": true
     },
@@ -723,10 +738,11 @@
         "assignment_revision": { "type": "integer", "minimum": 0 },
         "unchanged": { "type": "boolean" },
         "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
-        "upsert": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "upsert": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/QuestCard" } },
         "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
         "next_cursor": { "type": "string" },
-        "next_assignment_check": { "type": "integer", "minimum": 0 }
+        "next_assignment_check": { "type": "integer", "minimum": 0 },
+        "quest_updates": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestResolutionNotice" } }
       },
       "additionalProperties": true
     },
@@ -735,6 +751,7 @@
       "required": ["id", "points", "reward", "viewer"],
       "properties": {
         "id": { "type": "string" },
+        "publication_id": { "type": "string" },
         "points": { "type": "integer", "minimum": 0 },
         "reward": { "$ref": "#/$defs/QuestReward" },
         "viewer": { "$ref": "#/$defs/QuestViewerState" }
@@ -752,7 +769,7 @@
         "next_cursor": { "type": "string" },
         "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
         "patches": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestFeedViewerPatch" } },
-        "upsert": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "upsert": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/QuestCard" } },
         "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } }
       },
       "additionalProperties": false
@@ -875,7 +892,7 @@
         "feed_revision": { "type": "integer", "minimum": 0 },
         "assignment_revision": { "type": "integer", "minimum": 0 },
         "assignments": { "type": "array", "maxItems": 10, "items": { "$ref": "#/$defs/QuestRatingAssignment" } },
-        "cards": { "type": "array", "maxItems": 50, "items": { "$ref": "#/$defs/QuestCard" } },
+        "cards": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/QuestCard" } },
         "order": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
         "remove": { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
         "next_cursor": { "type": "string" },
@@ -1506,6 +1523,20 @@
           "additionalProperties": true
         },
         "player": { "$ref": "#/$defs/Player" }
+      },
+      "additionalProperties": true
+    },
+    "QuestResolutionNotice": {
+      "type": "object",
+      "description": "A completion resolution notification. In explicit acknowledgement mode, id is an opaque receipt tied to this exact resolution, not a quest or submission identifier to parse on the client.",
+      "required": ["status", "title", "placement", "points"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["accepted", "rejected"] },
+        "title": { "type": "string" },
+        "placement": { "enum": ["feed", "welcome"] },
+        "points": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": true
     },

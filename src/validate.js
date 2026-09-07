@@ -67,6 +67,9 @@ function inspect(rule, value, at, failures) {
   if (typeof value === 'number' && rule.maximum !== undefined && value > rule.maximum) {
     failures.push(`${at} must be at most ${rule.maximum}`)
   }
+  if (Array.isArray(value) && rule.maxItems !== undefined && value.length > rule.maxItems) {
+    failures.push(`${at} must contain at most ${rule.maxItems} items`)
+  }
 
   if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
     for (const field of rule.required || []) {
