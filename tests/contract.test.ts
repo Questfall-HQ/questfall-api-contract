@@ -9,10 +9,38 @@ import {
 } from '../src/check.mjs'
 
 describe('contract manifest', () => {
+  test('keeps primary evidence private until the persisted completion step', () => {
+    const guide = {
+      id: 'assignment', kind: 'quest_initial', phase: 'instructions', reportable: false,
+      instructions: 'Identify the castle from the reference.',
+      progress: {stage: 'judging', status: 'open', consensus_percent: 0},
+      pricing: {window_revision: 1, starts: 0, ends: 600000, rate_bps: 10000, reward: 20, penalty: -40, bypass_cost: 10, witness_cost: 0},
+      created: 1, expires: 600000,
+    }
+    expect(validate('ModerationAssignment', guide)).toEqual([])
+    for (const extra of [{proof_url: ''}, {proof_media: []}, {participant: 'player'}, {account: 'player'}]) {
+      expect(validate('ModerationAssignment', {...guide, ...extra}).length).toBeGreaterThan(0)
+    }
+    const completion = {...guide, phase: 'completion', proof_url: '', proof_media: ['proof']}
+    expect(validate('ModerationAssignment', completion)).toEqual([])
+    const {phase, ...withoutPhase} = completion
+    expect(validate('ModerationAssignment', withoutPhase).length).toBeGreaterThan(0)
+    expect(validate('ModerationAssignment', {...withoutPhase, kind: 'judge'})).toEqual([])
+  })
+
+  test('validates cancellation receipts and anonymous author explanations', () => {
+    expect(validate('QuestCompensation', {points: 1, reason: 'instructions_invalid', created: 1})).toEqual([])
+    // Receipts remain readable after an economy change; new awards have a 1 MP floor.
+    expect(validate('QuestCompensation', {points: 0, reason: 'instructions_invalid', created: 1})).toEqual([])
+    expect(validate('QuestCompensation', {points: -1, reason: 'instructions_invalid', created: 1}).length).toBeGreaterThan(0)
+    expect(schema('AuthorSpaceRatedQuest').properties.instruction_review.$ref).toBe('#/$defs/InstructionReview')
+    expect(validate('InstructionReview', {status: 'invalid', refund: 5, explanations: ['The castle reference is missing.']})).toEqual([])
+  })
+
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(107)
+		expect(contract.routes.length).toBe(109)
   })
 
   test('builds parameterized paths safely', () => {

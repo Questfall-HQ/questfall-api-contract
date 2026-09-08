@@ -66,6 +66,32 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 Screenshot consensus: +20/−40 Silver до общего рыночного множителя, без
 Witness Credit, включая controls; Action Witness → Judge не меняется.
 
+### Первая проверка и moderation_version=1
+
+`moderation_version=1` включает новые авторские Feed-версии Action/Screenshot,
+первичный `quest_initial`, этап `instructions`/`completion`, три решения
+`approve`/`reject`/`instructions_invalid`, `waiting_instructions` и `cancelled`.
+`POST /moderation/assignments/continue` принимает assignment_id и идемпотентно
+открывает доказательства без голоса. `POST /moderation/decisions` принимает
+assignment_id, decision и explanation (12–2000 символов для плохой инструкции).
+Старый `/moderation/votes` с boolean approve продолжает обслуживать бинарные
+кейсы. До continue assignment не содержит proof media/URL или участника, и
+приватный media API также закрывает доказательства.
+
+Публикация мгновенная; первый доступный кейс приоритетен, остальные submissions
+ждут решения по материалам. Первичные и бинарные кейсы завершаются сразу по
+достижении своих условий консенсуса; десятиминутное окно остаётся только для
+пересчёта цены. Первичная экономика +20/−40 × рыночный множитель,
+без Witness Credit. Отмена по инструкции содержит `compensation` с фактическими
+`max(1, floor(snapshot.points × 0.5))` недельными MP; это не успех, не
+возврат Stamina и не сезонный/completion зачёт. Уведомления используют прежний
+ack-протокол; неподдерживающий клиент не подтверждает скрытые результаты и
+не теряет активные обязательства. Новые публикации/назначения ему не выдаются,
+ошибка обновления при новой активации возникает до списания средств.
+
+Старые опубликованные версии сохраняют legacy-правила. Пересмотр одобренной
+инструкции, новые апелляции и дополнительные санкции Bounty 1 не добавляются.
+
 ### Установка
 
 Потребители фиксируют Git tag. Если consumer хранит lockfile в Git, обновление

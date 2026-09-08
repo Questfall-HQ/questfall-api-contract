@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.10.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.11.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -193,6 +193,9 @@
           "items": {
             "$ref": "#/$defs/MediaAsset"
           }
+        },
+        "instruction_review": {
+          "$ref": "#/$defs/InstructionReview"
         }
       },
       "additionalProperties": true
@@ -1578,7 +1581,8 @@
           "enum": [
             "pending",
             "accepted",
-            "rejected"
+            "rejected",
+            "cancelled"
           ]
         },
         "answer": {
@@ -1781,7 +1785,8 @@
             "none",
             "pending",
             "accepted",
-            "rejected"
+            "rejected",
+            "cancelled"
           ]
         },
         "moderation_stage": {
@@ -1791,7 +1796,9 @@
             "judging",
             "accepted",
             "rejected",
-            "paused"
+            "paused",
+            "waiting_instructions",
+            "cancelled"
           ]
         },
         "exhausted": {
@@ -1850,6 +1857,16 @@
           "items": {
             "type": "string"
           }
+        },
+        "compensation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCompensation"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": true
@@ -3288,7 +3305,8 @@
           "enum": [
             "unknown",
             "approve",
-            "reject"
+            "reject",
+            "instructions_invalid"
           ]
         },
         "category": {
@@ -3372,7 +3390,8 @@
           "enum": [
             "unknown",
             "approve",
-            "reject"
+            "reject",
+            "instructions_invalid"
           ]
         },
         "category": {
@@ -3539,7 +3558,8 @@
         "completion_report",
         "profile_report",
         "space_report",
-        "screenshot"
+        "screenshot",
+        "quest_initial"
       ]
     },
     "ModerationCaseMode": {
@@ -3651,7 +3671,9 @@
             "judging",
             "report",
             "resolved",
-            "paused"
+            "paused",
+            "waiting_instructions",
+            "cancelled"
           ]
         },
         "status": {
@@ -3787,8 +3809,6 @@
         "kind",
         "reportable",
         "instructions",
-        "proof_url",
-        "proof_media",
         "progress",
         "pricing",
         "created",
@@ -3927,9 +3947,95 @@
           "items": {
             "$ref": "#/$defs/MediaAsset"
           }
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "instructions",
+            "completion"
+          ]
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "phase"
+          ],
+          "properties": {
+            "kind": {
+              "const": "quest_initial"
+            },
+            "phase": {
+              "const": "instructions"
+            },
+            "proof_url": {
+              "enum": []
+            },
+            "proof_media": {
+              "enum": []
+            },
+            "participant": {
+              "enum": []
+            },
+            "participant_profile": {
+              "enum": []
+            },
+            "account": {
+              "enum": []
+            },
+            "target": {
+              "enum": []
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "proof_url",
+            "proof_media"
+          ],
+          "properties": {
+            "phase": {
+              "const": "completion"
+            }
+          },
+          "anyOf": [
+            {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "witness",
+                    "judge",
+                    "domain_proposal",
+                    "domain_report",
+                    "quest_report",
+                    "completion_report",
+                    "profile_report",
+                    "space_report",
+                    "screenshot"
+                  ]
+                }
+              }
+            },
+            {
+              "required": [
+                "phase"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "quest_initial"
+                },
+                "phase": {
+                  "const": "completion"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     "ModeratorState": {
       "type": "object",
@@ -4087,7 +4193,8 @@
           "enum": [
             "unknown",
             "approve",
-            "reject"
+            "reject",
+            "instructions_invalid"
           ]
         },
         "cost": {
@@ -4235,7 +4342,8 @@
           "enum": [
             "unknown",
             "approve",
-            "reject"
+            "reject",
+            "instructions_invalid"
           ]
         },
         "created": {
@@ -4344,7 +4452,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": true,
+            "properties": {
+              "decision": {
+                "$ref": "#/$defs/ModerationDecisionValue"
+              }
+            }
           }
         },
         "chains": {
@@ -4401,7 +4514,8 @@
           "enum": [
             "pending",
             "accepted",
-            "rejected"
+            "rejected",
+            "cancelled"
           ]
         },
         "accepted": {
@@ -4457,6 +4571,46 @@
         },
         "player": {
           "$ref": "#/$defs/Player"
+        },
+        "compensation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCompensation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "moderation": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "string",
+              "enum": [
+                "witnessing",
+                "judging",
+                "waiting_instructions",
+                "accepted",
+                "rejected",
+                "cancelled"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "open",
+                "paused",
+                "resolved",
+                "cancelled"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
         }
       },
       "additionalProperties": true
@@ -4483,7 +4637,8 @@
         "status": {
           "enum": [
             "accepted",
-            "rejected"
+            "rejected",
+            "cancelled"
           ]
         },
         "title": {
@@ -4498,6 +4653,16 @@
         "points": {
           "type": "integer",
           "minimum": 0
+        },
+        "compensation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCompensation"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": true
@@ -7360,6 +7525,65 @@
       },
       "additionalProperties": false,
       "description": "Screenshot requires exactly screenshot_count (1–5) IDs and no URL/account. Action retains 1–4 IDs plus its public link and account."
+    },
+    "ModerationDecisionValue": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "reject",
+        "instructions_invalid"
+      ]
+    },
+    "QuestCompensation": {
+      "type": "object",
+      "required": [
+        "points",
+        "reason",
+        "created"
+      ],
+      "properties": {
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "const": "instructions_invalid"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "InstructionReview": {
+      "type": "object",
+      "required": [
+        "status",
+        "refund",
+        "explanations"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "legacy",
+            "pending",
+            "approved",
+            "invalid"
+          ]
+        },
+        "refund": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "explanations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

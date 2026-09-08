@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.10.0",
+  "version": "6.11.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -685,7 +685,8 @@
           "cursor",
           "limit",
           "notice_mode",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -710,7 +711,8 @@
           "limit",
           "notice_mode",
           "notice_ack_ids",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -731,7 +733,8 @@
           "limit"
         ],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -750,7 +753,8 @@
         ],
         "required": [],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -771,7 +775,8 @@
         "optional": [
           "marked",
           "hidden",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -791,7 +796,8 @@
           "known_ids",
           "assignment_ids",
           "limit",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -836,7 +842,8 @@
           "proof_media_ids",
           "platform_account",
           "publication_id",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -924,7 +931,8 @@
         "params": [],
         "required": [],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -942,7 +950,8 @@
         "required": [],
         "optional": [
           "case_id",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -962,7 +971,8 @@
           "approve"
         ],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -980,7 +990,9 @@
         "required": [
           "assignment_id"
         ],
-        "optional": []
+        "optional": [
+          "moderation_version"
+        ]
       },
       "response": {
         "schema": "ModerationMutation"
@@ -1013,7 +1025,8 @@
           "assignment_id"
         ],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1031,7 +1044,8 @@
         "required": [],
         "optional": [
           "cursor",
-          "limit"
+          "limit",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1393,7 +1407,8 @@
           "slug"
         ],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1448,7 +1463,8 @@
           "slug"
         ],
         "optional": [
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1649,7 +1665,8 @@
           "duration",
           "cover",
           "cover_media_id",
-          "content_version"
+          "content_version",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1750,7 +1767,8 @@
           "bounty",
           "duration",
           "pricing_revision",
-          "idempotency_key"
+          "idempotency_key",
+          "moderation_version"
         ]
       },
       "response": {
@@ -1994,7 +2012,8 @@
           "status",
           "validation",
           "search",
-          "page"
+          "page",
+          "moderation_version"
         ]
       },
       "response": {
@@ -2018,6 +2037,48 @@
       },
       "response": {
         "schema": "Object"
+      }
+    },
+    {
+      "operation": "moderation.continue",
+      "method": "POST",
+      "path": "/moderation/assignments/continue",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id"
+        ],
+        "optional": [
+          "moderation_version",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationSummary"
+      }
+    },
+    {
+      "operation": "moderation.decide",
+      "method": "POST",
+      "path": "/moderation/decisions",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id",
+          "decision"
+        ],
+        "optional": [
+          "explanation",
+          "moderation_version",
+          "content_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
       }
     }
   ],
