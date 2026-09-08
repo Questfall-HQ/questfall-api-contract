@@ -196,6 +196,15 @@ completed, exhausted или другой блокировке `remaining`, `next
 только к текущему решению собственного submission: запоздавший ACK не скрывает
 более позднее решение. Без `notice_mode` сохраняется legacy consume-on-read.
 
+### Author Space in initial moderation (v6.13.0)
+
+`ModerationAssignment.author` is an optional nullable `QuestAuthor`. New
+`quest_initial` cases capture the public Author Space name, avatar and karma
+when created, and preserve that metadata in reference controls. Both review
+steps can display it; participant identity and proof remain hidden until
+`continue`. Older cases without this snapshot resolve their public author
+metadata when read. Binary assignments can omit the field or return `null`.
+
 ### Quest reports from initial moderation (v6.12.0)
 
 `POST /moderation/quests/report` accepts `assignment_id`, `category`, `explanation`

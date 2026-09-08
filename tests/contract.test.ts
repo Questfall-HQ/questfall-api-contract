@@ -18,6 +18,10 @@ describe('contract manifest', () => {
       created: 1, expires: 600000,
     }
     expect(validate('ModerationAssignment', guide)).toEqual([])
+    const author = {id: 'space', slug: 'castle-explorers', name: 'Castle Explorers', avatar: '', accent: 'violet', hue: 145, official: false, karma: 8.7}
+    expect(validate('ModerationAssignment', {...guide, author})).toEqual([])
+    expect(validate('ModerationAssignment', {...guide, author: null})).toEqual([])
+    expect(validate('ModerationAssignment', {...guide, author: {...author, karma: 11}}).length).toBeGreaterThan(0)
     for (const extra of [{proof_url: ''}, {proof_media: []}, {participant: 'player'}, {account: 'player'}]) {
       expect(validate('ModerationAssignment', {...guide, ...extra}).length).toBeGreaterThan(0)
     }

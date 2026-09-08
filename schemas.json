@@ -3954,6 +3954,16 @@
             "instructions",
             "completion"
           ]
+        },
+        "author": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/QuestAuthor"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": true,
