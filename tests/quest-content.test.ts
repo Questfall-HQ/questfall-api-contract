@@ -5,6 +5,14 @@ import {validate} from '../src/validate.js'
 const image = {type:'image',attrs:{media_id:'privateimage001',caption:'Castle'}}
 const doc = {version:1,content:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Reach the castle',marks:[{type:'bold'}]}]},image]}}
 
+test('quest reports from initial moderation address the private assignment and retain the legacy quest route',()=>{
+ const assigned=contract.routes.find(r=>r.operation==='moderation.quests.report')
+ expect(assigned?.path).toBe('/moderation/quests/report')
+ expect(assigned?.request.required).toEqual(['assignment_id','category','explanation','moderation_version'])
+ expect(assigned?.response.schema).toBe('ModerationMutation')
+ expect(contract.routes.find(r=>r.operation==='quests.report')?.request.required).toEqual(['id'])
+})
+
 test('supports Screenshot and explicit content negotiation on the affected surfaces',()=>{
  expect(validate('QuestType','screenshot')).toEqual([])
  expect(validate('ModerationCaseKind','screenshot')).toEqual([])

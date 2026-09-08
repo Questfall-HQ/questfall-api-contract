@@ -79,9 +79,11 @@ assignment_id, decision и explanation (12–2000 символов для пло
 приватный media API также закрывает доказательства.
 
 Публикация мгновенная; первый доступный кейс приоритетен, остальные submissions
-ждут решения по материалам. Первичные и бинарные кейсы завершаются сразу по
-достижении своих условий консенсуса; десятиминутное окно остаётся только для
-пересчёта цены. Первичная экономика +20/−40 × рыночный множитель,
+ждут решения по материалам. Первичный кейс завершается сразу при консенсусе.
+Бинарный — на общей десятиминутной границе либо досрочно, когда оставшиеся
+активные голоса уже не могут изменить исход; неразрешённая ничья требует
+дополнительных назначений. Окно также определяет рыночную цену.
+Первичная экономика +20/−40 × рыночный множитель,
 без Witness Credit. Отмена по инструкции содержит `compensation` с фактическими
 `max(1, floor(snapshot.points × 0.5))` недельными MP; это не успех, не
 возврат Stamina и не сезонный/completion зачёт. Уведомления используют прежний
@@ -193,3 +195,15 @@ completed, exhausted или другой блокировке `remaining`, `next
 в `notice_ack_ids` следующего `quests.feedChanges`. ACK идемпотентен и применим
 только к текущему решению собственного submission: запоздавший ACK не скрывает
 более позднее решение. Без `notice_mode` сохраняется legacy consume-on-read.
+
+### Quest reports from initial moderation (v6.12.0)
+
+`POST /moderation/quests/report` accepts `assignment_id`, `category`, `explanation`
+(12–2000 characters), and `moderation_version=1`; `content_version` is optional.
+The verified user must own an active `quest_initial` assignment. Quest policy
+categories and the existing report Stamina cost apply. The response is a
+`ModerationMutation` retaining the assignment and its current proof-access phase;
+reporting does not vote, release the assignment, or expose the quest/control source.
+A private receipt makes retries idempotent. Controls accept the same action and
+cost without creating a report against their source quest. The existing
+`POST /quests/report` with a quest `id` remains unchanged.

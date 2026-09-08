@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.11.0",
+  "version": "6.12.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -1120,6 +1120,28 @@
           "category",
           "explanation",
           "reason"
+        ]
+      },
+      "response": {
+        "schema": "ModerationMutation"
+      }
+    },
+    {
+      "operation": "moderation.quests.report",
+      "method": "POST",
+      "path": "/moderation/quests/report",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "assignment_id",
+          "category",
+          "explanation",
+          "moderation_version"
+        ],
+        "optional": [
+          "content_version"
         ]
       },
       "response": {
