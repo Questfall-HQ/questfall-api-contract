@@ -216,3 +216,13 @@ reporting does not vote, release the assignment, or expose the quest/control sou
 A private receipt makes retries idempotent. Controls accept the same action and
 cost without creating a report against their source quest. The existing
 `POST /quests/report` with a quest `id` remains unchanged.
+
+## v6.14.0 — quest lifecycle и bounty-v3
+
+Добавлены необязательный `lifecycle` в авторском квесте, приватный пагинируемый
+`authorSpaces.quests.history`, необязательный ключ идемпотентности duplicate и
+quote `pricing_version`. В bounty-v3 quote обязательны `discount_balance` и
+`discount_applied` (базовые Silver/сутки до Karma). Старые bounty-v1/v2 схемы и
+вызовы сохраняются. Без-ID quote без opt-in остаётся v1; v2 действует для
+продления старой активной публикации. Lifecycle описывает фактическую видимость,
+независимые ограничения, review, финансовые последствия и разрешения действий.

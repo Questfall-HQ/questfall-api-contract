@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.13.0",
+  "version": "6.14.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -1728,7 +1728,9 @@
         "required": [
           "id"
         ],
-        "optional": []
+        "optional": [
+          "idempotency_key"
+        ]
       },
       "response": {
         "schema": "Object"
@@ -1765,7 +1767,8 @@
           "duration"
         ],
         "optional": [
-          "id"
+          "id",
+          "pricing_version"
         ]
       },
       "response": {
@@ -2101,6 +2104,26 @@
       },
       "response": {
         "schema": "ModerationMutation"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.history",
+      "method": "GET",
+      "path": "/author-spaces/quests/history",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "cursor",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "AuthorQuestHistory"
       }
     }
   ],

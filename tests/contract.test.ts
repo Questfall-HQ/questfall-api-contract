@@ -41,10 +41,22 @@ describe('contract manifest', () => {
     expect(validate('InstructionReview', {status: 'invalid', refund: 5, explanations: ['The castle reference is missing.']})).toEqual([])
   })
 
+  test('keeps legacy pricing while requiring the v3 absolute discount fields', () => {
+    expect(operations['authorSpaces.quests.quote'].request.optional).toContain('pricing_version')
+    expect(operations['authorSpaces.quests.duplicate'].request.optional).toEqual(['idempotency_key'])
+    expect(operations['authorSpaces.quests.history'].access).toBe('verified')
+    const price = {pricing_version:'bounty-v3',bounty:10,duration:1,day:7808,subtotal:7808,karma:0,discount:0,discount_rate:0,total:7808,start_day:1,end_day:1,price_floor_day:30,first_day_price:7808,last_day_price:7808,mode:'activate',continued:false,pricing_revision:0,discount_balance:0,discount_applied:0,position:1,population:0,available:10000}
+    expect(validate('QuestPricingQuote',price)).toEqual([])
+    const {discount_balance, discount_applied, ...missing} = price
+    expect(validate('QuestPricingQuote',missing).length).toBeGreaterThan(0)
+    expect(validate('QuestPricingQuote',{...missing,pricing_version:'bounty-v2'})).toEqual([])
+    expect(validate('QuestPricingQuote',{...price,discount_balance:-1}).length).toBeGreaterThan(0)
+  })
+
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(110)
+		expect(contract.routes.length).toBe(111)
   })
 
   test('builds parameterized paths safely', () => {
@@ -85,7 +97,7 @@ describe('contract manifest', () => {
 		expect(operations['authorSpaces.quests.extend'].request.required).toEqual(['id', 'duration', 'pricing_version', 'pricing_revision', 'max_cost', 'idempotency_key'])
 		expect(operations['authorSpaces.quests.unpublishQuote'].response.schema).toBe('QuestUnpublishQuote')
 		expect(operations['authorSpaces.quests.unpublish'].response.schema).toBe('QuestUnpublishResult')
-		expect(schema('QuestPricingQuote').properties.pricing_version.enum).toEqual(['bounty-v1', 'bounty-v2'])
+		expect(schema('QuestPricingQuote').properties.pricing_version.enum).toEqual(['bounty-v1', 'bounty-v2', 'bounty-v3'])
 		expect(schema('QuestPricingQuote').properties.mode.enum).toEqual(['activate', 'reactivate', 'extend'])
 		expect(schema('QuestPricingQuote').properties.subtotal.minimum).toBe(0)
 		expect(schema('QuestPricingQuote').properties.discount_rate.maximum).toBe(1)
