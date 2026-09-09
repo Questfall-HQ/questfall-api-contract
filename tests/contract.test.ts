@@ -53,10 +53,23 @@ describe('contract manifest', () => {
     expect(validate('QuestPricingQuote',{...price,discount_balance:-1}).length).toBeGreaterThan(0)
   })
 
+  test('adds manual archive without requiring new lifecycle fields from old servers', () => {
+    const route = operations['authorSpaces.quests.archive']
+    expect(route.request.required).toEqual(['id','archived'])
+    expect(route.access).toBe('verified')
+    expect(route.response.schema).toBe('AuthorSpaceRatedQuest')
+    const life = schema('QuestLifecycle')
+    expect(life.properties.section.enum).toEqual(['drafts','active','inactive','archive'])
+    expect(life.required).not.toContain('section')
+    expect(life.required).not.toContain('archived_at')
+    expect(life.properties.actions.required).not.toContain('archive')
+    expect(life.properties.actions.required).not.toContain('restore')
+  })
+
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(111)
+		expect(contract.routes.length).toBe(112)
   })
 
   test('builds parameterized paths safely', () => {

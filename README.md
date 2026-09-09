@@ -226,3 +226,21 @@ quote `pricing_version`. В bounty-v3 quote обязательны `discount_bal
 вызовы сохраняются. Без-ID quote без opt-in остаётся v1; v2 действует для
 продления старой активной публикации. Lifecycle описывает фактическую видимость,
 независимые ограничения, review, финансовые последствия и разрешения действий.
+
+## v6.15.0 — author quest archive
+
+`POST /author-spaces/quests/archive` (`authorSpaces.quests.archive`) accepts
+`{id, archived: boolean}` and returns an `AuthorSpaceRatedQuest`. Verified team
+members need `drafts_manage`. Setting the same state again is idempotent and
+creates no additional event. Only inactive, previously published quests (including
+historical bans) can be archived; never-published drafts remain deletable.
+
+Optional lifecycle fields `section` (`drafts | active | inactive | archive`) and
+`archived_at` (Unix milliseconds, zero otherwise), plus `actions.archive` and
+`actions.restore`, describe team organization separately from publication and
+moderation. Returned quests remain Inactive, even while their DB status is draft.
+Archive/restore retain history, money, ratings, user tags and all restrictions.
+Restoring never publishes a quest. Archive actions appear in existing event and
+quest history responses. Older publication calls remain supported: an explicit
+successful publication clears manual archiving; existing records are not moved
+to Archive automatically.

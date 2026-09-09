@@ -7884,6 +7884,38 @@
                 }
               },
               "additionalProperties": false
+            },
+            "archive": {
+              "type": "object",
+              "required": [
+                "allowed",
+                "reason"
+              ],
+              "properties": {
+                "allowed": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "restore": {
+              "type": "object",
+              "required": [
+                "allowed",
+                "reason"
+              ],
+              "properties": {
+                "allowed": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -7907,6 +7939,21 @@
             }
           },
           "additionalProperties": false
+        },
+        "section": {
+          "type": "string",
+          "enum": [
+            "drafts",
+            "active",
+            "inactive",
+            "archive"
+          ],
+          "description": "Author workspace organization, independent of publication and moderation state. Drafts have never been published; Archive is explicitly chosen by the team."
+        },
+        "archived_at": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Manual archive time in Unix milliseconds, or zero."
         }
       },
       "additionalProperties": false

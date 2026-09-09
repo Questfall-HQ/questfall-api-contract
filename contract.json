@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.14.0",
+  "version": "6.15.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -1734,6 +1734,24 @@
       },
       "response": {
         "schema": "Object"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.archive",
+      "method": "POST",
+      "path": "/author-spaces/quests/archive",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "archived"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceRatedQuest"
       }
     },
     {
