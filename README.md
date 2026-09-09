@@ -255,3 +255,15 @@ moderation or payment updates. Reactivation clears the displayed marker through
 the new publication boundary; copying starts independently. Historical dates are
 not inferred from `updated`. Older servers may omit the field; older clients can
 ignore it. Publication permissions and readiness continue to use existing fields.
+
+## v6.17.0 — cumulative publication time
+
+Optional `AuthorSpaceRatedQuest.published_ms` reports total elapsed publication time in
+milliseconds at response time, across all recorded publications of the quest.
+Each interval is capped at server time, scheduled end and actual closure.
+Pauses and unused prepaid time are excluded; time hidden by moderation still
+counts while the publication is running. Extensions lengthen the same interval.
+The value is `null` if historical intervals are missing or incomplete, and zero
+for a never-published draft. Older servers may omit it; clients show an unknown
+total rather than substituting time since the latest activation. No new history
+records or database fields are required.

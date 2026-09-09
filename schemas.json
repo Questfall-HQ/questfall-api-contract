@@ -150,6 +150,14 @@
         "updated"
       ],
       "properties": {
+        "published_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Total elapsed time in milliseconds across all quest publication intervals at response time. Each interval ends at the earliest of its scheduled end, actual closure, or server time. Excludes gaps and unused prepaid time; includes time hidden by moderation while the publication remains running. Null when historical intervals are missing or incomplete. Optional for compatibility with older servers."
+        },
         "id": {
           "type": "string"
         },

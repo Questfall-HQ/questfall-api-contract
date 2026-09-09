@@ -9,6 +9,17 @@ import {
 } from '../src/check.mjs'
 
 describe('contract manifest', () => {
+  test('accepts cumulative publication time while keeping older author quest responses valid', () => {
+    const quest = {id:'quest',title:'A published quest',cover:'',tag_ids:[],rating:null,rated:0,updated:0}
+    expect(validate('AuthorSpaceRatedQuest',quest)).toEqual([])
+    for (const published_ms of [0, 3.5 * 86400000, null]) {
+      expect(validate('AuthorSpaceRatedQuest',{...quest,published_ms})).toEqual([])
+    }
+    for (const published_ms of [-1, 1.5, '86400000']) {
+      expect(validate('AuthorSpaceRatedQuest',{...quest,published_ms}).length).toBeGreaterThan(0)
+    }
+  })
+
   test('keeps primary evidence private until the persisted completion step', () => {
     const guide = {
       id: 'assignment', kind: 'quest_initial', phase: 'instructions', reportable: false,
