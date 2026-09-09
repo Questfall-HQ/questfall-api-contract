@@ -244,3 +244,14 @@ Restoring never publishes a quest. Archive actions appear in existing event and
 quest history responses. Older publication calls remain supported: an explicit
 successful publication clears manual archiving; existing records are not moved
 to Archive automatically.
+
+## v6.16.0 — author material edit date
+
+Optional `QuestLifecycle.edited_at` is Unix milliseconds of the last recorded
+normalized material edit after the latest publication began, shown only while
+inactive; zero means no recorded edit. It changes for title, type, description,
+verification instructions and config, not cover, Bounty, duration, tags,
+moderation or payment updates. Reactivation clears the displayed marker through
+the new publication boundary; copying starts independently. Historical dates are
+not inferred from `updated`. Older servers may omit the field; older clients can
+ignore it. Publication permissions and readiness continue to use existing fields.

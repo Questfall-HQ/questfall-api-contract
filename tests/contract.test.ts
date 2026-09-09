@@ -436,3 +436,10 @@ describe('consumer comparisons', () => {
     ])
   })
 })
+
+test('material edit dates extend lifecycle without requiring the field from older servers', () => {
+ const field = schema('QuestLifecycle').properties.edited_at
+ expect(field.type).toBe('integer')
+ expect(field.minimum).toBe(0)
+ expect(schema('QuestLifecycle').required).not.toContain('edited_at')
+})

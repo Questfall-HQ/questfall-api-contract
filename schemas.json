@@ -7954,6 +7954,11 @@
           "type": "number",
           "minimum": 0,
           "description": "Manual archive time in Unix milliseconds, or zero."
+        },
+        "edited_at": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unix milliseconds of the latest normalized material edit after the last publication began, for inactive quests. Zero when none is recorded; older records are not inferred from updated. Cover, Bounty, duration, tags and service changes do not count."
         }
       },
       "additionalProperties": false
