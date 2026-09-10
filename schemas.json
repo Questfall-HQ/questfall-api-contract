@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.11.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.20.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -207,6 +207,9 @@
         },
         "lifecycle": {
           "$ref": "#/$defs/QuestLifecycle"
+        },
+        "space_update": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
         }
       },
       "additionalProperties": true
@@ -2042,6 +2045,16 @@
           "items": {
             "$ref": "#/$defs/QuestResolutionNotice"
           }
+        },
+        "response_version": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
         }
       },
       "additionalProperties": true
@@ -2111,6 +2124,16 @@
           "items": {
             "$ref": "#/$defs/QuestResolutionNotice"
           }
+        },
+        "response_version": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
         }
       },
       "additionalProperties": true
@@ -2478,8 +2501,7 @@
       ],
       "properties": {
         "quest": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/AuthorQuestMutation"
         },
         "publication": {
           "$ref": "#/$defs/QuestPublication"
@@ -2565,8 +2587,7 @@
       ],
       "properties": {
         "quest": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/AuthorQuestMutation"
         },
         "publication": {
           "$ref": "#/$defs/QuestPublication"
@@ -6363,7 +6384,7 @@
               ]
             },
             "data": {
-              "type": "object",
+              "type": ["object", "null"],
               "additionalProperties": true
             }
           },
@@ -6421,6 +6442,12 @@
         "user"
       ],
       "properties": {
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
         "user": {
           "$ref": "#/$defs/ProfileUser"
         },
@@ -8064,6 +8091,2059 @@
         }
       },
       "additionalProperties": false
+    },
+    "BalanceState": {
+      "type": "object",
+      "required": [
+        "gold",
+        "silver",
+        "essence",
+        "lootboxes"
+      ],
+      "properties": {
+        "gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "silver": {
+          "type": "integer"
+        },
+        "essence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lootboxes": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "a": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "b": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "c": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "d": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "e": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "f": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "CharacterState": {
+      "type": "object",
+      "required": [
+        "level",
+        "experience",
+        "traits",
+        "points",
+        "shards",
+        "stamina",
+        "systems",
+        "equipment",
+        "mining"
+      ],
+      "properties": {
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "experience": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "traits": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "points": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "shards": {
+          "$ref": "#/$defs/ShardState"
+        },
+        "stamina": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "systems": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "equipment": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "mining": {
+          "$ref": "#/$defs/PlayerMining"
+        }
+      },
+      "additionalProperties": true
+    },
+    "OpeningCard": {
+      "type": "object",
+      "required": [
+        "id",
+        "checked",
+        "hint",
+        "revealed"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "hint": {
+          "type": "string",
+          "enum": [
+            "",
+            "safe",
+            "dead"
+          ]
+        },
+        "revealed": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "OpeningState": {
+      "type": "object",
+      "required": [
+        "id",
+        "box",
+        "status",
+        "turn",
+        "turns",
+        "checks_left",
+        "checks_total",
+        "luck",
+        "won",
+        "layout",
+        "last",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "box": {
+          "type": "string"
+        },
+        "status": {
+          "const": "active"
+        },
+        "turn": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "turns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checks_left": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checks_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "luck": {
+          "type": "object"
+        },
+        "won": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          }
+        },
+        "layout": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OpeningCard"
+          }
+        },
+        "last": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "EntitySnapshot": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "balances"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/BalanceState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "character"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/CharacterState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "inventory_summary"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/InventorySummary"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "opening"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/OpeningState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "account"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/ProfileUser"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "id",
+            "revision",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "reward_account"
+            },
+            "id": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "value": {
+              "$ref": "#/$defs/RewardAccountState"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/AuthorSpaceEntitySnapshot"
+        }
+      ]
+    },
+    "EntityRemoval": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "balances",
+            "character",
+            "inventory_summary",
+            "opening",
+            "account",
+            "reward_account"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "EntityEffects": {
+      "type": "object",
+      "required": [
+        "owner",
+        "server_now",
+        "upsert",
+        "remove",
+        "invalidate"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "upsert": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntitySnapshot"
+          }
+        },
+        "remove": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRemoval"
+          }
+        },
+        "invalidate": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mining.summary",
+              "mining.week",
+              "mining.season",
+              "mining.history",
+              "inventory",
+              "marketplace.list",
+              "marketplace.mine",
+              "participation",
+              "marketplace.mine"
+            ]
+          }
+        },
+        "inventory": {
+          "$ref": "#/$defs/EntityInventory"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PlayerState": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RewardAccountState": {
+      "type": "object",
+      "required": [
+        "claimable"
+      ],
+      "properties": {
+        "claimable": {
+          "$ref": "#/$defs/MiningClaimable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EntityInventory": {
+      "type": "object",
+      "required": [
+        "base_revision",
+        "revision",
+        "reset",
+        "changes"
+      ],
+      "properties": {
+        "base_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reset": {
+          "type": "boolean"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InventoryChange"
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CompactPlayerEnvelope": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "item": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Item"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          }
+        },
+        "ledger": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "notices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "quest_updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestUpdate"
+          }
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": true
+    },
+    "PlayerResult": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PlayerEnvelope"
+        },
+        {
+          "$ref": "#/$defs/CompactPlayerEnvelope"
+        }
+      ]
+    },
+    "MarketplaceMineState": {
+      "type": "object",
+      "required": [
+        "slots",
+        "slot_limit",
+        "occupied_count",
+        "open_count"
+      ],
+      "properties": {
+        "slots": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/MarketplaceListing"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "slot",
+                  "status"
+                ],
+                "properties": {
+                  "slot": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "status": {
+                    "const": "empty"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "slot_limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "occupied_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "open_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "MarketplaceMutation": {
+      "type": "object",
+      "required": [
+        "listing",
+        "marketplace",
+        "ledger"
+      ],
+      "properties": {
+        "listing": {
+          "$ref": "#/$defs/MarketplaceListing"
+        },
+        "marketplace": {
+          "$ref": "#/$defs/MarketplaceMineState"
+        },
+        "ledger": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "MarketplaceMutationV2": {
+      "type": "object",
+      "required": [
+        "listing",
+        "marketplace",
+        "ledger",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "listing": {
+          "$ref": "#/$defs/MarketplaceListing"
+        },
+        "marketplace": {
+          "$ref": "#/$defs/MarketplaceMineState"
+        },
+        "ledger": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": true
+    },
+    "MarketplaceMutationResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/MarketplaceMutation"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/MarketplaceMutationV2"
+        }
+      ]
+    },
+    "QuestCompletionV2": {
+      "type": "object",
+      "required": [
+        "id",
+        "quest_id",
+        "status",
+        "accepted",
+        "exhausted",
+        "attempt",
+        "attempt_multiplier",
+        "points",
+        "assignment_id",
+        "rating_vote",
+        "idempotent",
+        "claimable",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "accepted",
+            "rejected",
+            "cancelled"
+          ]
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "exhausted": {
+          "type": "boolean"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "attempt_multiplier": {
+          "enum": [
+            1,
+            0.8,
+            0.6,
+            0.4,
+            0.2
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assignment_id": {
+          "type": "string"
+        },
+        "rating_vote": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10,
+          "description": "The assignment's immutable vote, including when this particular quest attempt was rejected; null for ordinary completions."
+        },
+        "idempotent": {
+          "type": "boolean"
+        },
+        "claimable": {
+          "type": "boolean"
+        },
+        "reward": {
+          "type": "object",
+          "properties": {
+            "shards": {
+              "$ref": "#/$defs/ShardReward"
+            }
+          },
+          "additionalProperties": true
+        },
+        "compensation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCompensation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "moderation": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "string",
+              "enum": [
+                "witnessing",
+                "judging",
+                "waiting_instructions",
+                "accepted",
+                "rejected",
+                "cancelled"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "open",
+                "paused",
+                "resolved",
+                "cancelled"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuestCompletionResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QuestCompletion"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/QuestCompletionV2"
+        }
+      ]
+    },
+    "QuestRewardClaimV2": {
+      "type": "object",
+      "required": [
+        "quest_id",
+        "reward",
+        "settlement",
+        "idempotent",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "quest_id": {
+          "type": "string"
+        },
+        "reward": {
+          "$ref": "#/$defs/QuestReward"
+        },
+        "settlement": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "idempotent": {
+          "type": "boolean"
+        },
+        "quest_updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestUpdate"
+          }
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuestRewardClaimResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QuestRewardClaim"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/QuestRewardClaimV2"
+        }
+      ]
+    },
+    "MiningRewardsClaimResultV2": {
+      "type": "object",
+      "required": [
+        "idempotent",
+        "claim",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "idempotent": {
+          "type": "boolean"
+        },
+        "claim": {
+          "$ref": "#/$defs/MiningClaim"
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MiningRewardsClaimResultResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/MiningRewardsClaimResult"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/MiningRewardsClaimResultV2"
+        }
+      ]
+    },
+    "AuthorRewardWithdrawalResultV2": {
+      "type": "object",
+      "required": [
+        "idempotent",
+        "withdrawal",
+        "balances",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "idempotent": {
+          "type": "boolean"
+        },
+        "withdrawal": {
+          "$ref": "#/$defs/AuthorRewardWithdrawal"
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorRewardBalance"
+          }
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardWithdrawalResultResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/AuthorRewardWithdrawalResult"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/AuthorRewardWithdrawalResultV2"
+        }
+      ]
+    },
+    "AuthorPermissions": {
+      "type": "object",
+      "required": [
+        "drafts_manage",
+        "quests_publish",
+        "space_edit",
+        "team_manage"
+      ],
+      "properties": {
+        "drafts_manage": {
+          "type": "boolean"
+        },
+        "quests_publish": {
+          "type": "boolean"
+        },
+        "space_edit": {
+          "type": "boolean"
+        },
+        "team_manage": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorAccess": {
+      "type": "object",
+      "required": [
+        "owner",
+        "added",
+        "permissions"
+      ],
+      "properties": {
+        "owner": {
+          "type": "boolean"
+        },
+        "added": {
+          "type": "boolean"
+        },
+        "permissions": {
+          "$ref": "#/$defs/AuthorPermissions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceCounts": {
+      "type": "object",
+      "required": [
+        "team",
+        "followers",
+        "quests",
+        "submissions",
+        "drafts",
+        "active",
+        "history"
+      ],
+      "properties": {
+        "team": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "followers": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "submissions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "drafts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "active": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "history": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceNav": {
+      "type": "object",
+      "required": [
+        "id",
+        "slug",
+        "name",
+        "accent",
+        "hue",
+        "coverOpacity",
+        "avatar",
+        "cover",
+        "official",
+        "revision",
+        "access"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "hue": {
+          "type": "number"
+        },
+        "coverOpacity": {
+          "type": "number"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "official": {
+          "type": "boolean"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "access": {
+          "$ref": "#/$defs/AuthorAccess"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceSummary": {
+      "type": "object",
+      "required": [
+        "id",
+        "slug",
+        "name",
+        "description",
+        "accent",
+        "hue",
+        "coverOpacity",
+        "avatar",
+        "cover",
+        "karma",
+        "official",
+        "silver",
+        "owner",
+        "counts",
+        "created",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "hue": {
+          "type": "number"
+        },
+        "coverOpacity": {
+          "type": "number"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "karma": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "official": {
+          "type": "boolean"
+        },
+        "silver": {
+          "type": "integer"
+        },
+        "owner": {
+          "$ref": "#/$defs/MarketplaceUser"
+        },
+        "counts": {
+          "$ref": "#/$defs/AuthorSpaceCounts"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "AuthorSpacesMine": {
+      "type": "object",
+      "required": [
+        "items",
+        "can_create"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorSpaceSummary"
+          }
+        },
+        "can_create": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpacesNav": {
+      "type": "object",
+      "required": [
+        "items",
+        "can_create"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorSpaceNav"
+          }
+        },
+        "can_create": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpacesMineResult": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuthorSpacesMine"
+        },
+        {
+          "$ref": "#/$defs/AuthorSpacesNav"
+        }
+      ]
+    },
+    "AuthorQuestRow": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "cover",
+        "tag_ids",
+        "rating",
+        "rated",
+        "updated",
+        "space_id",
+        "description",
+        "status",
+        "type",
+        "submissions",
+        "lifecycle",
+        "revision"
+      ],
+      "properties": {
+        "published_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Total elapsed time in milliseconds across all quest publication intervals at response time. Each interval ends at the earliest of its scheduled end, actual closure, or server time. Excludes gaps and unused prepaid time; includes time hidden by moderation while the publication remains running. Null when historical intervals are missing or incomplete. Optional for compatibility with older servers."
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "tag_ids": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rating": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10
+        },
+        "rated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/QuestLifecycle"
+        },
+        "space_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "submissions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "space_update": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        }
+      },
+      "additionalProperties": true
+    },
+    "AuthorQuestDraft": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "cover",
+        "tag_ids",
+        "rating",
+        "rated",
+        "updated",
+        "space_id",
+        "config",
+        "revision"
+      ],
+      "properties": {
+        "published_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Total elapsed time in milliseconds across all quest publication intervals at response time. Each interval ends at the earliest of its scheduled end, actual closure, or server time. Excludes gaps and unused prepaid time; includes time hidden by moderation while the publication remains running. Null when historical intervals are missing or incomplete. Optional for compatibility with older servers."
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "tag_ids": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rating": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10
+        },
+        "rated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "config": {
+          "$ref": "#/$defs/QuestAuthorConfig"
+        },
+        "content_media": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MediaAsset"
+          }
+        },
+        "instruction_review": {
+          "$ref": "#/$defs/InstructionReview"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/QuestLifecycle"
+        },
+        "space_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "space_update": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        }
+      },
+      "additionalProperties": true
+    },
+    "AuthorQuestList": {
+      "type": "object",
+      "required": [
+        "space",
+        "access",
+        "revision",
+        "server_now",
+        "groups",
+        "quests"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "access": {
+          "$ref": "#/$defs/AuthorAccess"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorSpaceTag"
+          }
+        },
+        "quests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorQuestRow"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorQuestEditor": {
+      "type": "object",
+      "required": [
+        "space",
+        "access",
+        "revision",
+        "server_now",
+        "groups",
+        "quest"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "access": {
+          "$ref": "#/$defs/AuthorAccess"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorSpaceTag"
+          }
+        },
+        "quest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AuthorQuestDraft"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorMember": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "owner",
+        "permissions",
+        "joined"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/$defs/MarketplaceUser"
+        },
+        "owner": {
+          "type": "boolean"
+        },
+        "permissions": {
+          "$ref": "#/$defs/AuthorPermissions"
+        },
+        "joined": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorEvent": {
+      "type": "object",
+      "required": [
+        "id",
+        "action",
+        "actor",
+        "kind",
+        "title",
+        "label",
+        "detail",
+        "quest_id",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "actor": {
+          "$ref": "#/$defs/MarketplaceUser"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorTeam": {
+      "type": "object",
+      "required": [
+        "space",
+        "access",
+        "revision",
+        "server_now",
+        "team"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "access": {
+          "$ref": "#/$defs/AuthorAccess"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "team": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorMember"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorActivity": {
+      "type": "object",
+      "required": [
+        "space",
+        "access",
+        "revision",
+        "server_now",
+        "activity"
+      ],
+      "properties": {
+        "space": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "access": {
+          "$ref": "#/$defs/AuthorAccess"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "activity": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorEvent"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceEntitySnapshot": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id",
+        "revision",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "const": "author_space"
+        },
+        "id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "value": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceBalanceMutationV2": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "effects",
+        "space",
+        "account",
+        "entry"
+      ],
+      "properties": {
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "space": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "account": {
+          "$ref": "#/$defs/BalanceState"
+        },
+        "entry": {
+          "$ref": "#/$defs/AuthorSpaceBalanceEntry"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceBalanceMutationResult": {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/AuthorSpaceBalanceMutation"
+            },
+            {
+              "properties": {
+                "response_version": {
+                  "const": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/AuthorSpaceBalanceMutationV2"
+        }
+      ]
+    },
+    "MiningRewardsDetails": {
+      "type": "object",
+      "required": [
+        "server_now",
+        "claimable"
+      ],
+      "properties": {
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claimable": {
+          "$ref": "#/$defs/MiningClaimable"
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MiningPayoutReceipt"
+          }
+        },
+        "week": {
+          "$ref": "#/$defs/MiningRewardsPeriod"
+        },
+        "season": {
+          "$ref": "#/$defs/MiningRewardsPeriod"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceRewardsDetails": {
+      "type": "object",
+      "required": [
+        "server_now",
+        "access",
+        "balances"
+      ],
+      "properties": {
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "access": {
+          "type": "object",
+          "required": [
+            "owner"
+          ],
+          "properties": {
+            "owner": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorRewardBalance"
+          }
+        },
+        "payouts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorRewardPayout"
+          }
+        },
+        "withdrawals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorRewardWithdrawal"
+          }
+        },
+        "week": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AuthorRewardPeriod"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "season": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AuthorRewardPeriod"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorRewardSummaryPeriod": {
+      "type": "object",
+      "required": [
+        "scope",
+        "period",
+        "start",
+        "end",
+        "state",
+        "tracking_start",
+        "pool",
+        "settlement",
+        "space"
+      ],
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/AuthorRewardScope"
+        },
+        "period": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state": {
+          "enum": [
+            "upcoming",
+            "active",
+            "settling",
+            "settled"
+          ]
+        },
+        "tracking_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "karma_cutoff": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "pool": {
+          "$ref": "#/$defs/AuthorRewardAmount"
+        },
+        "settlement": {
+          "$ref": "#/$defs/AuthorRewardSettlement"
+        },
+        "space": {
+          "$ref": "#/$defs/AuthorRewardPosition"
+        },
+        "eligibility": {
+          "$ref": "#/$defs/AuthorRewardSeasonEligibility"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorSpaceRewardsSummary": {
+      "type": "object",
+      "required": [
+        "server_now",
+        "access",
+        "balances",
+        "week",
+        "season"
+      ],
+      "properties": {
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "access": {
+          "type": "object",
+          "required": [
+            "owner"
+          ],
+          "properties": {
+            "owner": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorRewardBalance"
+          }
+        },
+        "week": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AuthorRewardSummaryPeriod"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "season": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AuthorRewardSummaryPeriod"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorQuestMutation": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "space_id",
+        "status"
+      ],
+      "properties": {
+        "published_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Total elapsed time in milliseconds across all quest publication intervals at response time. Each interval ends at the earliest of its scheduled end, actual closure, or server time. Excludes gaps and unused prepaid time; includes time hidden by moderation while the publication remains running. Null when historical intervals are missing or incomplete. Optional for compatibility with older servers."
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "tag_ids": {
+          "type": "array",
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rating": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10
+        },
+        "rated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "config": {
+          "$ref": "#/$defs/QuestAuthorConfig"
+        },
+        "content_media": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MediaAsset"
+          }
+        },
+        "instruction_review": {
+          "$ref": "#/$defs/InstructionReview"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/QuestLifecycle"
+        },
+        "space_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "space_update": {
+          "$ref": "#/$defs/AuthorSpaceSummary"
+        }
+      },
+      "additionalProperties": true
     }
   }
 }

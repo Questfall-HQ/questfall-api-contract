@@ -44,6 +44,37 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Адресное состояние — v6.20.0
+
+`response_version=2` — явный opt-in для bootstrap, Inventory и мигрированных
+команд. Без него сохраняется legacy response. `/auth/me?response_version=2`
+возвращает профиль, Balances, Character, inventory summary и Mining summary;
+не включает предметы, opening layout, weekly XP или rewards details.
+Отказ Mining summary не отменяет восстановление профиля.
+
+`GET /player/state?parts=…` доступен verified пользователям. Whitelist:
+`balances`, `character`, `inventory_summary`, `opening`. Неизвестные части
+отклоняются; это не произвольная проекция полей базы.
+
+`EntityEffects` содержит `owner`, `server_now`, типизированные `upsert`,
+явные `remove` и ключи `invalidate`. Снимок содержит `kind`, `id`, `revision`,
+`value`; отсутствующая сущность не меняется. Балансы абсолютные. Все снимки
+одной операции согласованы транзакционно; более старые revisions не должны
+перезаписывать новые. `server_now` независимо продвигает временные проекции.
+Inventory сохраняет `put/delete/reset/revision` и добавляет `base_revision`:
+delta применяется только к соответствующей полной локальной коллекции.
+
+Авторские чтения разделены: `mine?view=nav`, `quests`, `quests/load`, `team`,
+`activity`. Редактор получает контекст и один квест; список не включает полные
+config/history. Старый `/author-spaces/load` не изменён. Ответы author mutations
+дополнены необязательными `revision` и `space_update`; старые серверы валидны.
+
+`/mining/rewards/details?parts=week,season,history` и аналогичный авторский
+endpoint возвращают только выбранные части. `/author-spaces/rewards/summary`
+не включает leaderboard, quests, payouts или withdrawals. Старые полные
+rewards endpoints и Mining summary сохранены. Свежесть/error каждой части
+независимы; частичный ответ не подтверждает актуальность отсутствующих частей.
+
 ### Профиль и Claim Reward — v6.19.0
 
 `GET /auth/me` включает необязательный `mining_rewards: MiningRewardsSummary`.

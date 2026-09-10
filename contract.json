@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.19.0",
+  "version": "6.20.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -8,13 +8,32 @@
       "path": "/auth/me",
       "access": "authenticated",
       "request": {
-        "transport": "none",
+        "transport": "query",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
         "schema": "Profile"
+      }
+    },
+    {
+      "operation": "player.state",
+      "method": "GET",
+      "path": "/player/state",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "parts"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "PlayerState"
       }
     },
     {
@@ -199,7 +218,8 @@
           "avatar",
           "avatar_media_id",
           "remove_icon",
-          "feed_authored"
+          "feed_authored",
+          "response_version"
         ]
       },
       "response": {
@@ -308,10 +328,12 @@
         "required": [
           "silver"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -325,10 +347,12 @@
         "required": [
           "attr"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -337,13 +361,15 @@
       "path": "/rpg/character/attributes/reset",
       "access": "verified",
       "request": {
-        "transport": "none",
+        "transport": "body",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -357,10 +383,12 @@
         "required": [
           "gold"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -374,11 +402,12 @@
         "required": [],
         "optional": [
           "revision",
-          "count"
+          "count",
+          "response_version"
         ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -393,10 +422,12 @@
           "itemId",
           "slot"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -411,11 +442,12 @@
           "slot"
         ],
         "optional": [
-          "itemId"
+          "itemId",
+          "response_version"
         ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -446,10 +478,12 @@
         "required": [
           "itemId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -463,10 +497,12 @@
         "required": [
           "itemId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -527,11 +563,12 @@
           "price"
         ],
         "optional": [
-          "slot"
+          "slot",
+          "response_version"
         ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -546,10 +583,12 @@
           "listingId",
           "price"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "Object"
+        "schema": "MarketplaceMutationResult"
       }
     },
     {
@@ -563,10 +602,12 @@
         "required": [
           "listingId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -580,10 +621,12 @@
         "required": [
           "listingId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -597,10 +640,12 @@
         "required": [
           "listingId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -614,10 +659,12 @@
         "required": [
           "boxType"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -632,10 +679,12 @@
           "openingId",
           "cardId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -650,10 +699,12 @@
           "openingId",
           "cardId"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -662,13 +713,15 @@
       "path": "/lootboxes/buy",
       "access": "verified",
       "request": {
-        "transport": "none",
+        "transport": "body",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "PlayerEnvelope"
+        "schema": "PlayerResult"
       }
     },
     {
@@ -686,7 +739,8 @@
           "limit",
           "notice_mode",
           "content_version",
-          "moderation_version"
+          "moderation_version",
+          "response_version"
         ]
       },
       "response": {
@@ -712,7 +766,8 @@
           "notice_mode",
           "notice_ack_ids",
           "content_version",
-          "moderation_version"
+          "moderation_version",
+          "response_version"
         ]
       },
       "response": {
@@ -843,11 +898,12 @@
           "platform_account",
           "publication_id",
           "content_version",
-          "moderation_version"
+          "moderation_version",
+          "response_version"
         ]
       },
       "response": {
-        "schema": "QuestCompletion"
+        "schema": "QuestCompletionResult"
       }
     },
     {
@@ -1294,10 +1350,12 @@
           "id",
           "idempotency_key"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "QuestRewardClaim"
+        "schema": "QuestRewardClaimResult"
       }
     },
     {
@@ -1390,8 +1448,15 @@
       "method": "GET",
       "path": "/mining/rewards/summary",
       "access": "public",
-      "request": {"transport": "query", "params": [], "required": [], "optional": []},
-      "response": {"schema": "MiningRewardsSummary"}
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "MiningRewardsSummary"
+      }
     },
     {
       "operation": "mining.rewards.claim",
@@ -1404,10 +1469,12 @@
         "required": [
           "idempotency_key"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "MiningRewardsClaimResult"
+        "schema": "MiningRewardsClaimResultResult"
       }
     },
     {
@@ -1416,13 +1483,15 @@
       "path": "/author-spaces/mine",
       "access": "verified",
       "request": {
-        "transport": "none",
+        "transport": "query",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "view"
+        ]
       },
       "response": {
-        "schema": "Object"
+        "schema": "AuthorSpacesMineResult"
       }
     },
     {
@@ -1475,10 +1544,12 @@
           "currency",
           "idempotency_key"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "AuthorRewardWithdrawalResult"
+        "schema": "AuthorRewardWithdrawalResultResult"
       }
     },
     {
@@ -1568,10 +1639,12 @@
           "slug",
           "amount"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "AuthorSpaceBalanceMutation"
+        "schema": "AuthorSpaceBalanceMutationResult"
       }
     },
     {
@@ -1606,10 +1679,12 @@
           "slug",
           "amount"
         ],
-        "optional": []
+        "optional": [
+          "response_version"
+        ]
       },
       "response": {
-        "schema": "AuthorSpaceBalanceMutation"
+        "schema": "AuthorSpaceBalanceMutationResult"
       }
     },
     {
@@ -1700,7 +1775,7 @@
         ]
       },
       "response": {
-        "schema": "Object"
+        "schema": "AuthorQuestMutation"
       }
     },
     {
@@ -1722,7 +1797,7 @@
         ]
       },
       "response": {
-        "schema": "Object"
+        "schema": "AuthorQuestMutation"
       }
     },
     {
@@ -1741,7 +1816,7 @@
         ]
       },
       "response": {
-        "schema": "Object"
+        "schema": "AuthorQuestMutation"
       }
     },
     {
@@ -2151,6 +2226,133 @@
       },
       "response": {
         "schema": "AuthorQuestHistory"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests",
+      "method": "GET",
+      "path": "/author-spaces/quests",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "content_version",
+          "moderation_version"
+        ]
+      },
+      "response": {
+        "schema": "AuthorQuestList"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.load",
+      "method": "GET",
+      "path": "/author-spaces/quests/load",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": [
+          "id",
+          "content_version",
+          "moderation_version"
+        ]
+      },
+      "response": {
+        "schema": "AuthorQuestEditor"
+      }
+    },
+    {
+      "operation": "authorSpaces.team",
+      "method": "GET",
+      "path": "/author-spaces/team",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorTeam"
+      }
+    },
+    {
+      "operation": "authorSpaces.activity",
+      "method": "GET",
+      "path": "/author-spaces/activity",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorActivity"
+      }
+    },
+    {
+      "operation": "mining.rewards.details",
+      "method": "GET",
+      "path": "/mining/rewards/details",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "parts"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "MiningRewardsDetails"
+      }
+    },
+    {
+      "operation": "authorSpaces.rewards.summary",
+      "method": "GET",
+      "path": "/author-spaces/rewards/summary",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceRewardsSummary"
+      }
+    },
+    {
+      "operation": "authorSpaces.rewards.details",
+      "method": "GET",
+      "path": "/author-spaces/rewards/details",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug",
+          "parts"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorSpaceRewardsDetails"
       }
     }
   ],
