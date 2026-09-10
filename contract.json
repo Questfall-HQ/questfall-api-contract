@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.17.0",
+  "version": "6.18.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -1386,6 +1386,14 @@
       }
     },
     {
+      "operation": "mining.rewards.summary",
+      "method": "GET",
+      "path": "/mining/rewards/summary",
+      "access": "public",
+      "request": {"transport": "query", "params": [], "required": [], "optional": []},
+      "response": {"schema": "MiningRewardsSummary"}
+    },
+    {
       "operation": "mining.rewards.claim",
       "method": "POST",
       "path": "/mining/rewards/claim",
@@ -2052,6 +2060,7 @@
           "slug"
         ],
         "optional": [
+          "quest_id",
           "status",
           "validation",
           "search",

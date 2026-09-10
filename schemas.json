@@ -5839,6 +5839,44 @@
       },
       "additionalProperties": false
     },
+    "MiningRewardsSummaryPeriod": {
+      "type": "object",
+      "required": ["scope", "period", "start", "end", "active", "pool_gold", "competition", "viewer"],
+      "properties": {
+        "scope": {"$ref": "#/$defs/MiningPayoutScope"},
+        "period": {"type": "string"},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "active": {"type": "boolean"},
+        "pool_gold": {"type": "integer", "minimum": 0},
+        "competition": {"oneOf": [{"$ref": "#/$defs/MiningRewardsWeekCompetition"}, {"$ref": "#/$defs/MiningRewardsSeasonCompetition"}]},
+        "viewer": {
+          "type": "object",
+          "required": ["points", "rank", "projected_gold", "share", "rank_shares"],
+          "properties": {
+            "points": {"type": "integer", "minimum": 0},
+            "rank": {"type": ["integer", "null"], "minimum": 1},
+            "qualified": {"type": "boolean"},
+            "projected_gold": {"type": "integer", "minimum": 0},
+            "share": {"type": "number", "minimum": 0, "maximum": 100},
+            "rank_shares": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "MiningRewardsSummary": {
+      "type": "object",
+      "required": ["server_now", "claimable", "week", "season"],
+      "properties": {
+        "server_now": {"type": "integer", "minimum": 0},
+        "claimable": {"$ref": "#/$defs/MiningClaimable"},
+        "week": {"$ref": "#/$defs/MiningRewardsSummaryPeriod"},
+        "season": {"$ref": "#/$defs/MiningRewardsSummaryPeriod"}
+      },
+      "additionalProperties": false
+    },
     "MiningRewards": {
       "type": "object",
       "required": [

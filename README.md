@@ -44,6 +44,19 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Пакетные чтения — v6.18.0
+
+`GET /author-spaces/submissions` принимает необязательный `quest_id`. Квест
+должен принадлежать пространству `slug`, иначе ответ `404`; `search` при этом
+ищет только среди ответов этого квеста. Права и response shape не изменены.
+
+Публичный optional-auth `GET /mining/rewards/summary` возвращает `server_now`,
+`claimable`, `week` и `season`. Периоды содержат прежние скалярные поля,
+`competition` и `viewer`, без `history`, `leaderboard`, `series` и `quests`.
+Полный `/mining/rewards` остаётся совместимым. HUD и фоновая загрузка используют
+summary; подробный экран запрашивает полный ответ. Кэш персональных ответов
+не должен смешиваться с гостевыми данными.
+
 ### Screenshot и content_version=1
 
 Новые клиенты согласуют поддержку `content_version=1` в затронутых запросах
