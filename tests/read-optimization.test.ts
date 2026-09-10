@@ -23,3 +23,11 @@ test('summary has its own optional-auth public route and excludes heavy collecti
  for(const field of ['history','leaderboard','series','quests']) expect(validate('MiningRewardsSummary',{...summary,[field]:[]}).length).toBeGreaterThan(0)
  for(const field of ['leaderboard','series','quests']) expect(validate('MiningRewardsSummary',{...summary,week:{...period,[field]:[]}}).length).toBeGreaterThan(0)
 })
+
+test('profile can embed the lightweight summary without breaking older responses',()=>{
+ const user={id:'a',name:'Miner',level:1,verify:true,email:{address:null,verify:0},wallet:{address:null,verify:0,data:{}}}
+ expect(operations['auth.me'].response.schema).toBe('Profile')
+ expect(validate('Profile',{user})).toEqual([])
+ expect(validate('Profile',{user,mining_rewards:summary})).toEqual([])
+ expect(validate('Profile',{user,mining_rewards:{...summary,history:[]}}).length).toBeGreaterThan(0)
+})

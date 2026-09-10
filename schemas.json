@@ -6426,6 +6426,10 @@
         },
         "linked": {
           "type": "boolean"
+        },
+        "mining_rewards": {
+          "$ref": "#/$defs/MiningRewardsSummary",
+          "description": "Optional current rewards summary included by /auth/me. Omitted if the independent rewards projection is unavailable."
         }
       },
       "additionalProperties": true

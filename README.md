@@ -44,6 +44,14 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Профиль и Claim Reward — v6.19.0
+
+`GET /auth/me` включает необязательный `mining_rewards: MiningRewardsSummary`.
+Профиль, HUD и доступная награда применяются одним ответом без фонового waterfall.
+История и leaderboard остаются в отдельном подробном endpoint. Если независимый
+расчёт сводки недоступен, профиль по-прежнему возвращается; клиент использует
+`/mining/rewards/summary` как fallback. Старые формы Profile остаются валидными.
+
 ### Пакетные чтения — v6.18.0
 
 `GET /author-spaces/submissions` принимает необязательный `quest_id`. Квест
