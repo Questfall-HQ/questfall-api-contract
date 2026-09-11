@@ -10731,6 +10731,10 @@
         },
         "href": {
           "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "description": "Public thumbnail or legacy PocketBase file path; empty when unavailable. Never includes private completion proof."
         }
       }
     },
@@ -10831,6 +10835,10 @@
         "updated": {
           "type": "integer",
           "minimum": 0
+        },
+        "finance_total": {
+          "type": "number",
+          "description": "Signed personal Silver ledger total for the grouped case, excluding moderator vote rewards."
         }
       }
     },
@@ -11299,6 +11307,10 @@
         "server_now": {
           "type": "integer",
           "minimum": 0
+        },
+        "finance_total": {
+          "type": "number",
+          "description": "Signed personal Silver ledger total for the grouped case, excluding moderator vote rewards."
         }
       }
     }

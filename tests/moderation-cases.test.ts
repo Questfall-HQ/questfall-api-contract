@@ -17,4 +17,6 @@ test('strict personal case schemas cover every visual fixture and reject private
  expect(validate('ModerationCaseDetail',{...detail,target:{...detail.target,participant_id:'private'}}).length).toBeGreaterThan(0)
  expect(validate('ModerationCaseDetail',{...detail,scope:'pending'}).length).toBeGreaterThan(0)
  expect(schema('ModerationCaseDetail').additionalProperties).toBe(false)
+ expect(validate('ModerationCaseDetail',{...detail,finance_total:-1000,target:{...detail.target,image:'/api/files/quests/id/cover.webp'}})).toEqual([])
+ expect(validate('ModerationCaseDetail',{...detail,finance_total:'500'}).length).toBeGreaterThan(0)
 })

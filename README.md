@@ -376,3 +376,11 @@ returns 409 before charging. Existing command shapes remain supported.
 
 New History requests `scope=votes`, returning own votes with empty `chains` and
 skipping chain collection. Omitting `scope` preserves the legacy response.
+
+### Personal case list presentation — v6.22.0
+
+Personal case summaries and details add optional `finance_total`, the signed
+user ledger total for the whole grouped case (excluding voting rewards), and
+`target.image`, a public thumbnail URL or legacy PocketBase file path. Empty
+images use a frontend fallback. Private completion proofs are never thumbnails.
+The list computes financial totals only for the returned cursor page.
