@@ -80,7 +80,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(121)
+		expect(contract.routes.length).toBe(124)
   })
 
   test('builds parameterized paths safely', () => {
@@ -194,7 +194,7 @@ describe('contract manifest', () => {
 		expect(operations['moderation.completions.report'].request.required).toEqual(['assignment_id'])
 		expect(operations['moderation.profiles.report'].request.required).toEqual(['id', 'category', 'explanation'])
 		expect(operations['moderation.spaces.report'].request.required).toEqual(['id', 'category', 'explanation'])
-		expect(operations['moderation.cases.appeal'].response.schema).toBe('ModerationAppealMutation')
+		expect(operations['moderation.cases.appeal'].response.schema).toBe('ModerationAppealResponse')
 		expect(operations['moderation.domains.resolve'].response.schema).toBe('EffectiveDomainTrust')
 		expect(operations['moderation.domains.favicon'].response.schema).toBe('DomainFavicon')
 		expect(schema('ModerationDomain').properties.favicon.$ref).toBe('#/$defs/DomainFavicon')

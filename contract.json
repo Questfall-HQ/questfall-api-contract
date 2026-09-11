@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.20.0",
+  "version": "6.21.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -310,7 +310,8 @@
         ],
         "required": [],
         "optional": [
-          "variant"
+          "variant",
+          "case_id"
         ]
       },
       "response": {
@@ -1101,7 +1102,8 @@
         "optional": [
           "cursor",
           "limit",
-          "moderation_version"
+          "moderation_version",
+          "scope"
         ]
       },
       "response": {
@@ -1293,11 +1295,16 @@
         "required": [
           "case_id"
         ],
-        "optional": []
+        "optional": [
+          "response_version",
+          "idempotency_key",
+          "expected_case_id"
+        ]
       },
       "response": {
-        "schema": "ModerationAppealMutation"
-      }
+        "schema": "ModerationAppealResponse"
+      },
+      "description": "Author quest appeals opt into response_version=2 with an 8\u2013128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2140,6 +2147,7 @@
           "validation",
           "search",
           "page",
+          "grouped",
           "moderation_version"
         ]
       },
@@ -2221,11 +2229,12 @@
         ],
         "optional": [
           "cursor",
-          "limit"
+          "limit",
+          "response_version"
         ]
       },
       "response": {
-        "schema": "AuthorQuestHistory"
+        "schema": "AuthorQuestHistoryResponse"
       }
     },
     {
@@ -2353,6 +2362,63 @@
       },
       "response": {
         "schema": "AuthorSpaceRewardsDetails"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.case",
+      "method": "GET",
+      "path": "/author-spaces/quests/case",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "id",
+          "root_case_id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorQuestCase"
+      },
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
+    },
+    {
+      "operation": "moderation.cases",
+      "method": "GET",
+      "path": "/moderation/cases",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "search",
+          "kind",
+          "scope",
+          "limit",
+          "cursor"
+        ]
+      },
+      "response": {
+        "schema": "ModerationCases"
+      }
+    },
+    {
+      "operation": "moderation.case",
+      "method": "GET",
+      "path": "/moderation/cases/{case_id}",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [
+          "case_id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ModerationCaseDetail"
       }
     }
   ],

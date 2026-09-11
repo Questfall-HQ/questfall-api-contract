@@ -11,6 +11,7 @@ test('quest-scoped submissions are additive and remain verified-only',()=>{
  expect(route.request.required).toEqual(['slug'])
  expect(route.request.optional).toContain('quest_id')
  expect(route.request.optional).toContain('search')
+ expect(route.request.optional).toContain('grouped')
 })
 
 test('summary has its own optional-auth public route and excludes heavy collections',()=>{

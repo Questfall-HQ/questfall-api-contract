@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.20.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.21.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -3487,6 +3487,9 @@
         "resolved": {
           "type": "integer",
           "minimum": 0
+        },
+        "case_id": {
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -5862,25 +5865,85 @@
     },
     "MiningRewardsSummaryPeriod": {
       "type": "object",
-      "required": ["scope", "period", "start", "end", "active", "pool_gold", "competition", "viewer"],
+      "required": [
+        "scope",
+        "period",
+        "start",
+        "end",
+        "active",
+        "pool_gold",
+        "competition",
+        "viewer"
+      ],
       "properties": {
-        "scope": {"$ref": "#/$defs/MiningPayoutScope"},
-        "period": {"type": "string"},
-        "start": {"type": "integer", "minimum": 0},
-        "end": {"type": "integer", "minimum": 0},
-        "active": {"type": "boolean"},
-        "pool_gold": {"type": "integer", "minimum": 0},
-        "competition": {"oneOf": [{"$ref": "#/$defs/MiningRewardsWeekCompetition"}, {"$ref": "#/$defs/MiningRewardsSeasonCompetition"}]},
+        "scope": {
+          "$ref": "#/$defs/MiningPayoutScope"
+        },
+        "period": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "pool_gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "competition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/MiningRewardsWeekCompetition"
+            },
+            {
+              "$ref": "#/$defs/MiningRewardsSeasonCompetition"
+            }
+          ]
+        },
         "viewer": {
           "type": "object",
-          "required": ["points", "rank", "projected_gold", "share", "rank_shares"],
+          "required": [
+            "points",
+            "rank",
+            "projected_gold",
+            "share",
+            "rank_shares"
+          ],
           "properties": {
-            "points": {"type": "integer", "minimum": 0},
-            "rank": {"type": ["integer", "null"], "minimum": 1},
-            "qualified": {"type": "boolean"},
-            "projected_gold": {"type": "integer", "minimum": 0},
-            "share": {"type": "number", "minimum": 0, "maximum": 100},
-            "rank_shares": {"type": "integer", "minimum": 0}
+            "points": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rank": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "qualified": {
+              "type": "boolean"
+            },
+            "projected_gold": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "share": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "rank_shares": {
+              "type": "integer",
+              "minimum": 0
+            }
           },
           "additionalProperties": false
         }
@@ -5889,12 +5952,26 @@
     },
     "MiningRewardsSummary": {
       "type": "object",
-      "required": ["server_now", "claimable", "week", "season"],
+      "required": [
+        "server_now",
+        "claimable",
+        "week",
+        "season"
+      ],
       "properties": {
-        "server_now": {"type": "integer", "minimum": 0},
-        "claimable": {"$ref": "#/$defs/MiningClaimable"},
-        "week": {"$ref": "#/$defs/MiningRewardsSummaryPeriod"},
-        "season": {"$ref": "#/$defs/MiningRewardsSummaryPeriod"}
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claimable": {
+          "$ref": "#/$defs/MiningClaimable"
+        },
+        "week": {
+          "$ref": "#/$defs/MiningRewardsSummaryPeriod"
+        },
+        "season": {
+          "$ref": "#/$defs/MiningRewardsSummaryPeriod"
+        }
       },
       "additionalProperties": false
     },
@@ -6384,7 +6461,10 @@
               ]
             },
             "data": {
-              "type": ["object", "null"],
+              "type": [
+                "object",
+                "null"
+              ],
               "additionalProperties": true
             }
           },
@@ -10144,6 +10224,1083 @@
         }
       },
       "additionalProperties": true
+    },
+    "AuthorCaseChange": {
+      "type": "object",
+      "required": [
+        "id",
+        "wallet",
+        "kind",
+        "label",
+        "amount",
+        "appeal_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "wallet": {
+          "enum": [
+            "personal",
+            "space"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "stake",
+            "stake_return",
+            "bonus",
+            "penalty",
+            "publication"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "appeal_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorCaseEvent": {
+      "type": "object",
+      "required": [
+        "id",
+        "created",
+        "kind",
+        "message",
+        "quest_id",
+        "root_case_id",
+        "decision_id",
+        "phase",
+        "changes",
+        "finance_available"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "root_case_id": {
+          "type": "string"
+        },
+        "decision_id": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "open",
+            "resolved"
+          ]
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorCaseChange"
+          }
+        },
+        "finance_available": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorCaseDecision": {
+      "type": "object",
+      "required": [
+        "id",
+        "mode",
+        "level",
+        "status",
+        "outcome",
+        "created",
+        "resolved",
+        "deadline",
+        "actor",
+        "voting"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/ModerationCaseMode"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "open",
+            "paused",
+            "resolved",
+            "cancelled"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "unknown",
+            "approve",
+            "reject",
+            "instructions_invalid"
+          ]
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deadline": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stake": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "appellant": {
+          "type": "boolean"
+        },
+        "actor": {
+          "enum": [
+            "none",
+            "self",
+            "manager",
+            "reporter"
+          ]
+        },
+        "voting": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "reverse",
+                "uphold",
+                "final"
+              ],
+              "properties": {
+                "reverse": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "uphold": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "final": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorCaseChain": {
+      "type": "object",
+      "required": [
+        "root_case_id",
+        "kind",
+        "category",
+        "explanation",
+        "target",
+        "current_outcome",
+        "current_case_id",
+        "deadline",
+        "can_appeal",
+        "can_review",
+        "decisions",
+        "entries",
+        "revision",
+        "server_now"
+      ],
+      "properties": {
+        "root_case_id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ModerationCaseKind"
+        },
+        "category": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ModerationTargetSnapshot"
+        },
+        "current_outcome": {
+          "enum": [
+            "unknown",
+            "approve",
+            "reject"
+          ]
+        },
+        "current_case_id": {
+          "type": "string"
+        },
+        "deadline": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "can_appeal": {
+          "type": "boolean"
+        },
+        "next_appeal_level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "next_appeal_stake": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "can_review": {
+          "type": "boolean"
+        },
+        "review_stake": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorCaseDecision"
+          }
+        },
+        "appeal_reason": {
+          "type": "string"
+        },
+        "appeal_pending": {
+          "type": "boolean"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorCaseEvent"
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorQuestCase": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "chain",
+        "quest",
+        "effects",
+        "server_now"
+      ],
+      "properties": {
+        "response_version": {
+          "const": 2
+        },
+        "chain": {
+          "$ref": "#/$defs/AuthorCaseChain"
+        },
+        "quest": {
+          "$ref": "#/$defs/AuthorSpaceRatedQuest"
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorAppealMutation": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "chain",
+        "quest",
+        "effects",
+        "server_now",
+        "ok",
+        "case_id",
+        "root_case_id",
+        "idempotent"
+      ],
+      "properties": {
+        "response_version": {
+          "const": 2
+        },
+        "chain": {
+          "$ref": "#/$defs/AuthorCaseChain"
+        },
+        "quest": {
+          "$ref": "#/$defs/AuthorSpaceRatedQuest"
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ok": {
+          "const": true
+        },
+        "case_id": {
+          "type": "string"
+        },
+        "root_case_id": {
+          "type": "string"
+        },
+        "idempotent": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModerationAppealResponse": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ModerationAppealMutation"
+        },
+        {
+          "$ref": "#/$defs/AuthorAppealMutation"
+        }
+      ]
+    },
+    "AuthorQuestHistoryV2": {
+      "type": "object",
+      "required": [
+        "quest",
+        "items",
+        "next_cursor",
+        "response_version",
+        "server_now"
+      ],
+      "properties": {
+        "quest": {
+          "$ref": "#/$defs/AuthorSpaceRatedQuest"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "created",
+              "kind",
+              "message",
+              "quest_id",
+              "changes"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "created": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "quest_id": {
+                "type": "string"
+              },
+              "root_case_id": {
+                "type": "string"
+              },
+              "decision_id": {
+                "type": "string"
+              },
+              "phase": {
+                "enum": [
+                  "open",
+                  "resolved"
+                ]
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/AuthorCaseChange"
+                }
+              },
+              "finance_available": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "next_cursor": {
+          "type": "string"
+        },
+        "response_version": {
+          "const": 2
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuthorQuestHistoryResponse": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuthorQuestHistory"
+        },
+        {
+          "$ref": "#/$defs/AuthorQuestHistoryV2"
+        }
+      ]
+    },
+    "ModerationCaseTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "title",
+        "subtitle",
+        "status",
+        "href"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "quest",
+            "domain",
+            "completion",
+            "profile",
+            "space"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "ModerationPersonalCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "category",
+        "target",
+        "roles",
+        "scope",
+        "status",
+        "mode",
+        "outcome",
+        "current_case_id",
+        "created",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "quest_report",
+            "domain_report",
+            "completion_report",
+            "profile_report",
+            "space_report",
+            "domain_proposal"
+          ]
+        },
+        "category": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ModerationCaseTarget"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "initiator",
+              "supporter",
+              "proposer",
+              "appellant",
+              "reviewer"
+            ]
+          }
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "progress",
+            "resolved",
+            "closed"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "open",
+            "paused",
+            "resolved",
+            "cancelled"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "appeal",
+            "review",
+            "admin"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "approve",
+            "reject",
+            "instructions_invalid"
+          ]
+        },
+        "current_case_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "ModerationCases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModerationPersonalCase"
+          }
+        },
+        "next_cursor": {
+          "type": "string"
+        }
+      }
+    },
+    "ModerationCaseStatement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "category",
+        "explanation",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "initiator",
+            "supporter",
+            "proposer",
+            "appellant",
+            "reviewer"
+          ]
+        },
+        "category": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "ModerationCaseEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "created",
+        "revision",
+        "text",
+        "links",
+        "media",
+        "restricted"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "type": "string"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "media": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "private",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "private": {
+                "type": "boolean"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "restricted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ModerationCaseFinance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "entries"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "case_id",
+              "group",
+              "amount",
+              "created",
+              "adjustment"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "case_id": {
+                "type": "string"
+              },
+              "group": {
+                "type": "string",
+                "enum": [
+                  "result",
+                  "stake",
+                  "return"
+                ]
+              },
+              "amount": {
+                "type": "integer"
+              },
+              "created": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "adjustment": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ModerationCaseActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "appeal",
+        "review"
+      ],
+      "properties": {
+        "appeal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "available",
+            "reason",
+            "stake",
+            "level",
+            "deadline",
+            "case_id"
+          ],
+          "properties": {
+            "available": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "stake": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "deadline": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "case_id": {
+              "type": "string"
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "available",
+            "reason",
+            "stake",
+            "target_type",
+            "id",
+            "host",
+            "after"
+          ],
+          "properties": {
+            "available": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "stake": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "target_type": {
+              "type": "string",
+              "enum": [
+                "quest",
+                "domain",
+                "completion",
+                "profile",
+                "space"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "host": {
+              "type": "string"
+            },
+            "after": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "ModerationCaseEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "case_id",
+        "mode",
+        "level",
+        "status",
+        "outcome",
+        "own",
+        "event",
+        "at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "case_id": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "appeal",
+            "review",
+            "admin"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "open",
+            "paused",
+            "resolved",
+            "cancelled"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "approve",
+            "reject",
+            "instructions_invalid"
+          ]
+        },
+        "own": {
+          "type": "boolean"
+        },
+        "event": {
+          "type": "string",
+          "enum": [
+            "created",
+            "resolved",
+            "supported"
+          ]
+        },
+        "at": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "ModerationCaseDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "category",
+        "target",
+        "roles",
+        "scope",
+        "status",
+        "mode",
+        "outcome",
+        "current_case_id",
+        "created",
+        "updated",
+        "mine",
+        "statements",
+        "evidence",
+        "finance",
+        "actions",
+        "events",
+        "server_now"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "quest_report",
+            "domain_report",
+            "completion_report",
+            "profile_report",
+            "space_report",
+            "domain_proposal"
+          ]
+        },
+        "category": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/ModerationCaseTarget"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "initiator",
+              "supporter",
+              "proposer",
+              "appellant",
+              "reviewer"
+            ]
+          }
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "progress",
+            "resolved",
+            "closed"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "open",
+            "paused",
+            "resolved",
+            "cancelled"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "appeal",
+            "review",
+            "admin"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "approve",
+            "reject",
+            "instructions_invalid"
+          ]
+        },
+        "current_case_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mine": {
+          "type": "boolean"
+        },
+        "statements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModerationCaseStatement"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModerationCaseEvidence"
+          }
+        },
+        "finance": {
+          "$ref": "#/$defs/ModerationCaseFinance"
+        },
+        "actions": {
+          "$ref": "#/$defs/ModerationCaseActions"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModerationCaseEvent"
+          }
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     }
   }
 }

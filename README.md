@@ -44,6 +44,36 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Авторские апелляции — v6.21.0
+
+`GET /author-spaces/quests/case?id=…&root_case_id=…` возвращает проверенное
+авторское дело, снимок квеста и абсолютные balance/space effects. Команда видит
+дело; владелец или участник с `quests_publish` может подать авторскую апелляцию.
+Голоса представлены только взвешенными процентами, без состава комиссии;
+нулевая выборка — `null`. Исторические результаты используют зафиксированные голоса.
+
+`POST /moderation/cases/appeal` поддерживает opt-in `response_version=2`:
+обязательны актуальный `case_id` и `idempotency_key`. Повтор ключа возвращает
+подтверждённую операцию, чужое решение с тем же ключом отклоняется. Старый ответ
+сохраняется без opt-in. `/author-spaces/quests/history?response_version=2`
+добавляет ссылки на дело/решение, фазу события и отдельные изменения личного
+кошелька пользователя и кошелька пространства. Чужие личные выплаты скрыты;
+отсутствующие финансовые данные помечаются как недоступные.
+
+### История submissions по игрокам — v6.21.0
+
+`GET /author-spaces/submissions` принимает необязательный `grouped=1` вместе с
+обязательным для этого режима `quest_id`. Без `grouped` сохраняется прежняя
+пагинация отдельных submissions. В grouped-режиме backend сначала объединяет
+все попытки квеста по пользователю, а затем пагинирует пользователей по дате их
+последней попытки.
+
+Каждый `items[]` содержит безопасный публичный `user`, хронологический массив
+`attempts` и время `latest`. Попытка сохраняет прежние submission-поля и
+добавляет nullable `publication: {id, sequence, starts}`, чтобы клиент мог
+разделять историю повторных публикаций. `page.total` означает число уникальных
+участников, а `summary` содержит независимые `submissions` и `participants`.
+
 ### Адресное состояние — v6.20.0
 
 `response_version=2` — явный opt-in для bootstrap, Inventory и мигрированных
@@ -319,3 +349,30 @@ The value is `null` if historical intervals are missing or incomplete, and zero
 for a never-published draft. Older servers may omit it; clients show an unknown
 total rather than substituting time since the latest activation. No new history
 records or database fields are required.
+
+### Personal moderation cases
+
+`GET /moderation/cases` and `GET /moderation/cases/{case_id}` are verified-only,
+`private, no-store` reads. Lists include reports submitted/supported by the actor,
+their domain proposals, appeals and re-reviews, with legacy reporter/proposer
+fallbacks. Merely owning an object or voting never makes a personal case.
+
+List query: `search` (object or any linked case ID), `kind` (one report kind or
+`domain_proposal`, default `all`), `scope` (`all`, `progress`, `resolved`, `closed`),
+`limit` (default 30, maximum 100), `cursor` (opaque returned `next_cursor`). Order
+is newest recorded creation/resolution/own-support event, then case ID descending.
+Appeals share the original root; re-reviews only follow parent links in this
+read projection and keep their independent settlement roots. Detail IDs may name
+any linked stage. The response resolves them to the same original case ID.
+
+`outcome` describes the original complaint/proposal and its appeals; `mode` and
+`status` describe the latest stage; `target.status` is the current object state.
+Timelines use recorded dates only. Statements and ledger entries are actor-only;
+private completion proof is omitted for supporters. `/media/assets/{id}/access`
+accepts optional `case_id` to retain evidence access for that complaint's reporter
+and previously permitted owners. It does not grant access to unrelated assets.
+Appeal confirmations may send optional `expected_case_id`; a changed decision
+returns 409 before charging. Existing command shapes remain supported.
+
+New History requests `scope=votes`, returning own votes with empty `chains` and
+skipping chain collection. Omitting `scope` preserves the legacy response.

@@ -1,0 +1,780 @@
+[
+  {
+    "id": "preview-quest",
+    "kind": "quest_report",
+    "category": "unsafe_content",
+    "target": {
+      "id": "preview-quest-object",
+      "type": "quest",
+      "title": "Plant a tree in your neighbourhood",
+      "subtitle": "Green World",
+      "status": "suspended",
+      "href": ""
+    },
+    "roles": [
+      "initiator"
+    ],
+    "scope": "progress",
+    "status": "open",
+    "mode": "appeal",
+    "outcome": "approve",
+    "current_case_id": "preview-quest",
+    "created": 1789020000000,
+    "updated": 1789106400000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-quest-statement",
+        "role": "initiator",
+        "category": "unsafe_content",
+        "explanation": "The quest asks participants to enter a recovery phrase on an external website. This puts their wallet at risk.",
+        "created": 1789020000000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-quest",
+        "created": 1789020000000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 500,
+      "entries": [
+        {
+          "id": "preview-quest-reward",
+          "case_id": "preview-quest",
+          "group": "result",
+          "amount": 500,
+          "created": 1789102800000,
+          "adjustment": false
+        }
+      ]
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "An appeal is already in progress.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-quest"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "quest",
+        "id": "preview-quest-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-quest-next",
+        "case_id": "preview-quest-next",
+        "mode": "appeal",
+        "level": 1,
+        "status": "open",
+        "outcome": "unknown",
+        "own": false,
+        "event": "created",
+        "at": 1789106400000
+      },
+      {
+        "id": "preview-quest-resolved",
+        "case_id": "preview-quest",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1789102800000
+      },
+      {
+        "id": "preview-quest-created",
+        "case_id": "preview-quest",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1789020000000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-domain",
+    "kind": "domain_report",
+    "category": "phishing",
+    "target": {
+      "id": "preview-domain-object",
+      "type": "domain",
+      "title": "wallet-rewards.example",
+      "subtitle": "",
+      "status": "blocked",
+      "href": ""
+    },
+    "roles": [
+      "initiator"
+    ],
+    "scope": "resolved",
+    "status": "resolved",
+    "mode": "initial",
+    "outcome": "approve",
+    "current_case_id": "preview-domain",
+    "created": 1788933600000,
+    "updated": 1789020000000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-domain-statement",
+        "role": "initiator",
+        "category": "phishing",
+        "explanation": "My saved explanation describing the specific content that should be reviewed.",
+        "created": 1788933600000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-domain",
+        "created": 1788933600000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 500,
+      "entries": [
+        {
+          "id": "preview-domain-reward",
+          "case_id": "preview-domain",
+          "group": "result",
+          "amount": 500,
+          "created": 1789016400000,
+          "adjustment": false
+        }
+      ]
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-domain"
+      },
+      "review": {
+        "available": true,
+        "reason": "",
+        "stake": 1000,
+        "target_type": "domain",
+        "id": "preview-domain-object",
+        "host": "wallet-rewards.example",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-domain-resolved",
+        "case_id": "preview-domain",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1789016400000
+      },
+      {
+        "id": "preview-domain-created",
+        "case_id": "preview-domain",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788933600000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-proposal",
+    "kind": "domain_proposal",
+    "category": "trusted_platform",
+    "target": {
+      "id": "preview-proposal-object",
+      "type": "domain",
+      "title": "community-garden.example",
+      "subtitle": "",
+      "status": "safe",
+      "href": ""
+    },
+    "roles": [
+      "proposer"
+    ],
+    "scope": "resolved",
+    "status": "resolved",
+    "mode": "initial",
+    "outcome": "approve",
+    "current_case_id": "preview-proposal",
+    "created": 1788847200000,
+    "updated": 1788933600000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-proposal-statement",
+        "role": "proposer",
+        "category": "trusted_platform",
+        "explanation": "A community resource for local gardening projects.",
+        "created": 1788847200000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-proposal",
+        "created": 1788847200000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 0,
+      "entries": []
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-proposal"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "domain",
+        "id": "preview-proposal-object",
+        "host": "community-garden.example",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-proposal-resolved",
+        "case_id": "preview-proposal",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1788930000000
+      },
+      {
+        "id": "preview-proposal-created",
+        "case_id": "preview-proposal",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788847200000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-completion",
+    "kind": "completion_report",
+    "category": "fake_evidence",
+    "target": {
+      "id": "preview-completion-object",
+      "type": "completion",
+      "title": "Record your morning walk",
+      "subtitle": "Healthy Habits \u00b7 Quest completion",
+      "status": "rejected",
+      "href": ""
+    },
+    "roles": [
+      "supporter"
+    ],
+    "scope": "resolved",
+    "status": "resolved",
+    "mode": "initial",
+    "outcome": "approve",
+    "current_case_id": "preview-completion",
+    "created": 1788760800000,
+    "updated": 1788847200000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-completion-statement",
+        "role": "supporter",
+        "category": "fake_evidence",
+        "explanation": "My saved explanation describing the specific content that should be reviewed.",
+        "created": 1788760800000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-completion",
+        "created": 1788760800000,
+        "revision": 1,
+        "text": "",
+        "links": [],
+        "media": [],
+        "restricted": true
+      }
+    ],
+    "finance": {
+      "total": 0,
+      "entries": []
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-completion"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "completion",
+        "id": "preview-completion-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-completion-resolved",
+        "case_id": "preview-completion",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1788843600000
+      },
+      {
+        "id": "preview-completion-created",
+        "case_id": "preview-completion",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788760800000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-profile",
+    "kind": "profile_report",
+    "category": "impersonation",
+    "target": {
+      "id": "preview-profile-object",
+      "type": "profile",
+      "title": "Garden Explorer",
+      "subtitle": "",
+      "status": "restricted",
+      "href": ""
+    },
+    "roles": [
+      "appellant",
+      "reviewer"
+    ],
+    "scope": "progress",
+    "status": "open",
+    "mode": "review",
+    "outcome": "approve",
+    "current_case_id": "preview-profile",
+    "created": 1788674400000,
+    "updated": 1788760800000,
+    "mine": true,
+    "statements": [],
+    "evidence": [
+      {
+        "case_id": "preview-profile",
+        "created": 1788674400000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 0,
+      "entries": []
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-profile"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "profile",
+        "id": "preview-profile-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-profile-next",
+        "case_id": "preview-profile-next",
+        "mode": "review",
+        "level": 0,
+        "status": "open",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788760800000
+      },
+      {
+        "id": "preview-profile-resolved",
+        "case_id": "preview-profile",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1788757200000
+      },
+      {
+        "id": "preview-profile-created",
+        "case_id": "preview-profile",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788674400000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-space",
+    "kind": "space_report",
+    "category": "impersonation",
+    "target": {
+      "id": "preview-space-object",
+      "type": "space",
+      "title": "City Garden Collective",
+      "subtitle": "",
+      "status": "visible",
+      "href": ""
+    },
+    "roles": [
+      "initiator"
+    ],
+    "scope": "resolved",
+    "status": "resolved",
+    "mode": "review",
+    "outcome": "approve",
+    "current_case_id": "preview-space",
+    "created": 1788588000000,
+    "updated": 1788674400000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-space-statement",
+        "role": "initiator",
+        "category": "impersonation",
+        "explanation": "My saved explanation describing the specific content that should be reviewed.",
+        "created": 1788588000000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-space",
+        "created": 1788588000000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 500,
+      "entries": [
+        {
+          "id": "preview-space-reward",
+          "case_id": "preview-space",
+          "group": "result",
+          "amount": 500,
+          "created": 1788670800000,
+          "adjustment": false
+        }
+      ]
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-space"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "space",
+        "id": "preview-space-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-space-next",
+        "case_id": "preview-space-next",
+        "mode": "review",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": false,
+        "event": "resolved",
+        "at": 1788674400000
+      },
+      {
+        "id": "preview-space-resolved",
+        "case_id": "preview-space",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "approve",
+        "own": true,
+        "event": "resolved",
+        "at": 1788670800000
+      },
+      {
+        "id": "preview-space-created",
+        "case_id": "preview-space",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788588000000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-closed",
+    "kind": "quest_report",
+    "category": "other_policy",
+    "target": {
+      "id": "preview-closed-object",
+      "type": "quest",
+      "title": "Weekend neighbourhood clean-up",
+      "subtitle": "Green World",
+      "status": "unavailable",
+      "href": ""
+    },
+    "roles": [
+      "initiator"
+    ],
+    "scope": "closed",
+    "status": "cancelled",
+    "mode": "initial",
+    "outcome": "unknown",
+    "current_case_id": "preview-closed",
+    "created": 1788501600000,
+    "updated": 1788588000000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-closed-statement",
+        "role": "initiator",
+        "category": "other_policy",
+        "explanation": "My saved explanation describing the specific content that should be reviewed.",
+        "created": 1788501600000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-closed",
+        "created": 1788501600000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 0,
+      "entries": []
+    },
+    "actions": {
+      "appeal": {
+        "available": false,
+        "reason": "The appeal deadline has passed.",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-closed"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "quest",
+        "id": "preview-closed-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-closed-created",
+        "case_id": "preview-closed",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788501600000
+      }
+    ],
+    "server_now": 1789106400000
+  },
+  {
+    "id": "preview-declined",
+    "kind": "quest_report",
+    "category": "other_policy",
+    "target": {
+      "id": "preview-declined-object",
+      "type": "quest",
+      "title": "Share a book with a neighbour",
+      "subtitle": "Local Library",
+      "status": "active",
+      "href": ""
+    },
+    "roles": [
+      "initiator"
+    ],
+    "scope": "resolved",
+    "status": "resolved",
+    "mode": "initial",
+    "outcome": "reject",
+    "current_case_id": "preview-declined",
+    "created": 1788415200000,
+    "updated": 1788501600000,
+    "mine": true,
+    "statements": [
+      {
+        "id": "preview-declined-statement",
+        "role": "initiator",
+        "category": "other_policy",
+        "explanation": "My saved explanation describing the specific content that should be reviewed.",
+        "created": 1788415200000
+      }
+    ],
+    "evidence": [
+      {
+        "case_id": "preview-declined",
+        "created": 1788415200000,
+        "revision": 1,
+        "text": "Saved public material from the time this case was submitted.",
+        "links": [],
+        "media": [],
+        "restricted": false
+      }
+    ],
+    "finance": {
+      "total": 0,
+      "entries": []
+    },
+    "actions": {
+      "appeal": {
+        "available": true,
+        "reason": "",
+        "stake": 1000,
+        "level": 1,
+        "deadline": 1820642400000,
+        "case_id": "preview-declined"
+      },
+      "review": {
+        "available": false,
+        "reason": "This object is not eligible for re-review.",
+        "stake": 1000,
+        "target_type": "quest",
+        "id": "preview-declined-object",
+        "host": "",
+        "after": 0
+      }
+    },
+    "events": [
+      {
+        "id": "preview-declined-resolved",
+        "case_id": "preview-declined",
+        "mode": "initial",
+        "level": 0,
+        "status": "resolved",
+        "outcome": "reject",
+        "own": true,
+        "event": "resolved",
+        "at": 1788498000000
+      },
+      {
+        "id": "preview-declined-created",
+        "case_id": "preview-declined",
+        "mode": "initial",
+        "level": 0,
+        "status": "queued",
+        "outcome": "unknown",
+        "own": true,
+        "event": "created",
+        "at": 1788415200000
+      }
+    ],
+    "server_now": 1789106400000
+  }
+]
