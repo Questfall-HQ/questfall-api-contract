@@ -3961,10 +3961,12 @@
         },
         "account": {
           "type": "string",
-          "maxLength": 128
+          "maxLength": 128,
+          "description": "Platform username supplied by the participant, not verified account ownership. Available for platform and screenshot evidence; empty when omitted or hidden during the instructions phase."
         },
         "participant": {
-          "type": "string"
+          "type": "string",
+          "description": "Questfall name captured when the completion was submitted. Show alongside account to identify the participant and the external username to check; hidden during the instructions phase."
         },
         "participant_profile": {
           "anyOf": [
@@ -7784,7 +7786,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot accepts 1–5 media IDs and no link/account. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
+      "description": "Action verification=screenshot accepts 1–5 media IDs, no link, and an optional platform_account when the external username differs from the Questfall name. A supplied account is trimmed, limited to 128 characters and retained as participant-provided evidence without a domain identity claim. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count and also accepts optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
     },
     "ModerationDecisionValue": {
       "type": "string",

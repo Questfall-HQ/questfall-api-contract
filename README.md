@@ -44,12 +44,21 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Аккаунт участника на платформе — v6.24.0
+
+Screenshot completion принимает необязательный `platform_account`, если имя
+на внешней платформе отличается от Questfall. Поле сохраняется вместе с
+выполнением, но без привязки аккаунта к домену. В completion-фазе модератор
+видит зафиксированное имя Questfall (`participant`) рядом с указанным участником
+внешним именем (`account`). Это указание, кого проверять, а не подтверждение
+владения аккаунтом. В instructions-фазе оба имени по-прежнему скрыты.
+
 ### Единый Action — v6.23.0
 
 Клиент передаёт `content_version=2` на существующих content-aware routes,
 включая `/moderation/bypass`. Новые `type=action` задают
 `config.verification=screenshot|platform` и `config.link_mode=shared|individual`.
-Screenshot принимает 1–5 изображений без URL/аккаунта. Platform принимает
+Screenshot принимает 1–5 изображений без URL (аккаунт необязателен с v6.24.0). Platform принимает
 пустой `proof_media_ids` и обязательный `platform_account`: shared использует
 единственный опубликованный `target_links[0]`, individual требует `proof_url`
 участника. Неприменимые ссылки удаляются из конфигурации при сохранении.
