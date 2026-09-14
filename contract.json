@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.22.0",
+  "version": "6.23.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -1048,7 +1048,8 @@
           "assignment_id"
         ],
         "optional": [
-          "moderation_version"
+          "moderation_version",
+          "content_version"
         ]
       },
       "response": {
@@ -1304,7 +1305,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Author quest appeals opt into response_version=2 with an 8\u2013128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
+      "description": "Author quest appeals opt into response_version=2 with an 8–128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2381,7 +2382,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
     },
     {
       "operation": "moderation.cases",

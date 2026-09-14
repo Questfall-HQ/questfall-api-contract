@@ -44,6 +44,28 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Единый Action — v6.23.0
+
+Клиент передаёт `content_version=2` на существующих content-aware routes,
+включая `/moderation/bypass`. Новые `type=action` задают
+`config.verification=screenshot|platform` и `config.link_mode=shared|individual`.
+Screenshot принимает 1–5 изображений без URL/аккаунта. Platform принимает
+пустой `proof_media_ids` и обязательный `platform_account`: shared использует
+единственный опубликованный `target_links[0]`, individual требует `proof_url`
+участника. Неприменимые ссылки удаляются из конфигурации при сохранении.
+
+Platform создаёт прямой moderation case `platform`, либо `quest_initial`
+для первой проверки материалов. Assignment содержит `verification`, чтобы
+completion-фаза первого дела тоже могла работать без изображений. Старые
+клиенты не получают новые квесты и назначения; legacy Action и Screenshot
+сохраняют прежний протокол и уже опубликованные snapshots.
+
+Приоритет отдаётся уже начатой проверке платформы в той же группе приоритета.
+Это сближает проверки во времени, но не гарантирует общий десятиминутный
+интервал. После решения оставшиеся назначения отменяются без позднего голоса;
+живой результат платформы не становится повторяемым контрольным примером.
+
+
 ### Авторские апелляции — v6.21.0
 
 `GET /author-spaces/quests/case?id=…&root_case_id=…` возвращает проверенное

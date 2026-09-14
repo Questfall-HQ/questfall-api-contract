@@ -33,5 +33,17 @@ test('shared evidence bounds are five; screenshot count is an integer from one t
  for(const count of [1,5])expect(validate('QuestAuthorConfig',{screenshot_count:count,player_document:doc,moderator_document:doc})).toEqual([])
  for(const count of [0,6,1.5])expect(validate('QuestAuthorConfig',{screenshot_count:count}).length).toBeGreaterThan(0)
  expect(validate('QuestEvidence',{proof_media_ids:['a','b','c','d','e']})).toEqual([])
- for(const ids of [[],['a','a'],['a','b','c','d','e','f']])expect(validate('QuestEvidence',{proof_media_ids:ids}).length).toBeGreaterThan(0)
+ expect(validate('QuestEvidence',{proof_media_ids:[],platform_account:'player'})).toEqual([])
+ for(const ids of [['a','a'],['a','b','c','d','e','f']])expect(validate('QuestEvidence',{proof_media_ids:ids}).length).toBeGreaterThan(0)
+})
+
+
+test('unified Action supports two verification methods and both platform link modes',()=>{
+ expect(validate('ModerationCaseKind','platform')).toEqual([])
+ for(const verification of ['screenshot','platform'])for(const link_mode of ['shared','individual']){
+  expect(validate('QuestAuthorConfig',{verification,link_mode})).toEqual([])
+  expect(validate('QuestPublicConfig',{verification,link_mode,target_links:[],allowed_domains:[]})).toEqual([])
+ }
+ expect(validate('QuestAuthorConfig',{verification:'automatic'}).length).toBeGreaterThan(0)
+ expect(validate('QuestAuthorConfig',{link_mode:'unknown'}).length).toBeGreaterThan(0)
 })

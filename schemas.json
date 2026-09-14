@@ -1354,7 +1354,7 @@
         },
         "target_links": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 5,
           "items": {
             "type": "string",
@@ -1370,7 +1370,7 @@
         },
         "allowed_domains": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 5,
           "items": {
             "type": "string"
@@ -1419,6 +1419,20 @@
           "items": {
             "$ref": "#/$defs/MediaAsset"
           }
+        },
+        "verification": {
+          "type": "string",
+          "enum": [
+            "screenshot",
+            "platform"
+          ]
+        },
+        "link_mode": {
+          "type": "string",
+          "enum": [
+            "shared",
+            "individual"
+          ]
         }
       },
       "additionalProperties": false
@@ -3622,7 +3636,8 @@
         "profile_report",
         "space_report",
         "screenshot",
-        "quest_initial"
+        "quest_initial",
+        "platform"
       ]
     },
     "ModerationCaseMode": {
@@ -4027,6 +4042,14 @@
               "type": "null"
             }
           ]
+        },
+        "verification": {
+          "type": "string",
+          "enum": [
+            "",
+            "screenshot",
+            "platform"
+          ]
         }
       },
       "additionalProperties": true,
@@ -4088,7 +4111,8 @@
                     "completion_report",
                     "profile_report",
                     "space_report",
-                    "screenshot"
+                    "screenshot",
+                    "platform"
                   ]
                 }
               }
@@ -7593,6 +7617,20 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5
+        },
+        "verification": {
+          "type": "string",
+          "enum": [
+            "screenshot",
+            "platform"
+          ]
+        },
+        "link_mode": {
+          "type": "string",
+          "enum": [
+            "shared",
+            "individual"
+          ]
         }
       },
       "additionalProperties": true
@@ -7730,7 +7768,7 @@
       "properties": {
         "proof_media_ids": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 0,
           "maxItems": 5,
           "uniqueItems": true,
           "items": {
@@ -7746,7 +7784,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot requires exactly screenshot_count (1\u20135) IDs and no URL/account. Action retains 1\u20134 IDs plus its public link and account."
+      "description": "Action verification=screenshot accepts 1–5 media IDs and no link/account. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
     },
     "ModerationDecisionValue": {
       "type": "string",
