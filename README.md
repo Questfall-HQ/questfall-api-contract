@@ -44,6 +44,15 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Точное число скриншотов — v6.25.0
+
+Action с `verification=screenshot` поддерживает `screenshot_count`: целое число
+от 1 до 5. Оно фиксируется в публикации и передаётся участнику в публичном config.
+Completion требует ровно столько разных `proof_media_ids`; меньшее или большее
+число отклоняется до создания submission. Новый редактор всегда задаёт число
+(по умолчанию 1). Platform не сохраняет `screenshot_count`. Ранее опубликованный
+Action без этого поля сохраняет диапазон 1–5 до новой редакции и публикации.
+
 ### Аккаунт участника на платформе — v6.24.0
 
 Screenshot completion принимает необязательный `platform_account`, если имя
@@ -58,7 +67,7 @@ Screenshot completion принимает необязательный `platform_
 Клиент передаёт `content_version=2` на существующих content-aware routes,
 включая `/moderation/bypass`. Новые `type=action` задают
 `config.verification=screenshot|platform` и `config.link_mode=shared|individual`.
-Screenshot принимает 1–5 изображений без URL (аккаунт необязателен с v6.24.0). Platform принимает
+Screenshot принимает точное `screenshot_count` (с v6.25.0) или 1–5 изображений для прежних публикаций без этого поля; URL не нужен, аккаунт необязателен с v6.24.0. Platform принимает
 пустой `proof_media_ids` и обязательный `platform_account`: shared использует
 единственный опубликованный `target_links[0]`, individual требует `proof_url`
 участника. Неприменимые ссылки удаляются из конфигурации при сохранении.

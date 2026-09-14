@@ -1409,7 +1409,8 @@
         "screenshot_count": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 5
+          "maximum": 5,
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -7618,7 +7619,8 @@
         "screenshot_count": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 5
+          "maximum": 5,
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "verification": {
           "type": "string",
@@ -7786,7 +7788,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot accepts 1–5 media IDs, no link, and an optional platform_account when the external username differs from the Questfall name. A supplied account is trimmed, limited to 128 characters and retained as participant-provided evidence without a domain identity claim. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count and also accepts optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
+      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link, and an optional platform_account when the external username differs from the Questfall name. A supplied account is trimmed, limited to 128 characters and retained as participant-provided evidence without a domain identity claim. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count and also accepts optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
     },
     "ModerationDecisionValue": {
       "type": "string",
