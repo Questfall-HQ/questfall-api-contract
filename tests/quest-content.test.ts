@@ -47,3 +47,14 @@ test('unified Action supports two verification methods and both platform link mo
  expect(validate('QuestAuthorConfig',{verification:'automatic'}).length).toBeGreaterThan(0)
  expect(validate('QuestAuthorConfig',{link_mode:'unknown'}).length).toBeGreaterThan(0)
 })
+
+
+test('platform identity config is additive and domain resolution includes identity scope',()=>{
+ for(const platform_domain of ['youtube.com','']) {
+  expect(validate('QuestAuthorConfig',{verification:'screenshot',platform_domain})).toEqual([])
+  expect(validate('QuestPublicConfig',{verification:'screenshot',platform_domain,platform_favicon:{state:'missing',url:'',checked:0}})).toEqual([])
+ }
+ expect(validate('QuestAuthorConfig',{platform_domain:42}).length).toBeGreaterThan(0)
+ expect(validate('QuestAuthorConfig',{platform_domain:'x'.repeat(254)}).length).toBeGreaterThan(0)
+ expect(validate('EffectiveDomainTrust',{host:'youtu.be',platform:'youtube.com',favicon:{state:'missing',url:'',checked:0},state:'safe',matched_rule:'youtu.be',revision:1,warning:false,blocked:false})).toEqual([])
+})

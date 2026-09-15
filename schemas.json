@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.21.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.26.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1434,6 +1434,14 @@
             "shared",
             "individual"
           ]
+        },
+        "platform_domain": {
+          "type": "string",
+          "maxLength": 253,
+          "description": "Canonical external platform domain, normalized by the server. Presence opts Action into content_version=3; empty means screenshots without an external platform. Shared derives it from the published target URL; individual requires an author-selected domain."
+        },
+        "platform_favicon": {
+          "$ref": "#/$defs/DomainFavicon"
         }
       },
       "additionalProperties": false
@@ -3621,6 +3629,13 @@
         },
         "blocked": {
           "type": "boolean"
+        },
+        "platform": {
+          "type": "string",
+          "description": "Canonical identity domain; independent from the host trust decision."
+        },
+        "favicon": {
+          "$ref": "#/$defs/DomainFavicon"
         }
       },
       "additionalProperties": false
@@ -6386,7 +6401,8 @@
           "minLength": 1,
           "maxLength": 128
         }
-      }
+      },
+      "description": "Recent identities owned by this user in the closed platform identity registry, grouped by canonical domain. Known aliases share one list; the old user-side cache cannot establish selectable ownership."
     },
     "ProfilePreferences": {
       "type": "object",
@@ -7635,6 +7651,11 @@
             "shared",
             "individual"
           ]
+        },
+        "platform_domain": {
+          "type": "string",
+          "maxLength": 253,
+          "description": "Canonical external platform domain, normalized by the server. Presence opts Action into content_version=3; empty means screenshots without an external platform. Shared derives it from the published target URL; individual requires an author-selected domain."
         }
       },
       "additionalProperties": true
@@ -7788,7 +7809,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link, and an optional platform_account when the external username differs from the Questfall name. A supplied account is trimmed, limited to 128 characters and retained as participant-provided evidence without a domain identity claim. Action verification=platform accepts no media IDs and requires platform_account; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Legacy Screenshot keeps its exact screenshot_count and also accepts optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. Unified Action requires content_version=2."
+      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters."
     },
     "ModerationDecisionValue": {
       "type": "string",
