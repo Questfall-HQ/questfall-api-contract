@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.29.0",
+  "version": "6.30.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -901,7 +901,8 @@
           "content_version",
           "moderation_version",
           "response_version"
-        ]
+        ],
+        "description": "For content_version>=7, platform_account is conditionally required and must be nonblank after trimming for published service identities and legacy completion forms that use usernames. Missing usernames are rejected before side effects. Explicitly unscoped publications and earlier client versions retain their existing protocol; see QuestEvidence."
       },
       "response": {
         "schema": "QuestCompletionResult"
