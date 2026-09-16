@@ -58,3 +58,16 @@ test('platform identity config is additive and domain resolution includes identi
  expect(validate('QuestAuthorConfig',{platform_domain:'x'.repeat(254)}).length).toBeGreaterThan(0)
  expect(validate('EffectiveDomainTrust',{host:'youtu.be',platform:'youtube.com',favicon:{state:'missing',url:'',checked:0},state:'safe',matched_rule:'youtu.be',revision:1,warning:false,blocked:false})).toEqual([])
 })
+
+test('v4 supports community checks and optionally restricted result URLs alongside legacy platform modes',()=>{
+ for(const verification of ['url','community'])for(const platform_domain of ['','discord.com']){
+  expect(validate('QuestAuthorConfig',{verification,platform_domain})).toEqual([])
+  expect(validate('QuestPublicConfig',{verification,platform_domain,target_links:[]})).toEqual([])
+ }
+ expect(validate('QuestAuthorConfig',{verification:'url-and-screenshots'}).length).toBeGreaterThan(0)
+ for(const verification of ['url','community']){
+  const assignment={id:'review',kind:'platform',verification,reportable:true,instructions:'Check completion',proof_url:verification==='url'?'https://unexpected.example/result':'',proof_media:[],account:verification==='community'?'member':'',platform:verification==='community'?'discord.com':'',progress:{stage:'judging',status:'open',consensus_percent:0},pricing:{window_revision:1,starts:0,ends:600000,rate_bps:10000,reward:20,penalty:-40,bypass_cost:10,witness_cost:0},created:0,expires:600000}
+  expect(validate('ModerationAssignment',assignment)).toEqual([])
+  expect(validate('ModerationAssignment',{...assignment,kind:'quest_initial',phase:'completion'})).toEqual([])
+ }
+})
