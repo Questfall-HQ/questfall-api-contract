@@ -44,6 +44,22 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Action без вложений — v6.28.0
+
+Клиент передаёт `content_version=5`. Новый `verification=confirmation` означает
+подтверждение участником без URL, изображений и внешнего username. Модератор
+видит профиль Questfall и проверяет действие по инструкции автора. Авторская
+конфигурация фиксирует пустой `platform_domain`; переданные в completion URL,
+домен и username игнорируются, непустой `proof_media_ids` отклоняется.
+Привязка внешнего аккаунта не создаётся. Применяются существующие транзакция,
+идемпотентность и direct judging (`platform` / `quest_initial`), а assignment
+возвращает `verification=confirmation`. Клиенты ниже v5 этот вариант не получают.
+
+Новый редактор предлагает три варианта без настроек: один скриншот, личная
+ссылка без ограничения сайта и Nothing (`confirmation`). Ссылки и действия
+описываются в тексте квеста. Backend сохраняет поддержку прежних публикаций,
+включая scoped URL, community, Shared/Personal Link и число скриншотов 1–5.
+
 ### Три способа проверки Action — v6.27.0
 
 Клиент передаёт `content_version=4`. Новые `verification=url|community`

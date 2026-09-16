@@ -65,9 +65,19 @@ test('v4 supports community checks and optionally restricted result URLs alongsi
   expect(validate('QuestPublicConfig',{verification,platform_domain,target_links:[]})).toEqual([])
  }
  expect(validate('QuestAuthorConfig',{verification:'url-and-screenshots'}).length).toBeGreaterThan(0)
- for(const verification of ['url','community']){
+ for(const verification of ['url','community','confirmation']){
   const assignment={id:'review',kind:'platform',verification,reportable:true,instructions:'Check completion',proof_url:verification==='url'?'https://unexpected.example/result':'',proof_media:[],account:verification==='community'?'member':'',platform:verification==='community'?'discord.com':'',progress:{stage:'judging',status:'open',consensus_percent:0},pricing:{window_revision:1,starts:0,ends:600000,rate_bps:10000,reward:20,penalty:-40,bypass_cost:10,witness_cost:0},created:0,expires:600000}
   expect(validate('ModerationAssignment',assignment)).toEqual([])
   expect(validate('ModerationAssignment',{...assignment,kind:'quest_initial',phase:'completion'})).toEqual([])
  }
+})
+
+
+test('v5 adds confirmation without changing earlier Action evidence modes',()=>{
+ for(const schema of ['QuestAuthorConfig','QuestPublicConfig']){
+  expect(validate(schema,{verification:'confirmation',platform_domain:''})).toEqual([])
+  expect(validate(schema,{verification:'screenshot',platform_domain:'',screenshot_count:1})).toEqual([])
+  expect(validate(schema,{verification:'platform',link_mode:'shared',platform_domain:'discord.com'})).toEqual([])
+ }
+ expect(validate('QuestEvidence',{proof_media_ids:[]})).toEqual([])
 })

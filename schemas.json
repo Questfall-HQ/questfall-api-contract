@@ -1427,9 +1427,10 @@
             "screenshot",
             "platform",
             "url",
-            "community"
+            "community",
+            "confirmation"
           ],
-          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol."
+          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol. confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements."
         },
         "link_mode": {
           "type": "string",
@@ -4071,9 +4072,10 @@
             "screenshot",
             "platform",
             "url",
-            "community"
+            "community",
+            "confirmation"
           ],
-          "description": "Completion evidence method. url and community require content_version=4; both use kind=platform or the initial quest review. url needs a result URL without requiring an account for unrestricted sites; community needs the published platform and username, with navigation in the quest description."
+          "description": "Completion evidence method. url and community require content_version=4; both use kind=platform or the initial quest review. url needs a result URL without requiring an account for unrestricted sites; community needs the published platform and username, with navigation in the quest description. confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements."
         }
       },
       "additionalProperties": true,
@@ -7650,9 +7652,10 @@
             "screenshot",
             "platform",
             "url",
-            "community"
+            "community",
+            "confirmation"
           ],
-          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol."
+          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol. confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements."
         },
         "link_mode": {
           "type": "string",
@@ -7818,7 +7821,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters. content_version=4 also supports verification=url (one result URL, no screenshots, optional author domain restriction) and community (no evidence URL or images; instructions are in the description and the published platform scopes the username). Unrestricted url submissions do not infer or claim a platform identity from the submitted URL. Both use direct platform judging without a witness stage. Existing publications keep their earlier protocol."
+      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters. content_version=4 also supports verification=url (one result URL, no screenshots, optional author domain restriction) and community (no evidence URL or images; instructions are in the description and the published platform scopes the username). Unrestricted url submissions do not infer or claim a platform identity from the submitted URL. Both use direct platform judging without a witness stage. Existing publications keep their earlier protocol. With content_version=5, verification=confirmation accepts no screenshots and ignores supplied URLs, platform names and usernames. It creates a direct moderation review, without claiming an external identity. The current author form offers screenshot (exactly one), unrestricted url, or confirmation, with no platform settings; prior screenshot counts and platform-scoped publications remain supported."
     },
     "ModerationDecisionValue": {
       "type": "string",
