@@ -81,3 +81,11 @@ test('v5 adds confirmation without changing earlier Action evidence modes',()=>{
  }
  expect(validate('QuestEvidence',{proof_media_ids:[]})).toEqual([])
 })
+
+
+test('v6 confirmation carries a canonical service and the existing username evidence field',()=>{
+ for(const schema of ['QuestAuthorConfig','QuestPublicConfig']){
+  expect(validate(schema,{verification:'confirmation',platform_domain:'discord.com'})).toEqual([])
+ }
+ expect(validate('QuestEvidence',{platform_account:'@petr',proof_media_ids:[]})).toEqual([])
+})
