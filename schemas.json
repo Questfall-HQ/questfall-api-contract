@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.31.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.32.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1446,6 +1446,9 @@
         },
         "platform_favicon": {
           "$ref": "#/$defs/DomainFavicon"
+        },
+        "identity": {
+          "$ref": "#/$defs/QuestIdentity"
         }
       },
       "additionalProperties": false
@@ -4077,6 +4080,17 @@
             "confirmation"
           ],
           "description": "Completion evidence method. url and community require content_version=4; both use kind=platform or the initial quest review. url needs a result URL without requiring an account for unrestricted sites; community needs the published platform and username, with navigation in the quest description. Unscoped confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements. Scoped confirmation requires content_version=6 and uses the published platform plus platform_account; moderators receive the external username and service favicon."
+        },
+        "identity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Identity and custom requirements from the immutable submitted publication, never the current editable draft. Null for earlier publications."
         }
       },
       "additionalProperties": true,
@@ -7669,6 +7683,9 @@
           "type": "string",
           "maxLength": 253,
           "description": "Canonical external platform domain, normalized by the server. Presence opts Action into content_version=3; empty means screenshots without an external platform. Shared derives it from the published target URL; individual requires an author-selected domain. With v4, community requires an author-selected domain; url may leave it empty to accept any nonblocked HTTP(S) site without an identity claim, or set it to restrict result links and scope usernames. Restrictions apply to canonical hosts and known aliases, not URL paths. With content_version=6, confirmation may also select a nonempty service domain and atomically claim its username. An empty domain retains the v5 confirmation protocol without an identity claim. The current author form selects one common service for screenshot, url, and confirmation."
+        },
+        "identity": {
+          "$ref": "#/$defs/QuestIdentity"
         }
       },
       "additionalProperties": true
@@ -11482,6 +11499,29 @@
         }
       },
       "additionalProperties": false
+    },
+    "QuestIdentity": {
+      "type": "object",
+      "required": [
+        "kind",
+        "instructions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "account",
+            "wallet",
+            "questfall"
+          ]
+        },
+        "instructions": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "description": "Published identification method, independent of screenshot, url or confirmation evidence. Requires content_version >= 9. account and wallet use platform_domain and require platform_account at submission; questfall uses the authenticated participant and no external binding. Optional custom instructions are retained only for questfall. Preview account lists and conflict states are never persisted."
     }
   }
 }

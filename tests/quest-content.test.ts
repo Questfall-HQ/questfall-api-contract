@@ -5,6 +5,14 @@ import {validate} from '../src/validate.js'
 const image = {type:'image',attrs:{media_id:'privateimage001',caption:'Castle'}}
 const doc = {version:1,content:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Reach the castle',marks:[{type:'bold'}]}]},image]}}
 
+test('v9 publishes all nine independent evidence and identity combinations without preview state',()=>{
+ for(const verification of ['screenshot','url','confirmation'])for(const kind of ['account','wallet','questfall']){
+  const identity={kind,instructions:kind==='questfall'?'Hold a sign with your name.':''}
+  for(const shape of ['QuestAuthorConfig','QuestPublicConfig'])expect(validate(shape,{verification,identity,platform_domain:kind==='questfall'?'':'example.com'})).toEqual([])
+ }
+ for(const identity of [{kind:'unknown',instructions:''},{kind:'wallet',instructions:'x'.repeat(501)},{kind:'account',instructions:'',conflict:true}])expect(validate('QuestIdentity',identity).length).toBeGreaterThan(0)
+})
+
 test('quest reports from initial moderation address the private assignment and retain the legacy quest route',()=>{
  const assigned=contract.routes.find(r=>r.operation==='moderation.quests.report')
  expect(assigned?.path).toBe('/moderation/quests/report')

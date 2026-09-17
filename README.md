@@ -509,6 +509,23 @@ user ledger total for the whole grouped case (excluding voting rewards), and
 images use a frontend fallback. Private completion proofs are never thumbnails.
 The list computes financial totals only for the returned cursor page.
 
+### Published quest identity — v6.32.0
+
+Action config now optionally includes `identity: {kind, instructions}`, where
+`kind` is `account`, `wallet`, or `questfall` and `instructions` is a string of at
+most 500 characters. It is independent of `verification=screenshot|url|confirmation`.
+External identities require `platform_domain` at publication and explicit
+`platform_account` at completion. Questfall identity clears the domain and uses
+the authenticated participant, ignoring external account input. Only Questfall
+identity retains custom author requirements; transient preview state is discarded.
+
+`QuestPublicConfig`, `QuestAuthorConfig`, and `ModerationAssignment` share this
+shape. Assignments expose the submitted publication's identity (null for legacy
+quests), so later draft edits cannot change review requirements. Clients send
+`content_version=9`; older clients are excluded by both SQL feed selection and
+runtime checks. Existing publications and v8 account claims retain their protocol.
+No new route or storage migration is required.
+
 ### Account claims — v6.31.0
 
 Adds verified-only accounts.list/create/submit operations and AccountClaim /
