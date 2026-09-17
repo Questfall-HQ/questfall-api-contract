@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.30.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.31.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -3657,7 +3657,8 @@
         "space_report",
         "screenshot",
         "quest_initial",
-        "platform"
+        "platform",
+        "identity_claim"
       ]
     },
     "ModerationCaseMode": {
@@ -11388,6 +11389,99 @@
           "description": "Signed personal Silver ledger total for the grouped case, excluding moderator vote rewards."
         }
       }
+    },
+    "AccountClaim": {
+      "type": "object",
+      "required": [
+        "id",
+        "domain",
+        "account",
+        "code",
+        "message",
+        "proof_url",
+        "explanation",
+        "case_id",
+        "created",
+        "updated",
+        "expires",
+        "status",
+        "method",
+        "wallet_supported"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "proof_url": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "case_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "pending",
+            "transferred",
+            "insufficient",
+            "superseded"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "public",
+            "wallet"
+          ]
+        },
+        "wallet_supported": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AccountClaimList": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AccountClaim"
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

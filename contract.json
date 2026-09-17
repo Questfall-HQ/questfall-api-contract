@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.30.0",
+  "version": "6.31.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2421,6 +2421,64 @@
       },
       "response": {
         "schema": "ModerationCaseDetail"
+      }
+    },
+    {
+      "operation": "accounts.list",
+      "method": "GET",
+      "path": "/accounts/claims",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "AccountClaimList"
+      }
+    },
+    {
+      "operation": "accounts.create",
+      "method": "POST",
+      "path": "/accounts/claims",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "domain",
+          "account"
+        ],
+        "optional": [
+          "method",
+          "origin"
+        ]
+      },
+      "response": {
+        "schema": "AccountClaim"
+      }
+    },
+    {
+      "operation": "accounts.submit",
+      "method": "POST",
+      "path": "/accounts/claims/submit",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "claim_id"
+        ],
+        "optional": [
+          "unavailable",
+          "proof_url",
+          "explanation",
+          "signature"
+        ]
+      },
+      "response": {
+        "schema": "AccountClaim"
       }
     }
   ],

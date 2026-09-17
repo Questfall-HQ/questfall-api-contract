@@ -508,3 +508,12 @@ user ledger total for the whole grouped case (excluding voting rewards), and
 `target.image`, a public thumbnail URL or legacy PocketBase file path. Empty
 images use a frontend fallback. Private completion proofs are never thumbnails.
 The list computes financial totals only for the returned cursor page.
+
+### Account claims — v6.31.0
+
+Adds verified-only accounts.list/create/submit operations and AccountClaim /
+AccountClaimList shapes. Public-code disputes use the new identity_claim
+moderation kind, delivered only to content_version >= 8. Wallet proof transfers
+only quest identity ownership, never authentication identities. Draft, pending,
+transferred, insufficient and superseded statuses are explicit; opening a claim
+does not change ownership. Personal claim lists never reveal other claimants.
