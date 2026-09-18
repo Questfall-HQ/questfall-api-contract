@@ -9,6 +9,11 @@ import {
 } from '../src/check.mjs'
 
 describe('contract manifest', () => {
+  test('retirement is an optional boolean on historical lifecycles', () => {
+    const life = schema('QuestLifecycle')
+    expect(life.required).not.toContain('retired')
+    expect(life.properties.retired.type).toBe('boolean')
+  })
   test('accepts cumulative publication time while keeping older author quest responses valid', () => {
     const quest = {id:'quest',title:'A published quest',cover:'',tag_ids:[],rating:null,rated:0,updated:0}
     expect(validate('AuthorSpaceRatedQuest',quest)).toEqual([])

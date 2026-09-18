@@ -44,6 +44,18 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 
 ## Подключение
 
+### Вывод старых Action из эксплуатации — v6.33.0
+
+`QuestLifecycle.retired?: boolean` сообщает о старом формате: отдельный
+Screenshot либо Action без `identity.kind=account|wallet|questfall` или без
+`verification=screenshot|url|confirmation`. Welcome исключён. Поле необязательное,
+исторические ответы остаются валидными. Для retired согласованно запрещены
+`actions.edit|activate|reactivate|extend|launch_new`, `ready` и соответствующие
+`can_*`. Причина доступна в `actions.*.reason`; клиент предлагает создать пустой
+Action в том же пространстве. История, архивирование, восстановление в Inactive,
+модерация и завершение ранее выданных назначений сохраняются. Сервер проверяет
+исходную сохранённую запись до входящих изменений независимо от версии клиента.
+
 ### Явный username при выполнении — v6.30.0
 
 Клиент передаёт `content_version=7`. Если в выполнении используется внешний

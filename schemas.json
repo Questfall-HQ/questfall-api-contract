@@ -8209,6 +8209,10 @@
           "type": "integer",
           "minimum": 0,
           "description": "Unix milliseconds of the latest normalized material edit after the last publication began, for inactive quests. Zero when none is recorded; older records are not inferred from updated. Cover, Bounty, duration, tags and service changes do not count."
+        },
+        "retired": {
+          "type": "boolean",
+          "description": "Retired legacy Action/Screenshot record. Content editing, activation, reactivation, extension and duplication are unavailable; history and existing moderation remain accessible. Replacement must be created as a new Action quest."
         }
       },
       "additionalProperties": false
