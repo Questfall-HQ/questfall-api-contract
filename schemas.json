@@ -210,6 +210,10 @@
         },
         "space_update": {
           "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "cover_original": {
+          "type": "string",
+          "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
       "additionalProperties": true
@@ -2018,6 +2022,10 @@
         },
         "viewer": {
           "$ref": "#/$defs/QuestViewerState"
+        },
+        "cover_original": {
+          "type": "string",
+          "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
       "additionalProperties": true
@@ -7435,7 +7443,48 @@
         },
         "variants": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "properties": {
+            "original": {
+              "type": "object",
+              "required": [
+                "name",
+                "bytes",
+                "width",
+                "height",
+                "mime",
+                "url"
+              ],
+              "properties": {
+                "name": {
+                  "const": "original"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4194304
+                },
+                "width": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3000
+                },
+                "height": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3000
+                },
+                "mime": {
+                  "const": "image/webp"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true,
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+            }
+          }
         },
         "url": {
           "type": "string"
@@ -9642,6 +9691,10 @@
         },
         "space_update": {
           "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "cover_original": {
+          "type": "string",
+          "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
       "additionalProperties": true
@@ -9728,6 +9781,10 @@
         },
         "space_update": {
           "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "cover_original": {
+          "type": "string",
+          "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
       "additionalProperties": true
@@ -10318,6 +10375,10 @@
         },
         "space_update": {
           "$ref": "#/$defs/AuthorSpaceSummary"
+        },
+        "cover_original": {
+          "type": "string",
+          "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
       "additionalProperties": true

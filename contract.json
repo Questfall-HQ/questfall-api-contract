@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.33.0",
+  "version": "6.34.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -275,7 +275,8 @@
           "kind",
           "files"
         ],
-        "optional": []
+        "optional": [],
+        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
