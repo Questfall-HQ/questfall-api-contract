@@ -257,6 +257,18 @@ describe('contract manifest', () => {
 		expect(schema('QuestRatingHistory').properties.summary.required).toContain('closest')
 	})
 
+  test('validates rating voter moderation status while retaining legacy profiles', () => {
+    const user = {id: 'voter', name: 'Questfall user', avatar: {}, avatar_icon: null, level: 1}
+    expect(validate('QuestRatingHistoryUser', user)).toEqual([])
+    for (const moderation_status of ['active', 'restricted']) {
+      expect(validate('QuestRatingHistoryUser', {...user, moderation_status})).toEqual([])
+    }
+    expect(validate('QuestRatingHistoryUser', {...user, moderation_status: 'unknown'})).not.toEqual([])
+    expect(validate('QuestRatingHistoryUser', {...user, moderation_status: null})).not.toEqual([])
+    expect(validate('QuestRatingHistoryUser', {...user, email: 'private@example.test'})).not.toEqual([])
+    expect(schema('QuestRatingHistoryUser').additionalProperties).toBe(false)
+  })
+
   test('declares the Author Space accent and hue on create and update', () => {
     expect(operations['authorSpaces.create'].request.optional).toContain('accent')
     expect(operations['authorSpaces.update'].request.optional).toContain('accent')

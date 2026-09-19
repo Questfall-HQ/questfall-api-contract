@@ -2834,6 +2834,13 @@
         "level": {
           "type": "integer",
           "minimum": 1
+        },
+        "moderation_status": {
+          "enum": [
+            "active",
+            "restricted"
+          ],
+          "description": "Optional public identity status; restricted profiles use masked name and avatar. Older responses and missing-user fallbacks may omit it."
         }
       },
       "additionalProperties": false
