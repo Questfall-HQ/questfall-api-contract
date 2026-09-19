@@ -4723,7 +4723,14 @@
           "type": "object",
           "properties": {
             "shards": {
-              "$ref": "#/$defs/ShardReward"
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ShardReward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "additionalProperties": true
@@ -9114,7 +9121,14 @@
           "type": "object",
           "properties": {
             "shards": {
-              "$ref": "#/$defs/ShardReward"
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ShardReward"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "additionalProperties": true
