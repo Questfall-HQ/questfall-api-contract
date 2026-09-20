@@ -612,6 +612,17 @@ Items stay in option order, including zero-vote options; percentages use the
 accepted response total. Queries aggregate in SQL without returning raw answers,
 proofs, or participant information. Existing analytics remains compatible.
 
+### Quiz answer distribution — v6.41.0
+
+`AuthorQuestResults.quiz` is optional for compatibility with older servers and
+null for other quest types. It uses the same `{total, items}` shape as `survey`,
+but counts every valid submitted answer, including incorrect and repeated
+attempts. Percentages use this attempt total, not unique participants or only
+accepted submissions. A historical publication must match the displayed quiz
+type, question, ordered options and correct answer index; legacy submissions
+without a material snapshot use the current terms. The existing Survey and
+daily-series semantics are unchanged.
+
 ### Quest comments — v6.39.0
 
 - `POST /quests/comments`: verified, requires `id`, `publication_id`, `text`
