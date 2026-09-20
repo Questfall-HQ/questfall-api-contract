@@ -706,7 +706,7 @@ publication with no saved materials also returns null answer distributions, neve
 substituting a changed draft. `total`, daily `series`, and ratings remain quest-wide.
 Answer distributions combine publications with matching question/answer conditions,
 as before; editing the draft does not change the selected published results.
-History publication-start events expose optional `publication_id` in both response
+History publication-start and publication-end events expose optional `publication_id` in both response
 versions so the author can inspect earlier materials.
 
 ## v6.45.0 — Stamina potions
@@ -721,3 +721,5 @@ and exposes optional `quest_cost`, including equipment pressure.
 
 The same release also includes immutable published-quest result snapshots and
 history links described above. Both consumers must pin the same exact tag.
+
+History result links belong to closing events (author unpublication, expiry or moderation), alongside any refund. Start events retain their IDs for backward compatibility. The frontend opens these results separately from the inactive draft editor.

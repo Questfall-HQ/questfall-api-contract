@@ -1,5 +1,5 @@
 import {expect,test} from 'bun:test'
-import {validate,operations} from '../src/index.js'
+import {validate,operations,schemas} from '../src/index.js'
 const empty = () => ({total:0,ratings:0,timezone:'UTC',series:Array.from({length:30},(_,i)=>({day:i*86400000,count:0})),survey:null})
 test('author results declare access and a bounded daily response',()=>{
   expect(operations['authorSpaces.quests.results'].access).toBe('verified')
@@ -39,4 +39,8 @@ test('published results include immutable materials and remain compatible with o
  expect(validate('AuthorQuestResults',{...empty(),publication:null})).toEqual([]);
  expect(validate('AuthorQuestResults',{...empty(),publication:{...publication,content:{title:'Missing materials'}}}).length).toBeGreaterThan(0);
  expect(validate('AuthorQuestResults',{...empty(),publication:{...publication,secret:'private'}}).length).toBeGreaterThan(0);
+});
+
+test('history documents result links on closing events for both response versions',()=>{
+ for(const name of ['AuthorQuestHistory','AuthorQuestHistoryV2'])expect(schemas.$defs[name].properties.items.items.properties.publication_id.description).toContain('Closing events');
 });

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.45.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.46.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -8391,7 +8391,8 @@
                 "type": "string"
               },
               "publication_id": {
-                "type": "string"
+                "type": "string",
+                "description": "Related publication. Closing events (including author unpublication, expiry and moderation) expose this ID for viewing their results. Publication-start events retain it for older clients."
               }
             },
             "additionalProperties": false
@@ -10936,7 +10937,8 @@
                 "type": "boolean"
               },
               "publication_id": {
-                "type": "string"
+                "type": "string",
+                "description": "Related publication. Closing events (including author unpublication, expiry and moderation) expose this ID for viewing their results. Publication-start events retain it for older clients."
               }
             },
             "additionalProperties": false
