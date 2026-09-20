@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.36.0",
+  "version": "6.37.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -907,7 +907,8 @@
       },
       "response": {
         "schema": "QuestCompletionResult"
-      }
+      },
+      "description": " Content v10 supports explicit identity.version=2: automatic authenticated Questfall identity and screenshot/url without a source account. Individual result links are single-use per quest, even after rejection or republication; exact idempotent replay does not create another submission."
     },
     {
       "operation": "quests.report",

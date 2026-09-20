@@ -5,6 +5,16 @@ import {validate} from '../src/validate.js'
 const image = {type:'image',attrs:{media_id:'privateimage001',caption:'Castle'}}
 const doc = {version:1,content:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Reach the castle',marks:[{type:'bold'}]}]},image]}}
 
+test('v10 adds explicit source-free and automatic Questfall policies without reinterpreting v9',()=>{
+ for(const kind of ['account','wallet','submitter']) {
+  const identity={version:2,kind,instructions:''}
+  expect(validate('QuestIdentity',identity)).toEqual([])
+  for(const shape of ['QuestAuthorConfig','QuestPublicConfig'])expect(validate(shape,{verification:'screenshot',identity,platform_domain:kind==='submitter'?'':'questfall.xyz'})).toEqual([])
+ }
+ for(const identity of [{kind:'submitter',instructions:''},{version:1,kind:'account',instructions:''},{version:2,kind:'questfall',instructions:''},{version:2,kind:'account',instructions:'',prototype:true}])expect(validate('QuestIdentity',identity).length).toBeGreaterThan(0)
+ expect(validate('QuestIdentity',{kind:'account',instructions:''})).toEqual([])
+})
+
 test('v9 publishes all nine independent evidence and identity combinations without preview state',()=>{
  for(const verification of ['screenshot','url','confirmation'])for(const kind of ['account','wallet','questfall']){
   const identity={kind,instructions:kind==='questfall'?'Hold a sign with your name.':''}

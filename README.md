@@ -42,6 +42,22 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 входят в его `count`. До публикации финального рейтинга `rating`, distribution
 и личности остаются `null`.
 
+### Идентификация результата — v6.37.0
+
+`QuestIdentity.version?: 2` явно включает content protocol v10. В этой версии
+`account` + `questfall.xyz` использует authenticated Questfall account без
+внешней привязки, а новый `submitter` допускает screenshot/url без исходного
+аккаунта. Для остальных account/wallet по-прежнему нужен явный `platform_account`.
+`submitter` недопустим для confirmation. Поля старого v9 без версии сохраняют
+исходную семантику, включая старый `questfall` и внешние claims на questfall.xyz.
+
+Новая версия описывает клиентский watermark на screenshot и сравнение с
+сохранённой идентификацией отправки. Старые изображения не меняются. Watermark
+не является серверной подписью или доказательством авторства. Индивидуальная
+ссылка принимается один раз на весь квест, включая отказы и новые публикации;
+сравнивается точный URL после trim. Idempotent replay возвращает прежний receipt.
+Клиенты ниже v10 не получают публикации и задания с новой identity policy.
+
 ### Пустая награда осколками — v6.36.0
 
 `QuestCompletion.reward.shards` и соответствующее поле ответа v2 допускают

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.32.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.37.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -1455,7 +1455,8 @@
           "$ref": "#/$defs/QuestIdentity"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Identity version 2 requires content_version >= 10. submitter is available only for screenshot/url. Existing unversioned identity rules remain unchanged."
     },
     "QuestAuthor": {
       "type": "object",
@@ -7751,7 +7752,8 @@
           "$ref": "#/$defs/QuestIdentity"
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "description": "Identity version 2 requires content_version >= 10. submitter is available only for screenshot/url. Existing unversioned identity rules remain unchanged."
     },
     "QuestContentText": {
       "type": "object",
@@ -7902,7 +7904,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters. content_version=4 also supports verification=url (one result URL, no screenshots, optional author domain restriction) and community (no evidence URL or images; instructions are in the description and the published platform scopes the username). Unrestricted url submissions do not infer or claim a platform identity from the submitted URL. Both use direct platform judging without a witness stage. Existing publications keep their earlier protocol. With content_version=5, verification=confirmation accepts no screenshots and ignores supplied URLs, platform names and usernames. It creates a direct moderation review, without claiming an external identity. The v5 author form offered screenshot (exactly one), unrestricted url, or confirmation, with no platform settings; prior screenshot counts and platform-scoped publications remain supported. With content_version=6 and a nonempty published platform_domain, confirmation accepts platform_account (blank defaults to the Questfall name), atomically claims that service identity, and exposes it to moderators. Supplied URLs remain ignored and screenshots rejected. The service can never be overridden by completion input. Username uniqueness is per canonical service; the same username may belong to different users on different services. Existing v5 unscoped confirmations keep their original behavior. With content_version>=7, platform_account must be explicitly provided and nonblank after trimming whenever the published configuration uses a service identity. Legacy Action/Screenshot forms that display a username also require it. The server rejects missing or whitespace-only usernames before identity claims, submissions, or resource charges; it never substitutes the Questfall name for these requests. Explicitly unscoped publications keep their prior protocol without a username requirement. Earlier clients retain the previous fallback behavior, and already accepted requests still replay idempotently."
+      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters. content_version=4 also supports verification=url (one result URL, no screenshots, optional author domain restriction) and community (no evidence URL or images; instructions are in the description and the published platform scopes the username). Unrestricted url submissions do not infer or claim a platform identity from the submitted URL. Both use direct platform judging without a witness stage. Existing publications keep their earlier protocol. With content_version=5, verification=confirmation accepts no screenshots and ignores supplied URLs, platform names and usernames. It creates a direct moderation review, without claiming an external identity. The v5 author form offered screenshot (exactly one), unrestricted url, or confirmation, with no platform settings; prior screenshot counts and platform-scoped publications remain supported. With content_version=6 and a nonempty published platform_domain, confirmation accepts platform_account (blank defaults to the Questfall name), atomically claims that service identity, and exposes it to moderators. Supplied URLs remain ignored and screenshots rejected. The service can never be overridden by completion input. Username uniqueness is per canonical service; the same username may belong to different users on different services. Existing v5 unscoped confirmations keep their original behavior. With content_version>=7, platform_account must be explicitly provided and nonblank after trimming whenever the published configuration uses a service identity. Legacy Action/Screenshot forms that display a username also require it. The server rejects missing or whitespace-only usernames before identity claims, submissions, or resource charges; it never substitutes the Questfall name for these requests. Explicitly unscoped publications keep their prior protocol without a username requirement. Earlier clients retain the previous fallback behavior, and already accepted requests still replay idempotently. Content v10 identity.version=2: omit platform_account for submitter and account + questfall.xyz; the server uses the authenticated participant and creates no external account binding. Other account/wallet settings require an explicit platform_account. Each individual result URL (trimmed exact URL) may be submitted only once per quest across users, statuses and publications, even after rejection. The same idempotency-key replay still returns its original receipt. Screenshot variants are prepared by the client with the account watermark before media upload; historical evidence is unchanged."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -11587,27 +11589,75 @@
       "additionalProperties": false
     },
     "QuestIdentity": {
-      "type": "object",
-      "required": [
-        "kind",
-        "instructions"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": [
-            "account",
-            "wallet",
-            "questfall"
-          ]
+      "description": "Published identification method. Missing version retains content v9: account/wallet require an explicit platform_account scoped to platform_domain; questfall requires the authenticated Questfall name in the original result and retains custom instructions. Version 2 requires content_version >= 10: account + questfall.xyz uses the authenticated participant automatically, without an external binding or trusting platform_account. Other account/wallet services still require platform_account. submitter requires version 2 and permits screenshot/url only, clears platform_domain and ignores platform_account; no source account is required in the result. Version 2 screenshot evidence is watermarked by the client with the submitted source username/wallet or the authenticated Questfall name for automatic identity. Moderators compare this label against the saved submission identity; it is not a server signature or authorship proof. The identity and instructions are preserved in publication and moderation snapshots. Preview state is never persisted.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "instructions"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "questfall"
+            },
+            "instructions": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
         },
-        "instructions": {
-          "type": "string",
-          "maxLength": 500
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "instructions"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "account",
+                "wallet",
+                "submitter"
+              ]
+            },
+            "instructions": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "version": {
+              "type": "integer",
+              "const": 2,
+              "description": "Explicit content v10 policy. Missing version keeps the original v9 behavior, including external claims on questfall.xyz."
+            }
+          },
+          "anyOf": [
+            {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "account",
+                    "wallet"
+                  ]
+                }
+              }
+            },
+            {
+              "required": [
+                "version"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "submitter"
+                }
+              }
+            }
+          ]
         }
-      },
-      "description": "Published identification method, independent of screenshot, url or confirmation evidence. Requires content_version >= 9. account and wallet use platform_domain and require platform_account at submission; questfall uses the authenticated participant and no external binding. Optional custom instructions are retained only for questfall. Preview account lists and conflict states are never persisted."
+      ]
     }
   }
 }
