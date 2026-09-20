@@ -676,3 +676,18 @@ Optional query `answers_page` defaults to 1 (invalid/negative values become 1),
 with five rejected answer groups per page. `page` uses `{page, per_page, total,
 pages}`; out-of-range pages clamp to the final page. Accepted groups (at most 20)
 are always included. Clients refresh from page one if totals change while paging.
+
+### Shared feedback handling — v6.44.0
+
+`POST /author-spaces/quests/comments/status` requires verified membership of the
+quest's Author Space and `id`, `comment_id`, `status` (`open` or `done`). It returns
+`QuestCommentReview`: the updated `comment` and the quest's `comments` summary.
+Done is shared by the team and records `done_at` and safe public `done_by` identity;
+repeated Done requests preserve that actor/time. Reopen clears them. Opening or
+reading feedback never handles it, and existing personal receipts stay compatible.
+
+`QuestComment` adds optional `status`, `done_at`, `done_by`; summaries add optional
+`open` / `done` counts, and `AuthorSpaceNav` adds optional `feedback_open`. Existing
+notes are Open. `GET /author-spaces/quests/comments` accepts an optional `status`
+filter; omitting it still lists all notes. A pagination cursor remains usable
+after its note moves between states. Public participant responses are unchanged.

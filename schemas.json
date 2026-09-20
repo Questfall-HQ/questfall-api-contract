@@ -9503,6 +9503,10 @@
         },
         "access": {
           "$ref": "#/$defs/AuthorAccess"
+        },
+        "feedback_open": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -11936,6 +11940,14 @@
         "latest": {
           "type": "integer",
           "minimum": 0
+        },
+        "open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "done": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -12040,6 +12052,23 @@
         },
         "unread": {
           "type": "boolean"
+        },
+        "status": {
+          "$ref": "#/$defs/QuestCommentStatus"
+        },
+        "done_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "done_by": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCommentUser"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -12115,6 +12144,28 @@
         },
         "reason": {
           "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentStatus": {
+      "enum": [
+        "open",
+        "done"
+      ]
+    },
+    "QuestCommentReview": {
+      "type": "object",
+      "required": [
+        "comment",
+        "comments"
+      ],
+      "properties": {
+        "comment": {
+          "$ref": "#/$defs/QuestComment"
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": false
