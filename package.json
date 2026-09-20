@@ -1,6 +1,6 @@
 {
   "name": "@questfall/api-contract",
-  "version": "6.44.1",
+  "version": "6.45.0",
   "private": true,
   "type": "module",
   "description": "Versioned public API contract between Questfall application and PocketBase",

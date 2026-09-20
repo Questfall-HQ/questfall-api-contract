@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.44.1",
+  "version": "6.45.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -276,7 +276,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -546,7 +546,8 @@
           "seller",
           "sort",
           "page",
-          "perPage"
+          "perPage",
+          "kind"
         ]
       },
       "response": {
@@ -1324,7 +1325,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Author quest appeals opt into response_version=2 with an 8–128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
+      "description": "Author quest appeals opt into response_version=2 with an 8\u2013128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2401,7 +2402,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -2512,7 +2513,8 @@
           "id"
         ],
         "optional": [
-          "answers_page"
+          "answers_page",
+          "publication_id"
         ]
       },
       "response": {
@@ -2598,6 +2600,45 @@
       },
       "response": {
         "schema": "QuestCommentReview"
+      }
+    },
+    {
+      "operation": "items.consume",
+      "method": "POST",
+      "path": "/items/consume",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PotionConsumeResult"
+      }
+    },
+    {
+      "operation": "items.merge",
+      "method": "POST",
+      "path": "/items/merge",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "ingredientId"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PotionMergeResult"
       }
     }
   ],

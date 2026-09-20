@@ -691,3 +691,33 @@ reading feedback never handles it, and existing personal receipts stay compatibl
 notes are Open. `GET /author-spaces/quests/comments` accepts an optional `status`
 filter; omitting it still lists all notes. A pagination cursor remains usable
 after its note moves between states. Public participant responses are unchanged.
+
+### Published materials in author results
+
+`authorSpaces.quests.results` accepts optional `publication_id`: `latest` selects
+the active publication or the most recent ended publication; an explicit ID
+selects that quest's saved publication (a missing or foreign ID returns 404).
+Omitting it preserves the previous active-publication/draft behavior.
+
+The optional nullable `publication` contains publication metadata and immutable
+`content` for author display, including resolved covers and instructional media.
+It is null when omitted or when historical materials were not saved; a requested
+publication with no saved materials also returns null answer distributions, never
+substituting a changed draft. `total`, daily `series`, and ratings remain quest-wide.
+Answer distributions combine publications with matching question/answer conditions,
+as before; editing the draft does not change the selected published results.
+History publication-start events expose optional `publication_id` in both response
+versions so the author can inspect earlier materials.
+
+## v6.45.0 — Stamina potions
+
+Adds verified `items.consume` and `items.merge` commands. Merge requires an
+explicit `ingredientId` as well as `itemId`. Item now supports clothing and
+Stamina potions: potion level is 0 (no levels), slot/wear are empty, and `potion`
+contains `type: stamina` and `restore_percent`. Potions cannot be equipped.
+Craft quotes include server-derived consumption and merge details. Marketplace
+listing reads accept the optional `kind` filter. Player Stamina retains overflow
+and exposes optional `quest_cost`, including equipment pressure.
+
+The same release also includes immutable published-quest result snapshots and
+history links described above. Both consumers must pin the same exact tag.

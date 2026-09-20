@@ -31,3 +31,12 @@ test('Question results expose grouped answers and bounded rejected pages',()=>{
   {...question,rejected:{...question.rejected,page:{...question.rejected.page,page:0}}},
  ]) expect(validate('AuthorQuestResults',{...empty(),question:bad}).length).toBeGreaterThan(0);
 });
+
+test('published results include immutable materials and remain compatible with old responses',()=>{
+ expect(operations['authorSpaces.quests.results'].request.optional).toContain('publication_id');
+ const publication={id:'pub',sequence:1,status:'ended',end_reason:'expired',bounty:1,starts:1,ends:2,closed:2,completion_count:0,rating:0,content:{title:'Published title',description:'Published description',instructions:'',type:'survey',config:{prompt:'Choose',options:['First','Second']},cover:'',cover_original:'',content_media:[]}};
+ expect(validate('AuthorQuestResults',{...empty(),publication})).toEqual([]);
+ expect(validate('AuthorQuestResults',{...empty(),publication:null})).toEqual([]);
+ expect(validate('AuthorQuestResults',{...empty(),publication:{...publication,content:{title:'Missing materials'}}}).length).toBeGreaterThan(0);
+ expect(validate('AuthorQuestResults',{...empty(),publication:{...publication,secret:'private'}}).length).toBeGreaterThan(0);
+});
