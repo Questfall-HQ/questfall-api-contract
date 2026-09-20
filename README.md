@@ -593,3 +593,21 @@ moderation kind, delivered only to content_version >= 8. Wallet proof transfers
 only quest identity ownership, never authentication identities. Draft, pending,
 transferred, insufficient and superseded statuses are explicit; opening a claim
 does not change ownership. Personal claim lists never reveal other claimants.
+
+### Author quest results — v6.38.0
+
+`GET /author-spaces/quests/results?slug=…&id=…` requires verified authentication
+and membership of the requested Author Space; foreign quest IDs return 404.
+`AuthorQuestResults.total` counts all persisted submission attempts for the quest
+across publications and statuses. `series` contains exactly 30 ascending UTC day
+buckets, including today and zero days; each count uses submission `created`, not
+resolution time. `ratings` counts votes in the latest closed rating round (or the
+latest open round when no round has closed), consistent with quest analytics.
+
+`survey` is null for other quest types. For Surveys it contains accepted responses
+with a valid integer answer index, matching the displayed publication's question
+and ordered options. Historical publications with different questions/options are
+excluded; legacy submissions without a material snapshot use the current terms.
+Items stay in option order, including zero-vote options; percentages use the
+accepted response total. Queries aggregate in SQL without returning raw answers,
+proofs, or participant information. Existing analytics remains compatible.

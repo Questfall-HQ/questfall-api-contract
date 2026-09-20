@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.37.0",
+  "version": "6.38.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2481,6 +2481,24 @@
       },
       "response": {
         "schema": "AccountClaim"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.results",
+      "method": "GET",
+      "path": "/author-spaces/quests/results",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug",
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthorQuestResults"
       }
     }
   ],

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.37.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.38.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -11658,6 +11658,97 @@
           ]
         }
       ]
+    },
+    "AuthorQuestResults": {
+      "type": "object",
+      "required": [
+        "total",
+        "timezone",
+        "series",
+        "survey",
+        "ratings"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ratings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timezone": {
+          "const": "UTC"
+        },
+        "series": {
+          "type": "array",
+          "minItems": 30,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "required": [
+              "day",
+              "count"
+            ],
+            "properties": {
+              "day": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "survey": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "total",
+            "items"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "index",
+                  "count",
+                  "percent"
+                ],
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
