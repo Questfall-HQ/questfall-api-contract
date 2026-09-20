@@ -611,3 +611,20 @@ excluded; legacy submissions without a material snapshot use the current terms.
 Items stay in option order, including zero-vote options; percentages use the
 accepted response total. Queries aggregate in SQL without returning raw answers,
 proofs, or participant information. Existing analytics remains compatible.
+
+### Quest comments — v6.39.0
+
+- `POST /quests/comments`: verified, requires `id`, `publication_id`, `text`
+  (plain text, 1–2,000 characters) and `idempotency_key` (8–128 ASCII letters,
+  digits, underscores or hyphens). Accepts the existing content/moderation
+  capability fields; the publication must match the quest shown to this user.
+  The same user/key and payload replay the immutable `QuestCommentReceipt`.
+- `GET /author-spaces/quests/comments?id=…`: verified membership of the quest's
+  Author Space; optional `before` cursor and `limit` (default 30, maximum 50).
+  Returns `QuestCommentList` with safe public identities and no private auth data.
+- `POST /author-spaces/quests/comments/read`: same membership check, requires
+  `id` and up to 50 `comment_ids`; validates all IDs against that quest and marks
+  them only for the current author-space member. Returns `QuestCommentSummary`.
+- Author quest rows/drafts/mutations optionally include `comments`:
+  `{total, unread, latest}`. This is private author data; public quest cards are
+  unchanged. No replies, editing or public comment feed are introduced.

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.38.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.39.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -9718,6 +9718,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -9808,6 +9811,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -10402,6 +10408,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -11746,6 +11755,159 @@
             }
           },
           "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentSummary": {
+      "type": "object",
+      "required": [
+        "total",
+        "unread",
+        "latest"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unread": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latest": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentReceipt": {
+      "type": "object",
+      "required": [
+        "id",
+        "quest_id",
+        "publication_id",
+        "text",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "publication_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentUser": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {},
+        "avatar_icon": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "level": {
+          "type": "integer"
+        },
+        "moderation_status": {
+          "enum": [
+            "active",
+            "restricted"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestComment": {
+      "type": "object",
+      "required": [
+        "id",
+        "quest_id",
+        "publication_id",
+        "text",
+        "created",
+        "user",
+        "unread"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "publication_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "user": {
+          "$ref": "#/$defs/QuestCommentUser"
+        },
+        "unread": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentList": {
+      "type": "object",
+      "required": [
+        "items",
+        "comments",
+        "next"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestComment"
+          }
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "additionalProperties": false

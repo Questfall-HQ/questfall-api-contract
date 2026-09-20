@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.38.0",
+  "version": "6.39.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2499,6 +2499,67 @@
       },
       "response": {
         "schema": "AuthorQuestResults"
+      }
+    },
+    {
+      "operation": "quests.comment",
+      "method": "POST",
+      "path": "/quests/comments",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "publication_id",
+          "text",
+          "idempotency_key"
+        ],
+        "optional": [
+          "content_version",
+          "moderation_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestCommentReceipt"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.comments",
+      "method": "GET",
+      "path": "/author-spaces/quests/comments",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "before",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "QuestCommentList"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.readcomments",
+      "method": "POST",
+      "path": "/author-spaces/quests/comments/read",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "comment_ids"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestCommentSummary"
       }
     }
   ],
