@@ -645,3 +645,10 @@ daily-series semantics are unchanged.
 `GET /rpg/character/attributes/reset/quote` (verified) returns `AttributeResetQuote`: `gold`, `balance`, effective `league`, `free_reason` (`beginner`, `new_league`, or empty), refundable `points`, `enabled`, `reason`, and opaque `token`.
 
 `POST /rpg/character/attributes/reset` accepts optional `quote_token` alongside `response_version`. It must match the current quote for a paid reset; old clients without a token can still perform free resets. A supplied stale token fails without resetting points or charging Gold. Tokens bind the user, effective league, reset revision and base allocation. A successful reset invalidates the token, including after an identical reallocation. Existing `PlayerResult`/compact effects remain unchanged and include updated balances when Gold is spent.
+
+### Unread feedback in Author Space navigation — v6.42.0
+
+`GET /author-spaces/mine?view=nav` may include `feedback_unread` on each
+`AuthorSpaceNav`. It counts unread quest feedback for the authenticated member
+across that space, including inactive and archived quests. Other teammates have
+independent read receipts. Older responses may omit this additive field.

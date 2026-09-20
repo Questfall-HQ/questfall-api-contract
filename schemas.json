@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.39.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.42.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -9495,6 +9495,11 @@
         "revision": {
           "type": "integer",
           "minimum": 0
+        },
+        "feedback_unread": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unread quest feedback across this space for the authenticated team member. Omitted by older servers."
         },
         "access": {
           "$ref": "#/$defs/AuthorAccess"
