@@ -652,3 +652,27 @@ daily-series semantics are unchanged.
 `AuthorSpaceNav`. It counts unread quest feedback for the authenticated member
 across that space, including inactive and archived quests. Other teammates have
 independent read receipts. Older responses may omit this additive field.
+
+### Question answer distribution — v6.43.0
+
+`AuthorQuestResults.question` is optional for older servers, null for non-text
+quests. It contains `total`, `accepted` answer rows and `rejected: {items, page}`.
+Each row is `{answer, count, percent}`; only submitted values appear. Configured
+allowed answers remain in the quest content, including unused variants.
+Percentages use all accepted/rejected text attempts, including retries. Empty
+text attempts count; malformed non-string proofs and pending attempts do not.
+Answers use completion normalization: trim/collapse whitespace, NFKC, then
+lowercase unless case-sensitive. Accepted groups use the author's first matching
+label; other groups use normalized text. Groups are classified by the displayed
+accepted-answer set and sorted by count descending, then answer ascending.
+
+Only historical publications with the same question, case-sensitivity and
+normalized allowed-answer set contribute. Reordering equivalent allowed answers
+does not reset statistics. Legacy submissions without a material snapshot use
+current terms, as with Survey/Quiz. No participant IDs or other proof fields are
+returned. Daily chart and overall submission total keep their existing scope.
+
+Optional query `answers_page` defaults to 1 (invalid/negative values become 1),
+with five rejected answer groups per page. `page` uses `{page, per_page, total,
+pages}`; out-of-range pages clamp to the final page. Accepted groups (at most 20)
+are always included. Clients refresh from page one if totals change while paging.

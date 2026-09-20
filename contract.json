@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.42.0",
+  "version": "6.43.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2511,7 +2511,9 @@
           "slug",
           "id"
         ],
-        "optional": []
+        "optional": [
+          "answers_page"
+        ]
       },
       "response": {
         "schema": "AuthorQuestResults"

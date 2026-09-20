@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.42.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.43.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -11801,6 +11801,115 @@
                 },
                 "additionalProperties": false
               }
+            }
+          },
+          "additionalProperties": false
+        },
+        "question": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "total",
+            "accepted",
+            "rejected"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accepted": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": [
+                  "answer",
+                  "count",
+                  "percent"
+                ],
+                "properties": {
+                  "answer": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "rejected": {
+              "type": "object",
+              "required": [
+                "items",
+                "page"
+              ],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "answer",
+                      "count",
+                      "percent"
+                    ],
+                    "properties": {
+                      "answer": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "percent": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "page": {
+                  "type": "object",
+                  "required": [
+                    "page",
+                    "per_page",
+                    "total",
+                    "pages"
+                  ],
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "per_page": {
+                      "const": 5
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
