@@ -11911,6 +11911,55 @@
         }
       },
       "additionalProperties": false
+    },
+    "AttributeResetQuote": {
+      "type": "object",
+      "required": [
+        "gold",
+        "balance",
+        "league",
+        "free_reason",
+        "points",
+        "token",
+        "enabled",
+        "reason"
+      ],
+      "properties": {
+        "gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "balance": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "league": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "free_reason": {
+          "enum": [
+            "beginner",
+            "new_league",
+            ""
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

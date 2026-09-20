@@ -628,3 +628,9 @@ proofs, or participant information. Existing analytics remains compatible.
 - Author quest rows/drafts/mutations optionally include `comments`:
   `{total, unread, latest}`. This is private author data; public quest cards are
   unchanged. No replies, editing or public comment feed are introduced.
+
+### Attribute resets — v6.40.0
+
+`GET /rpg/character/attributes/reset/quote` (verified) returns `AttributeResetQuote`: `gold`, `balance`, effective `league`, `free_reason` (`beginner`, `new_league`, or empty), refundable `points`, `enabled`, `reason`, and opaque `token`.
+
+`POST /rpg/character/attributes/reset` accepts optional `quote_token` alongside `response_version`. It must match the current quote for a paid reset; old clients without a token can still perform free resets. A supplied stale token fails without resetting points or charging Gold. Tokens bind the user, effective league, reset revision and base allocation. A successful reset invalidates the token, including after an identical reallocation. Existing `PlayerResult`/compact effects remain unchanged and include updated balances when Gold is spent.

@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.39.0",
+  "version": "6.40.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -358,6 +358,21 @@
       }
     },
     {
+      "operation": "character.resetQuote",
+      "method": "GET",
+      "path": "/rpg/character/attributes/reset/quote",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "AttributeResetQuote"
+      }
+    },
+    {
       "operation": "character.reset",
       "method": "POST",
       "path": "/rpg/character/attributes/reset",
@@ -367,7 +382,8 @@
         "params": [],
         "required": [],
         "optional": [
-          "response_version"
+          "response_version",
+          "quote_token"
         ]
       },
       "response": {
