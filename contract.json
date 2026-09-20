@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.43.0",
+  "version": "6.44.1",
   "routes": [
     {
       "operation": "auth.me",
