@@ -732,3 +732,19 @@ The same release also includes immutable published-quest result snapshots and
 history links described above. Both consumers must pin the same exact tag.
 
 History result links belong to closing events (author unpublication, expiry or moderation), alongside any refund. Start events retain their IDs for backward compatibility. The frontend opens these results separately from the inactive draft editor.
+
+### Character: компактные характеристики и Stamina — v6.48.0
+
+Формат ответов и сохранённых персонажей не меняется. Схемы уточняют уже
+выдаваемую структуру: `CharacterTraits` содержит шесть строк по семь чисел
+(вложенные очки, итоговый атрибут, пять traits в указанном в schema порядке),
+`CharacterPoints` — `total`, `used`, `free`, `per_level`. Те же определения
+используются в legacy Player и отдельном `CharacterState`.
+
+`Stamina` требует `current`, `max`, `recovery`, `updated`, `percent`, `quest_cost`.
+`current` может превышать `max`; дробная скорость восстановления допустима.
+`CharacterEquipment` проверяет объект `slots` и три числовых веса
+(raw/effective/ignored), сохраняя совместимость с историческими полями предметов.
+Это уточнение проверки существующих ответов; новые поля запроса, routes и
+миграция хранилища не требуются. Именованные доменные операции остаются у
+потребителей контракта, игровые формулы в этот пакет не входят.
