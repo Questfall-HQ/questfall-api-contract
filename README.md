@@ -1,5 +1,14 @@
 # questfall-api-contract
 
+### Public quest submissions — v6.47.0
+
+`QuestCard.submission_count?: integer` is the nonnegative number of saved sends
+for a quest across every publication and status, including repeat attempts.
+It is distinct from unique participants and the existing `completion_count`.
+The field is shared by feed, detail, public-space and incremental card responses;
+it is optional for compatibility with older servers. This additive release
+does not change personal completion state, outcome statistics or rewards.
+
 Публичный версионируемый контракт между
 [`questfall-application`](https://github.com/Questfall-HQ/questfall-application)
 и [`questfall-pocketbase`](https://github.com/Questfall-HQ/questfall-pocketbase).

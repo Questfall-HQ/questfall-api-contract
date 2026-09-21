@@ -1998,6 +1998,11 @@
           "type": "integer",
           "minimum": 0
         },
+        "submission_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "All saved submissions for this quest across every publication and status, including repeat attempts. Counts sends, not unique participants or accepted completions. Optional for compatibility with older servers."
+        },
         "published": {
           "type": "integer",
           "minimum": 0
