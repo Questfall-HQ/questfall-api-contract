@@ -108,9 +108,11 @@ function inspect(rule, value, at, failures) {
     for (const [field, child] of Object.entries(rule.properties || {})) {
       if (field in value) inspect(child, value[field], `${at}.${field}`, failures)
     }
-    if (rule.additionalProperties === false) {
-      for (const field of Object.keys(value)) {
-        if (!(field in (rule.properties || {}))) failures.push(`${at}.${field} is not allowed`)
+    for (const field of Object.keys(value)) {
+      if (Object.hasOwn(rule.properties || {}, field)) continue
+      if (rule.additionalProperties === false) failures.push(`${at}.${field} is not allowed`)
+      else if (rule.additionalProperties && typeof rule.additionalProperties === 'object') {
+        inspect(rule.additionalProperties, value[field], `${at}.${field}`, failures)
       }
     }
   }

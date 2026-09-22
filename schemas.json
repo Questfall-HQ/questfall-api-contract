@@ -7214,8 +7214,7 @@
               "$ref": "#/$defs/Stamina"
             },
             "systems": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/CharacterSystems"
             },
             "equipment": {
               "$ref": "#/$defs/CharacterEquipment"
@@ -8495,8 +8494,7 @@
           "$ref": "#/$defs/Stamina"
         },
         "systems": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/CharacterSystems"
         },
         "equipment": {
           "$ref": "#/$defs/CharacterEquipment"
@@ -12863,31 +12861,27 @@
           "type": "object",
           "properties": {
             "head": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             },
             "chest": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             },
             "hands": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             },
             "legs": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             },
             "feet": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             },
             "outer": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/$defs/EquippedItem"
             }
           },
-          "additionalProperties": true
+          "additionalProperties": {
+            "$ref": "#/$defs/EquippedItem"
+          }
         },
         "weight": {
           "type": "array",
@@ -12901,7 +12895,13 @@
         },
         "links": {
           "type": "object",
-          "additionalProperties": true
+          "properties": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
       "additionalProperties": true
@@ -13225,6 +13225,1433 @@
         "starter"
       ],
       "additionalProperties": false
+    },
+    "CharacterInventorySystem": {
+      "type": "object",
+      "properties": {
+        "traits": {
+          "type": "object",
+          "properties": {
+            "capacity": {
+              "type": "number"
+            },
+            "levitation": {
+              "type": "number"
+            },
+            "equipping": {
+              "type": "number"
+            },
+            "overlevel": {
+              "type": "number"
+            },
+            "exemption": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "capacity",
+            "levitation",
+            "equipping",
+            "overlevel",
+            "exemption"
+          ]
+        },
+        "capacity": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            },
+            "flat_g": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat_g": {
+              "type": "number"
+            },
+            "total_flat_g": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "value",
+            "flat_g",
+            "mastery_rank",
+            "mastery_flat_g",
+            "total_flat_g",
+            "percent"
+          ]
+        },
+        "levitation": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "flat_g": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat_g": {
+              "type": "number"
+            },
+            "total_flat_g": {
+              "type": "number"
+            },
+            "weight_percent": {
+              "type": "number"
+            },
+            "remaining_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "rate",
+            "flat_g",
+            "mastery_rank",
+            "mastery_flat_g",
+            "total_flat_g",
+            "weight_percent",
+            "remaining_percent"
+          ]
+        },
+        "exemption": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "flat",
+            "value"
+          ]
+        },
+        "equipping": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "total_flat": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            },
+            "remaining_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "rate",
+            "flat",
+            "mastery_rank",
+            "mastery_flat",
+            "total_flat",
+            "percent",
+            "remaining_percent"
+          ]
+        },
+        "overlevel": {
+          "type": "object",
+          "properties": {
+            "gap_reduction": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "total_flat": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            },
+            "level": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "gap_reduction",
+            "flat",
+            "mastery_rank",
+            "mastery_flat",
+            "total_flat",
+            "percent",
+            "level"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "traits",
+        "capacity",
+        "levitation",
+        "exemption",
+        "equipping",
+        "overlevel"
+      ]
+    },
+    "CharacterMiningSystem": {
+      "type": "object",
+      "properties": {
+        "loot": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "rolls": {
+              "type": "object",
+              "properties": {
+                "guaranteed": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "chance": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": true,
+              "required": [
+                "guaranteed",
+                "chance"
+              ]
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "rate",
+            "rolls"
+          ]
+        },
+        "power": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "before_grants": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "before_grants",
+            "grant_percent",
+            "value"
+          ]
+        },
+        "flow": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "bonus": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "bonus"
+          ]
+        },
+        "focus": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "trait_minutes": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_minutes": {
+              "type": "number"
+            },
+            "grant_minutes": {
+              "type": "number"
+            },
+            "minutes": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "trait_minutes",
+            "mastery_rank",
+            "mastery_minutes",
+            "grant_minutes",
+            "minutes"
+          ]
+        },
+        "priority": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            },
+            "minutes": {
+              "type": "number"
+            },
+            "trait_minutes": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_minutes": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "value",
+            "minutes",
+            "trait_minutes",
+            "mastery_rank",
+            "mastery_minutes"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "loot",
+        "power",
+        "flow",
+        "focus",
+        "priority"
+      ]
+    },
+    "CharacterCraftingSystem": {
+      "type": "object",
+      "properties": {
+        "scrapping": {
+          "type": "object",
+          "properties": {
+            "trait_recovery": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "recovery_rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_recovery",
+            "mastery_rank",
+            "mastery_flat",
+            "grant_efficiency",
+            "grant_flat",
+            "recovery_rate",
+            "flat"
+          ]
+        },
+        "leveling": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "trait_remaining": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "trait_remaining",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "remaining",
+            "reduction"
+          ]
+        },
+        "merging": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "multiplier",
+            "remaining"
+          ]
+        },
+        "rarity": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "multiplier",
+            "remaining"
+          ]
+        },
+        "quality": {
+          "type": "object",
+          "properties": {
+            "trait_pressure": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_pressure": {
+              "type": "number"
+            },
+            "grant_pressure": {
+              "type": "number"
+            },
+            "pressure": {
+              "type": "number"
+            },
+            "bias": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_pressure",
+            "mastery_rank",
+            "mastery_pressure",
+            "grant_pressure",
+            "pressure",
+            "bias"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "scrapping",
+        "leveling",
+        "merging",
+        "rarity",
+        "quality"
+      ]
+    },
+    "CharacterTradingSystem": {
+      "type": "object",
+      "properties": {
+        "fee": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "rate",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "bid": {
+          "type": "object",
+          "properties": {
+            "power": {
+              "type": "number"
+            },
+            "effective_price_percent": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "power",
+            "effective_price_percent",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "liquidity": {
+          "type": "object",
+          "properties": {
+            "power": {
+              "type": "number"
+            },
+            "required_percent": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "power",
+            "required_percent",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "conversion": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "trait_rate": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "grant_pressure": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "trait_rate",
+            "mastery_rank",
+            "mastery_flat",
+            "grant_pressure",
+            "grant_flat",
+            "rate"
+          ]
+        },
+        "slots": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_slots": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_slots",
+            "grant_percent",
+            "grant_flat",
+            "value"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "fee",
+        "bid",
+        "liquidity",
+        "conversion",
+        "slots"
+      ]
+    },
+    "CharacterStaminaSystem": {
+      "type": "object",
+      "properties": {
+        "reserve": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "grant_flat",
+            "value"
+          ]
+        },
+        "recovery": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "per_minute": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "grant_flat",
+            "per_minute"
+          ]
+        },
+        "efficiency": {
+          "type": "object",
+          "properties": {
+            "trait_rate": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_rate": {
+              "type": "number"
+            },
+            "grant_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_rate",
+            "mastery_rank",
+            "mastery_rate",
+            "grant_rate",
+            "rate",
+            "flat"
+          ]
+        },
+        "relief": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_weight_reduction": {
+              "type": "number"
+            },
+            "power": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_weight_reduction",
+            "power",
+            "multiplier"
+          ]
+        },
+        "absorption": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "bonus": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "bonus"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "reserve",
+        "recovery",
+        "efficiency",
+        "relief",
+        "absorption"
+      ]
+    },
+    "CharacterLuckSystem": {
+      "type": "object",
+      "properties": {
+        "shards": {
+          "type": "object",
+          "properties": {
+            "missing_bias": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "missing_weight": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "missing_bias",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "missing_weight"
+          ]
+        },
+        "boxes": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "chance": {
+              "type": "number"
+            },
+            "chance_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "chance",
+            "chance_percent"
+          ]
+        },
+        "cards": {
+          "type": "object",
+          "properties": {
+            "starter_turns": {
+              "type": "number"
+            },
+            "trait_turns": {
+              "type": "number"
+            },
+            "base_turns": {
+              "type": "number"
+            },
+            "mastery_turns": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "earned_turns": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "expected_turns": {
+              "type": "number"
+            },
+            "guaranteed_turns": {
+              "type": "number"
+            },
+            "extra_turn_chance": {
+              "type": "number"
+            },
+            "turns": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "starter_turns",
+            "trait_turns",
+            "base_turns",
+            "mastery_turns",
+            "mastery_rank",
+            "earned_turns",
+            "grant_percent",
+            "expected_turns",
+            "guaranteed_turns",
+            "extra_turn_chance",
+            "turns"
+          ]
+        },
+        "chance": {
+          "type": "object",
+          "properties": {
+            "trait_chance": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_weight_percent": {
+              "type": "number"
+            },
+            "grant_weight_percent": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_chance",
+            "mastery_rank",
+            "mastery_weight_percent",
+            "grant_weight_percent",
+            "value"
+          ]
+        },
+        "bonus": {
+          "type": "object",
+          "properties": {
+            "base_power": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_power": {
+              "type": "number"
+            },
+            "effective_power": {
+              "type": "number"
+            },
+            "reward_grant": {
+              "type": "number"
+            },
+            "power": {
+              "type": "number"
+            },
+            "discount_grant": {
+              "type": "number"
+            },
+            "discount_rate": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_power",
+            "mastery_rank",
+            "mastery_power",
+            "effective_power",
+            "reward_grant",
+            "power",
+            "discount_grant",
+            "discount_rate"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "shards",
+        "boxes",
+        "cards",
+        "chance",
+        "bonus"
+      ]
+    },
+    "CharacterSystems": {
+      "type": "object",
+      "properties": {
+        "grants": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "inventory": {
+          "$ref": "#/$defs/CharacterInventorySystem"
+        },
+        "mining": {
+          "$ref": "#/$defs/CharacterMiningSystem"
+        },
+        "crafting": {
+          "$ref": "#/$defs/CharacterCraftingSystem"
+        },
+        "trading": {
+          "$ref": "#/$defs/CharacterTradingSystem"
+        },
+        "stamina": {
+          "$ref": "#/$defs/CharacterStaminaSystem"
+        },
+        "luck": {
+          "$ref": "#/$defs/CharacterLuckSystem"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "grants",
+        "inventory",
+        "mining",
+        "crafting",
+        "trading",
+        "stamina",
+        "luck"
+      ],
+      "description": "Resolved public RPG values. The server owns formulas; the contract describes results, not balance constants. Numeric maps allow new grant identifiers."
+    },
+    "EquipmentValue": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "number"
+        },
+        "effective": {
+          "type": "number"
+        },
+        "boost": {
+          "type": "number"
+        },
+        "boosted": {
+          "type": "boolean"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "power": {
+          "type": "number"
+        },
+        "multipliers": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "raw",
+        "effective",
+        "boost",
+        "boosted"
+      ],
+      "description": "Resolved item value. Negative boost is valid when equipment power is reduced; optional multipliers describe the contributing effects."
+    },
+    "EquipmentSelector": {
+      "type": "object",
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "wear": {
+          "type": "string"
+        },
+        "rarity": {
+          "type": "string"
+        },
+        "aspect": {
+          "type": "string"
+        },
+        "attr": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "EquipmentAspect": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/EquipmentValue"
+            }
+          ]
+        },
+        "step": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "value"
+      ]
+    },
+    "EquipmentPerk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "trait_terminal",
+            "booster",
+            "trait_grant",
+            "attribute_grant"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "effect": {
+          "type": "string"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/EquipmentSelector"
+            }
+          ]
+        },
+        "condition": {
+          "$ref": "#/$defs/EquipmentSelector"
+        },
+        "filter": {
+          "$ref": "#/$defs/EquipmentSelector"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/EquipmentValue"
+            }
+          ]
+        },
+        "step": {
+          "type": "number"
+        },
+        "roll": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "boosters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "value"
+      ]
+    },
+    "EquippedItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "kind": {
+          "const": "clothing"
+        },
+        "slot": {
+          "enum": [
+            "head",
+            "chest",
+            "hands",
+            "legs",
+            "feet",
+            "outer"
+          ]
+        },
+        "wear": {
+          "type": "string"
+        },
+        "rarity": {
+          "enum": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "location": {
+          "enum": [
+            "inventory",
+            "equipped",
+            "marketplace"
+          ]
+        },
+        "location_ref": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0
+        },
+        "image": {},
+        "image_url": {
+          "type": "string"
+        },
+        "set": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "origin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "aspect": {
+          "$ref": "#/$defs/EquipmentAspect"
+        },
+        "perks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EquipmentPerk"
+          }
+        },
+        "essence_invested": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true,
+      "description": "Public equipped clothing snapshot. Metadata remains optional for historical records (including id-only snapshots). Present fields are typed; aspect/perk values may use the historical scalar form or the resolved object form. Images retain their existing opaque representation."
     }
   }
 }
