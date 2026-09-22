@@ -88,6 +88,12 @@ function inspect(rule, value, at, failures) {
   if (typeof value === 'number' && rule.minimum !== undefined && value < rule.minimum) {
     failures.push(`${at} must be at least ${rule.minimum}`)
   }
+  if (typeof value === 'number' && rule.exclusiveMinimum !== undefined && value <= rule.exclusiveMinimum) {
+    failures.push(`${at} must be greater than ${rule.exclusiveMinimum}`)
+  }
+  if (typeof value === 'number' && rule.exclusiveMaximum !== undefined && value >= rule.exclusiveMaximum) {
+    failures.push(`${at} must be less than ${rule.exclusiveMaximum}`)
+  }
   if (typeof value === 'number' && rule.maximum !== undefined && value > rule.maximum) {
     failures.push(`${at} must be at most ${rule.maximum}`)
   }

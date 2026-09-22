@@ -1,5 +1,14 @@
 # questfall-api-contract
 
+### Настройки Stamina — v6.49.0
+
+`GET /rpg/stamina/config` возвращает публичные параметры баланса и начальную
+проекцию Stamina. Числа принадлежат серверному каталогу; контракт задаёт только
+структуру. `Stamina` дополнена необязательными `decay_per_hour` и
+`potion_reference`: клиент проецирует старый snapshot с его собственными
+параметрами до получения нового. `PotionEffect.restore_percent` — положительное
+число, а не фиксированный список значений баланса.
+
 ### Public quest submissions — v6.47.0
 
 `QuestCard.submission_count?: integer` is the nonnegative number of saved sends

@@ -12365,14 +12365,8 @@
           "const": "stamina"
         },
         "restore_percent": {
-          "enum": [
-            10,
-            30,
-            90,
-            270,
-            810,
-            2430
-          ]
+          "type": "number",
+          "exclusiveMinimum": 0
         }
       },
       "additionalProperties": false
@@ -12554,6 +12548,14 @@
           "maximum": 100
         },
         "quest_cost": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "decay_per_hour": {
+          "type": "number",
+          "minimum": 0
+        },
+        "potion_reference": {
           "type": "integer",
           "minimum": 1
         }
@@ -12903,6 +12905,326 @@
         }
       },
       "additionalProperties": true
+    },
+    "StaminaConfig": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "base_reserve": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_root": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_power": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_exponent": {
+              "type": "number",
+              "minimum": 0
+            },
+            "overflow_decay_rate": {
+              "type": "number",
+              "minimum": 0
+            },
+            "relief_power": {
+              "type": "number",
+              "minimum": 0
+            },
+            "recovery_minutes": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "efficiency_curve": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "absorption_limit": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "absorption_curve": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "quest_cost": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "efficiency_floor": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "reduction_limit": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 100
+            },
+            "mastery": {
+              "type": "object",
+              "properties": {
+                "efficiency": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "absorption": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "reserve": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "recovery": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "relief": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "efficiency",
+                "absorption",
+                "reserve",
+                "recovery",
+                "relief"
+              ],
+              "additionalProperties": false
+            },
+            "potions": {
+              "type": "object",
+              "properties": {
+                "chance": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "tiers": {
+                  "type": "object",
+                  "properties": {
+                    "f": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "e": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "d": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "c": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "b": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "a": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "f",
+                    "e",
+                    "d",
+                    "c",
+                    "b",
+                    "a"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "chance",
+                "tiers"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "base_reserve",
+            "reserve_root",
+            "reserve_power",
+            "reserve_exponent",
+            "overflow_decay_rate",
+            "relief_power",
+            "recovery_minutes",
+            "efficiency_curve",
+            "absorption_limit",
+            "absorption_curve",
+            "quest_cost",
+            "efficiency_floor",
+            "reduction_limit",
+            "mastery",
+            "potions"
+          ],
+          "additionalProperties": false
+        },
+        "starter": {
+          "$ref": "#/$defs/Stamina"
+        }
+      },
+      "required": [
+        "parameters",
+        "starter"
+      ],
+      "additionalProperties": false
     }
   }
 }
