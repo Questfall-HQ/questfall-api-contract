@@ -56,9 +56,9 @@ test('shared evidence bounds are five; screenshot count is an integer from one t
 })
 
 
-test('unified Action supports two verification methods and both platform link modes',()=>{
+test('Action supports current evidence methods while platform remains a moderation kind',()=>{
  expect(validate('ModerationCaseKind','platform')).toEqual([])
- for(const verification of ['screenshot','platform'])for(const link_mode of ['shared','individual']){
+ for(const verification of ['screenshot','url','confirmation'])for(const link_mode of ['shared','individual']){
   expect(validate('QuestAuthorConfig',{verification,link_mode})).toEqual([])
   expect(validate('QuestPublicConfig',{verification,link_mode,target_links:[],allowed_domains:[]})).toEqual([])
  }
@@ -77,26 +77,27 @@ test('platform identity config is additive and domain resolution includes identi
  expect(validate('EffectiveDomainTrust',{host:'youtu.be',platform:'youtube.com',favicon:{state:'missing',url:'',checked:0},state:'safe',matched_rule:'youtu.be',revision:1,warning:false,blocked:false})).toEqual([])
 })
 
-test('v4 supports community checks and optionally restricted result URLs alongside legacy platform modes',()=>{
- for(const verification of ['url','community'])for(const platform_domain of ['','discord.com']){
+test('URL and confirmation support optional service scope',()=>{
+ for(const verification of ['url','confirmation'])for(const platform_domain of ['','discord.com']){
   expect(validate('QuestAuthorConfig',{verification,platform_domain})).toEqual([])
   expect(validate('QuestPublicConfig',{verification,platform_domain,target_links:[]})).toEqual([])
  }
  expect(validate('QuestAuthorConfig',{verification:'url-and-screenshots'}).length).toBeGreaterThan(0)
- for(const verification of ['url','community','confirmation']){
-  const assignment={id:'review',kind:'platform',verification,reportable:true,instructions:'Check completion',proof_url:verification==='url'?'https://unexpected.example/result':'',proof_media:[],account:verification==='community'?'member':'',platform:verification==='community'?'discord.com':'',progress:{stage:'judging',status:'open',consensus_percent:0},pricing:{window_revision:1,starts:0,ends:600000,rate_bps:10000,reward:20,penalty:-40,bypass_cost:10,witness_cost:0},created:0,expires:600000}
+ for(const verification of ['url','confirmation']){
+  const assignment={id:'review',kind:'platform',verification,reportable:true,instructions:'Check completion',proof_url:verification==='url'?'https://unexpected.example/result':'',proof_media:[],account:verification==='confirmation'?'member':'',platform:verification==='confirmation'?'discord.com':'',progress:{stage:'judging',status:'open',consensus_percent:0},pricing:{window_revision:1,starts:0,ends:600000,rate_bps:10000,reward:20,penalty:-40,bypass_cost:10,witness_cost:0},created:0,expires:600000}
   expect(validate('ModerationAssignment',assignment)).toEqual([])
   expect(validate('ModerationAssignment',{...assignment,kind:'quest_initial',phase:'completion'})).toEqual([])
  }
 })
 
 
-test('v5 adds confirmation without changing earlier Action evidence modes',()=>{
+test('confirmation and screenshot configurations validate; obsolete platform mode is rejected',()=>{
  for(const schema of ['QuestAuthorConfig','QuestPublicConfig']){
   expect(validate(schema,{verification:'confirmation',platform_domain:''})).toEqual([])
   expect(validate(schema,{verification:'screenshot',platform_domain:'',screenshot_count:1})).toEqual([])
-  expect(validate(schema,{verification:'platform',link_mode:'shared',platform_domain:'discord.com'})).toEqual([])
+  expect(validate(schema,{verification:'platform',link_mode:'shared',platform_domain:'discord.com'})).not.toEqual([])
  }
+ for(const mode of ['platform','community'])for(const schema of ['QuestAuthorConfig','QuestPublicConfig']) expect(validate(schema,{verification:mode})).not.toEqual([])
  expect(validate('QuestEvidence',{proof_media_ids:[]})).toEqual([])
 })
 

@@ -1,5 +1,79 @@
 # questfall-api-contract
 
+### Опубликованное оформление предметов
+
+`GET /rpg/artwork?keys=…` принимает до 100 ключей и возвращает `ArtworkCatalog`: версию каталога и только запрошенные опубликованные оформления. Без `keys` возвращается версия и пустой `artworks`. Каждое оформление содержит постоянный ID, редакцию, пять параметров позиционирования и шесть AVIF/WebP-вариантов с фактическими размерами, MIME и объёмом. Черновики, оригиналы и административные операции закрыты и не входят в публичную surface. Старое поле `image` сохраняется.
+
+### Единый протокол ответов — v7.0.0
+
+RPG, Inventory, Profile, награды, пополнение Space и завершение квестов
+возвращают квитанцию операции и `effects` с `response_version: 2`. Параметр
+можно не передавать; явно указанная неподдерживаемая версия отклоняется до
+выполнения команды. Старый HTTP-конверт `player` и альтернативные схемы v1 удалены.
+Внутренний `Entities.player` клиента остаётся проекцией для интерфейса.
+
+Новый клиент передаёт `response_version: 2` и `idempotency_key`. Открытые вкладки
+App 0.5.43, не передающие оба поля, получают серверный ключ на пользователя и
+конкретное решение; повтор запроса не создаёт вторую ставку. Эта переходная ветка
+удаляется после прекращения поддержки старых открытых вкладок. Явная версия
+2 по-прежнему требует ключ. Автор получает разрешённую ему историю
+дела; остальные участники — квитанцию и свой баланс без закрытых авторских данных.
+История квеста всегда содержит отдельные изменения личного и Space-кошельков.
+Это изменение протокола, без миграции серверных данных и пересчёта прошлых выплат.
+
+В этой же локальной версии удалены неиспользуемые Quest types `question` и
+`transaction`, а также режимы Quest config `verification=platform|community`.
+Действующий Question имеет тип `text`; Action сохраняет `screenshot|url|confirmation`.
+`platform` остаётся видом модерации и маркером её снимков. Исторические Screenshot,
+Action без verification и прежние identities продолжают читаться: такие данные
+есть в сохранённой истории. Проверка отсутствующих форматов и границы очистки:
+[workspace audit](../docs/architecture/BACKWARD-COMPATIBILITY-AUDIT-2026-09-22.md).
+
+Релизный контракт — неизменяемый tag `v7.0.0`. Оба consumer должны фиксировать
+именно этот tag, хранить lockfile и проходить полные проверки из чистого checkout.
+
+`Item` и `EquippedItem` требуют основные метаданные, `aspect` и `perks`.
+Значения aspect/perks представлены только `EquipmentValue`
+(`raw`, `effective`, `boost`, `boosted`); числовой или строковый ответ, предмет
+из одного `id` и строковый perk target больше не поддерживаются. В одежде
+обязателен `aspect.id`; у зелья остаются нулевое рассчитанное значение и пустые
+perks. Числовые атомы в серверном хранилище остаются текущим внутренним форматом:
+presenters уже преобразуют их на границе API. Дополнительные поля допустимы.
+
+### Результаты RPG и экипировка — v6.50.0
+
+Ниже описан прежний допуск v6.50.0; в v7.0.0 он сужен, как указано выше.
+
+`CharacterSystems` описывает результаты всех шести RPG-систем: обязательные
+числовые поля, grants и Mining rolls. Схема используется в Character entity. `EquippedItem` задаёт
+метаданные надетой одежды, aspect/perks, рассчитанные значения, множители и
+связи усилений. Исторические неполные предметы и скалярные значения допустимы;
+поля, которые присутствуют, проверяются. Новые поля остаются допустимыми.
+
+JSON-ответы, маршруты и формулы не меняются. Это уточнение существующей
+публичной формы; коэффициенты баланса принадлежат серверу. Валидатор теперь
+проверяет schema-valued `additionalProperties`, включая каждый элемент
+числовых карт и карт связей. Тесты используют синтетические ответы серверного
+`helpers/player.view.character` (empty, equipped, veteran, legacy).
+
+### Настройки Stamina — v6.49.0
+
+`GET /rpg/stamina/config` возвращает публичные параметры баланса и начальную
+проекцию Stamina. Числа принадлежат серверному каталогу; контракт задаёт только
+структуру. `Stamina` дополнена необязательными `decay_per_hour` и
+`potion_reference`: клиент проецирует старый snapshot с его собственными
+параметрами до получения нового. `PotionEffect.restore_percent` — положительное
+число, а не фиксированный список значений баланса.
+
+### Public quest submissions — v6.47.0
+
+`QuestCard.submission_count?: integer` is the nonnegative number of saved sends
+for a quest across every publication and status, including repeat attempts.
+It is distinct from unique participants and the existing `completion_count`.
+The field is shared by feed, detail, public-space and incremental card responses;
+it is optional for compatibility with older servers. This additive release
+does not change personal completion state, outcome statistics or rewards.
+
 Публичный версионируемый контракт между
 [`questfall-application`](https://github.com/Questfall-HQ/questfall-application)
 и [`questfall-pocketbase`](https://github.com/Questfall-HQ/questfall-pocketbase).
@@ -235,10 +309,10 @@ completion-фаза первого дела тоже могла работать
 Голоса представлены только взвешенными процентами, без состава комиссии;
 нулевая выборка — `null`. Исторические результаты используют зафиксированные голоса.
 
-`POST /moderation/cases/appeal` поддерживает opt-in `response_version=2`:
+`POST /moderation/cases/appeal` использует единый протокол ответов:
 обязательны актуальный `case_id` и `idempotency_key`. Повтор ключа возвращает
-подтверждённую операцию, чужое решение с тем же ключом отклоняется. Старый ответ
-сохраняется без opt-in. `/author-spaces/quests/history?response_version=2`
+подтверждённую операцию, чужое решение с тем же ключом отклоняется.
+`/author-spaces/quests/history`
 добавляет ссылки на дело/решение, фазу события и отдельные изменения личного
 кошелька пользователя и кошелька пространства. Чужие личные выплаты скрыты;
 отсутствующие финансовые данные помечаются как недоступные.
@@ -259,8 +333,8 @@ completion-фаза первого дела тоже могла работать
 
 ### Адресное состояние — v6.20.0
 
-`response_version=2` — явный opt-in для bootstrap, Inventory и мигрированных
-команд. Без него сохраняется legacy response. `/auth/me?response_version=2`
+`response_version=2` — единственный формат для bootstrap, Inventory и
+команд; он же используется без параметра. `/auth/me`
 возвращает профиль, Balances, Character, inventory summary и Mining summary;
 не включает предметы, opening layout, weekly XP или rewards details.
 Отказ Mining summary не отменяет восстановление профиля.
@@ -593,3 +667,156 @@ moderation kind, delivered only to content_version >= 8. Wallet proof transfers
 only quest identity ownership, never authentication identities. Draft, pending,
 transferred, insufficient and superseded statuses are explicit; opening a claim
 does not change ownership. Personal claim lists never reveal other claimants.
+
+### Author quest results — v6.38.0
+
+`GET /author-spaces/quests/results?slug=…&id=…` requires verified authentication
+and membership of the requested Author Space; foreign quest IDs return 404.
+`AuthorQuestResults.total` counts all persisted submission attempts for the quest
+across publications and statuses. `series` contains exactly 30 ascending UTC day
+buckets, including today and zero days; each count uses submission `created`, not
+resolution time. `ratings` counts votes in the latest closed rating round (or the
+latest open round when no round has closed), consistent with quest analytics.
+
+`survey` is null for other quest types. For Surveys it contains accepted responses
+with a valid integer answer index, matching the displayed publication's question
+and ordered options. Historical publications with different questions/options are
+excluded; legacy submissions without a material snapshot use the current terms.
+Items stay in option order, including zero-vote options; percentages use the
+accepted response total. Queries aggregate in SQL without returning raw answers,
+proofs, or participant information. Existing analytics remains compatible.
+
+### Quiz answer distribution — v6.41.0
+
+`AuthorQuestResults.quiz` is optional for compatibility with older servers and
+null for other quest types. It uses the same `{total, items}` shape as `survey`,
+but counts every valid submitted answer, including incorrect and repeated
+attempts. Percentages use this attempt total, not unique participants or only
+accepted submissions. A historical publication must match the displayed quiz
+type, question, ordered options and correct answer index; legacy submissions
+without a material snapshot use the current terms. The existing Survey and
+daily-series semantics are unchanged.
+
+### Quest comments — v6.39.0
+
+
+- `POST /quests/comments`: verified, requires `id`, `publication_id`, `text`
+  (plain text, 1–2,000 characters) and `idempotency_key` (8–128 ASCII letters,
+  digits, underscores or hyphens). Accepts the existing content/moderation
+  capability fields; the publication must match the quest shown to this user.
+  The same user/key and payload replay the immutable `QuestCommentReceipt`.
+- `GET /author-spaces/quests/comments?id=…`: verified membership of the quest's
+  Author Space; optional `before` cursor and `limit` (default 30, maximum 50).
+  Returns `QuestCommentList` with safe public identities and no private auth data.
+- `POST /author-spaces/quests/comments/read`: same membership check, requires
+  `id` and up to 50 `comment_ids`; validates all IDs against that quest and marks
+  them only for the current author-space member. Returns `QuestCommentSummary`.
+- Author quest rows/drafts/mutations optionally include `comments`:
+  `{total, unread, latest}`. This is private author data; public quest cards are
+  unchanged. No replies, editing or public comment feed are introduced.
+
+### Attribute resets — v6.40.0
+
+`GET /rpg/character/attributes/reset/quote` (verified) returns `AttributeResetQuote`: `gold`, `balance`, effective `league`, `free_reason` (`beginner`, `new_league`, or empty), refundable `points`, `enabled`, `reason`, and opaque `token`.
+
+`POST /rpg/character/attributes/reset` accepts optional `quote_token` alongside `response_version`. It must match the current quote for a paid reset; old clients without a token can still perform free resets. A supplied stale token fails without resetting points or charging Gold. Tokens bind the user, effective league, reset revision and base allocation. A successful reset invalidates the token, including after an identical reallocation. Existing `PlayerResult`/compact effects remain unchanged and include updated balances when Gold is spent.
+
+### Unread feedback in Author Space navigation — v6.42.0
+
+`GET /author-spaces/mine?view=nav` may include `feedback_unread` on each
+`AuthorSpaceNav`. It counts unread quest feedback for the authenticated member
+across that space, including inactive and archived quests. Other teammates have
+independent read receipts. Older responses may omit this additive field.
+
+### Shared feedback handling — v6.44.0
+
+`POST /author-spaces/quests/comments/status` requires verified membership of the
+quest's Author Space and `id`, `comment_id`, `status` (`open` or `done`). It returns
+`QuestCommentReview`: the updated `comment` and the quest's `comments` summary.
+Done is shared by the team and records `done_at` and safe public `done_by` identity;
+repeated Done requests preserve that actor/time. Reopen clears them. Opening or
+reading feedback never handles it, and existing personal receipts stay compatible.
+
+`QuestComment` adds optional `status`, `done_at`, `done_by`; summaries add optional
+`open` / `done` counts, and `AuthorSpaceNav` adds optional `feedback_open`. Existing
+notes are Open. `GET /author-spaces/quests/comments` accepts an optional `status`
+filter; omitting it still lists all notes. A pagination cursor remains usable
+after its note moves between states. Public participant responses are unchanged.
+
+### Question answer distribution — v6.43.0
+
+`AuthorQuestResults.question` is optional for older servers, null for non-text
+quests. It contains `total`, `accepted` answer rows and `rejected: {items, page}`.
+Each row is `{answer, count, percent}`; only submitted values appear. Configured
+allowed answers remain in the quest content, including unused variants.
+Percentages use all accepted/rejected text attempts, including retries. Empty
+text attempts count; malformed non-string proofs and pending attempts do not.
+Answers use completion normalization: trim/collapse whitespace, NFKC, then
+lowercase unless case-sensitive. Accepted groups use the author's first matching
+label; other groups use normalized text. Groups are classified by the displayed
+accepted-answer set and sorted by count descending, then answer ascending.
+
+Only historical publications with the same question, case-sensitivity and
+normalized allowed-answer set contribute. Reordering equivalent allowed answers
+does not reset statistics. Legacy submissions without a material snapshot use
+current terms, as with Survey/Quiz. No participant IDs or other proof fields are
+returned. Daily chart and overall submission total keep their existing scope.
+
+Optional query `answers_page` defaults to 1 (invalid/negative values become 1),
+with five rejected answer groups per page. `page` uses `{page, per_page, total,
+pages}`; out-of-range pages clamp to the final page. Accepted groups (at most 20)
+are always included. Clients refresh from page one if totals change while paging.
+
+### Published materials in author results
+
+`authorSpaces.quests.results` accepts optional `publication_id`: `latest` selects
+the active publication or the most recent ended publication; an explicit ID
+selects that quest's saved publication (a missing or foreign ID returns 404).
+Omitting it preserves the previous active-publication/draft behavior.
+
+The optional nullable `publication` contains publication metadata and immutable
+`content` for author display, including resolved covers and instructional media.
+It is null when omitted or when historical materials were not saved; a requested
+publication with no saved materials also returns null answer distributions, never
+substituting a changed draft. `total`, daily `series`, and ratings remain quest-wide.
+Answer distributions combine publications with matching question/answer conditions,
+as before; editing the draft does not change the selected published results.
+History publication-start and publication-end events expose optional `publication_id` in both response
+versions so the author can inspect earlier materials.
+
+## v6.45.0 — Stamina potions
+
+Adds verified `items.consume` and `items.merge` commands. Merge requires an
+explicit `ingredientId` as well as `itemId`. Item now supports clothing and
+Stamina potions: potion level is 0 (no levels), slot/wear are empty, and `potion`
+contains `type: stamina` and `restore_percent`. Potions cannot be equipped.
+Craft quotes include server-derived consumption and merge details. Marketplace
+listing reads accept the optional `kind` filter. Player Stamina retains overflow
+and exposes optional `quest_cost`, including equipment pressure.
+
+The same release also includes immutable published-quest result snapshots and
+history links described above. Both consumers must pin the same exact tag.
+
+History result links belong to closing events (author unpublication, expiry or moderation), alongside any refund. Start events retain their IDs for backward compatibility. The frontend opens these results separately from the inactive draft editor.
+
+### Character: компактные характеристики и Stamina — v6.48.0
+
+Формат ответов и сохранённых персонажей не меняется. Схемы уточняют уже
+выдаваемую структуру: `CharacterTraits` содержит шесть строк по семь чисел
+(вложенные очки, итоговый атрибут, пять traits в указанном в schema порядке),
+`CharacterPoints` — `total`, `used`, `free`, `per_level`. Те же определения
+используются в `CharacterState`.
+
+`Stamina` требует `current`, `max`, `recovery`, `updated`, `percent`, `quest_cost`.
+`current` может превышать `max`; дробная скорость восстановления допустима.
+`CharacterEquipment` проверяет объект `slots` и три числовых веса
+(raw/effective/ignored), сохраняя совместимость с историческими полями предметов.
+Это уточнение проверки существующих ответов; новые поля запроса, routes и
+миграция хранилища не требуются. Именованные доменные операции остаются у
+потребителей контракта, игровые формулы в этот пакет не входят.
+
+### Prepared v7: canonical quest content and publication requests
+
+New quests and edited Welcome quests persist player and moderator instruction documents. Plain text remains an authoring input, converted on save. Historical text is materialized by the coordinated database migration.
+
+New publication requests require `pricing_revision` and `idempotency_key`; `bounty-v1` is rejected. No-ID quotes now use `bounty-v3` without opt-in. Stored v1 receipts remain readable; existing paid publications retain v2 extension/refund rules. Direct avatar file uploads are rejected; settings accept `avatar_media_id` from the media upload API. This is prepared locally for the combined release, not published.

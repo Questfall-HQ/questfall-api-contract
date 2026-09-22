@@ -1,7 +1,7 @@
 import {test,expect} from 'bun:test'
 import {operations,validate} from '../src/index.js'
 const decision={id:'decision',mode:'appeal',level:1,status:'resolved',outcome:'reject',created:1,resolved:2,deadline:3,appellant:true,stake:1000,actor:'self',voting:{reverse:75,uphold:25,final:true}}
-test('author case is scoped and legacy appeal submissions remain supported',()=>{
+test('author case is scoped and appeals use one revisioned response',()=>{
  expect(operations['authorSpaces.quests.case'].request.required).toEqual(['id','root_case_id'])
  expect(operations['authorSpaces.quests.case'].access).toBe('verified')
  expect(operations['moderation.cases.appeal'].request.required).toEqual(['case_id'])

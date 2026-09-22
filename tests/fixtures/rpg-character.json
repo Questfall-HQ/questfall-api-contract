@@ -1,0 +1,1828 @@
+[
+  {
+    "name": "empty",
+    "value": {
+      "level": 1,
+      "experience": {
+        "total": 0,
+        "current": 0,
+        "next": 1000,
+        "percent": 0,
+        "level": 1
+      },
+      "traits": {
+        "inventory": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "mining": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "crafting": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "trading": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "stamina": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "luck": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "points": {
+        "total": 6,
+        "used": 6,
+        "free": 0,
+        "per_level": 6
+      },
+      "shards": {
+        "active": false,
+        "period": "2026-W39",
+        "set": null,
+        "progress": {
+          "unique": 0,
+          "required": 0,
+          "total": 0,
+          "completed": 0
+        },
+        "pieces": {}
+      },
+      "stamina": {
+        "current": 2208,
+        "quest_cost": 32,
+        "decay_per_hour": 552,
+        "potion_reference": 53655,
+        "max": 2208,
+        "recovery": 4.6,
+        "updated": 1790035200000,
+        "percent": 100
+      },
+      "systems": {
+        "grants": {},
+        "inventory": {
+          "traits": {
+            "capacity": 1,
+            "levitation": 1,
+            "equipping": 1,
+            "overlevel": 1,
+            "exemption": 1
+          },
+          "capacity": {
+            "base": 5000,
+            "value": 5000,
+            "flat_g": 0,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 0,
+            "percent": 0
+          },
+          "levitation": {
+            "base_rate": 0,
+            "rate": 0,
+            "flat_g": 0,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 0,
+            "weight_percent": 0,
+            "remaining_percent": 100
+          },
+          "exemption": {
+            "base": 0,
+            "mastery_rank": 0,
+            "flat": 0,
+            "value": 0
+          },
+          "equipping": {
+            "rate": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "remaining_percent": 100
+          },
+          "overlevel": {
+            "gap_reduction": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "level": 1
+          }
+        },
+        "mining": {
+          "loot": {
+            "base": 10,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "rate": 10,
+            "rolls": {
+              "guaranteed": 0,
+              "chance": 10
+            }
+          },
+          "power": {
+            "base": 0,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "before_grants": 0,
+            "grant_percent": 0,
+            "value": 0
+          },
+          "flow": {
+            "base": 5,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 5
+          },
+          "focus": {
+            "base": 5,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0,
+            "grant_minutes": 0,
+            "minutes": 5
+          },
+          "priority": {
+            "base": 0,
+            "value": 0,
+            "minutes": 0,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0
+          }
+        },
+        "crafting": {
+          "scrapping": {
+            "trait_recovery": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_efficiency": 0,
+            "grant_flat": 0,
+            "recovery_rate": 0,
+            "flat": 0
+          },
+          "leveling": {
+            "trait_reduction": 0,
+            "trait_remaining": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "remaining": 100,
+            "reduction": 0
+          },
+          "merging": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "rarity": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "quality": {
+            "trait_pressure": 0,
+            "mastery_rank": 0,
+            "mastery_pressure": 0,
+            "grant_pressure": 0,
+            "pressure": 0,
+            "bias": 0
+          }
+        },
+        "trading": {
+          "fee": {
+            "base_rate": 30,
+            "rate": 30,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "bid": {
+            "power": 0,
+            "effective_price_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "liquidity": {
+            "power": 0,
+            "required_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "conversion": {
+            "base_rate": 10,
+            "trait_rate": 10.000289695955432,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_pressure": 0,
+            "grant_flat": 0,
+            "rate": 10.0003
+          },
+          "slots": {
+            "base": 1,
+            "mastery_rank": 0,
+            "mastery_slots": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 1
+          }
+        },
+        "stamina": {
+          "reserve": {
+            "base": 2208,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 2208
+          },
+          "recovery": {
+            "base": 4.6,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "per_minute": 4.6
+          },
+          "efficiency": {
+            "trait_rate": 0,
+            "mastery_rank": 0,
+            "mastery_rate": 0,
+            "grant_rate": 0,
+            "rate": 0,
+            "flat": 0
+          },
+          "relief": {
+            "mastery_rank": 0,
+            "mastery_weight_reduction": 0,
+            "power": 0,
+            "multiplier": 1
+          },
+          "absorption": {
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 0
+          }
+        },
+        "luck": {
+          "shards": {
+            "missing_bias": 0,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "missing_weight": 1
+          },
+          "boxes": {
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "chance": 0.01,
+            "chance_percent": 1
+          },
+          "cards": {
+            "starter_turns": 1,
+            "trait_turns": 0,
+            "base_turns": 1,
+            "mastery_turns": 0,
+            "mastery_rank": 0,
+            "earned_turns": 0,
+            "grant_percent": 0,
+            "expected_turns": 1,
+            "guaranteed_turns": 1,
+            "extra_turn_chance": 0,
+            "turns": 1
+          },
+          "chance": {
+            "trait_chance": 1,
+            "mastery_rank": 0,
+            "mastery_weight_percent": 0,
+            "grant_weight_percent": 0,
+            "value": 1
+          },
+          "bonus": {
+            "base_power": 10,
+            "mastery_rank": 0,
+            "mastery_power": 0,
+            "effective_power": 10,
+            "reward_grant": 0,
+            "power": 10,
+            "discount_grant": 0,
+            "discount_rate": 4.545454545454546
+          }
+        }
+      },
+      "equipment": {
+        "slots": {},
+        "weight": [
+          0,
+          0,
+          0
+        ],
+        "links": {}
+      },
+      "mining": {
+        "week": 0,
+        "season": 0,
+        "server_now": 1790035200000,
+        "power": 0,
+        "boost": 1,
+        "base_multiplier": 1,
+        "multiplier": 1,
+        "flow": {
+          "active": false,
+          "started_at": 0,
+          "ends_at": 0,
+          "bonus": 5,
+          "focus_minutes": 5
+        }
+      }
+    }
+  },
+  {
+    "name": "equipped",
+    "value": {
+      "level": 8,
+      "experience": {
+        "total": 28000,
+        "current": 0,
+        "next": 8000,
+        "percent": 0,
+        "level": 8
+      },
+      "traits": {
+        "inventory": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "mining": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "crafting": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "trading": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "stamina": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "luck": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "points": {
+        "total": 48,
+        "used": 6,
+        "free": 42,
+        "per_level": 6
+      },
+      "shards": {
+        "active": false,
+        "period": "2026-W39",
+        "set": null,
+        "progress": {
+          "unique": 0,
+          "required": 0,
+          "total": 0,
+          "completed": 0
+        },
+        "pieces": {}
+      },
+      "stamina": {
+        "current": 2208,
+        "quest_cost": 32,
+        "decay_per_hour": 552,
+        "potion_reference": 53655,
+        "max": 2208,
+        "recovery": 4.6,
+        "updated": 1790035200000,
+        "percent": 100
+      },
+      "systems": {
+        "grants": {
+          "attribute:stamina": 0.52,
+          "inventory:capacity_flat_g": 16.080000000000002,
+          "stamina:relief_reduction": 8,
+          "crafting:scrapping_flat": 0.2,
+          "luck:cards_turn_percent": 0.8,
+          "trading:conversion_pressure": 0.32
+        },
+        "inventory": {
+          "traits": {
+            "capacity": 1,
+            "levitation": 1,
+            "equipping": 1,
+            "overlevel": 1,
+            "exemption": 1
+          },
+          "capacity": {
+            "base": 5000,
+            "value": 5016,
+            "flat_g": 16.080000000000002,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 16.080000000000002,
+            "percent": 0
+          },
+          "levitation": {
+            "base_rate": 0,
+            "rate": 0,
+            "flat_g": 0,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 0,
+            "weight_percent": 0,
+            "remaining_percent": 100
+          },
+          "exemption": {
+            "base": 0,
+            "mastery_rank": 0,
+            "flat": 0,
+            "value": 0
+          },
+          "equipping": {
+            "rate": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "remaining_percent": 100
+          },
+          "overlevel": {
+            "gap_reduction": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "level": 8
+          }
+        },
+        "mining": {
+          "loot": {
+            "base": 10,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "rate": 10,
+            "rolls": {
+              "guaranteed": 0,
+              "chance": 10
+            }
+          },
+          "power": {
+            "base": 0,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "before_grants": 0,
+            "grant_percent": 0,
+            "value": 0
+          },
+          "flow": {
+            "base": 5,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 5
+          },
+          "focus": {
+            "base": 5,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0,
+            "grant_minutes": 0,
+            "minutes": 5
+          },
+          "priority": {
+            "base": 0,
+            "value": 0,
+            "minutes": 0,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0
+          }
+        },
+        "crafting": {
+          "scrapping": {
+            "trait_recovery": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_efficiency": 0,
+            "grant_flat": 0,
+            "recovery_rate": 0,
+            "flat": 0
+          },
+          "leveling": {
+            "trait_reduction": 0,
+            "trait_remaining": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "remaining": 100,
+            "reduction": 0
+          },
+          "merging": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "rarity": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "quality": {
+            "trait_pressure": 0,
+            "mastery_rank": 0,
+            "mastery_pressure": 0,
+            "grant_pressure": 0,
+            "pressure": 0,
+            "bias": 0
+          }
+        },
+        "trading": {
+          "fee": {
+            "base_rate": 30,
+            "rate": 30,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "bid": {
+            "power": 0,
+            "effective_price_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "liquidity": {
+            "power": 0,
+            "required_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "conversion": {
+            "base_rate": 10,
+            "trait_rate": 10.447204267704093,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_pressure": 0.32,
+            "grant_flat": 0,
+            "rate": 10.4472
+          },
+          "slots": {
+            "base": 1,
+            "mastery_rank": 0,
+            "mastery_slots": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 1
+          }
+        },
+        "stamina": {
+          "reserve": {
+            "base": 2208,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 2208
+          },
+          "recovery": {
+            "base": 4.6,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "per_minute": 4.6
+          },
+          "efficiency": {
+            "trait_rate": 0,
+            "mastery_rank": 0,
+            "mastery_rate": 0,
+            "grant_rate": 0,
+            "rate": 0,
+            "flat": 0
+          },
+          "relief": {
+            "mastery_rank": 0,
+            "mastery_weight_reduction": 0,
+            "power": 0,
+            "multiplier": 0.9215359999999999
+          },
+          "absorption": {
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 0
+          }
+        },
+        "luck": {
+          "shards": {
+            "missing_bias": 0,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "missing_weight": 1
+          },
+          "boxes": {
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "chance": 0.01,
+            "chance_percent": 1
+          },
+          "cards": {
+            "starter_turns": 1,
+            "trait_turns": 0,
+            "base_turns": 1,
+            "mastery_turns": 0,
+            "mastery_rank": 0,
+            "earned_turns": 0,
+            "grant_percent": 0.8,
+            "expected_turns": 1,
+            "guaranteed_turns": 1,
+            "extra_turn_chance": 0,
+            "turns": 1
+          },
+          "chance": {
+            "trait_chance": 1,
+            "mastery_rank": 0,
+            "mastery_weight_percent": 0,
+            "grant_weight_percent": 0,
+            "value": 1
+          },
+          "bonus": {
+            "base_power": 10,
+            "mastery_rank": 0,
+            "mastery_power": 0,
+            "effective_power": 10,
+            "reward_grant": 0,
+            "power": 10,
+            "discount_grant": 0,
+            "discount_rate": 4.545454545454546
+          }
+        }
+      },
+      "equipment": {
+        "slots": {
+          "head": {
+            "id": "fixture-head",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "head",
+            "wear": "helmet",
+            "rarity": "c",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "head",
+            "weight": 1500,
+            "name": "fixture_helmet",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "head:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "booster",
+                "effect": "perk:1",
+                "value": {
+                  "raw": 25,
+                  "effective": 4,
+                  "boost": -21,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {
+                  "slot": "chest"
+                },
+                "condition": {},
+                "boosters": []
+              },
+              {
+                "type": "attribute_grant",
+                "effect": "attribute:stamina",
+                "value": {
+                  "raw": 3.25,
+                  "effective": 0.52,
+                  "boost": -2.73,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              },
+              {
+                "type": "trait_grant",
+                "effect": "grant:inventory:capacity_flat_g",
+                "value": {
+                  "raw": 100.5,
+                  "effective": 16.08,
+                  "boost": -84.42,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "chest": {
+            "id": "fixture-chest",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "chest",
+            "wear": "robe",
+            "rarity": "d",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "chest",
+            "weight": 1500,
+            "name": "fixture_robe",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "chest:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_terminal",
+                "effect": "trait:mining:focus",
+                "value": {
+                  "raw": 7.75,
+                  "effective": 1.4384,
+                  "boost": -6.3116,
+                  "boosted": true,
+                  "multiplier": 0.1856,
+                  "power": 0.16,
+                  "multipliers": {
+                    "set": 2,
+                    "origin": 2
+                  }
+                },
+                "target": {},
+                "condition": {
+                  "slot": "feet",
+                  "aspect": "mining"
+                },
+                "step": 0.1,
+                "roll": 0.25,
+                "boosters": [
+                  "head:perk:1"
+                ]
+              },
+              {
+                "type": "trait_grant",
+                "effect": "grant:stamina:relief_reduction",
+                "value": {
+                  "raw": 20,
+                  "effective": 3.2,
+                  "boost": -16.8,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "hands": {
+            "id": "fixture-hands",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "hands",
+            "wear": "gloves",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "hands",
+            "weight": 1500,
+            "name": "fixture_gloves",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "hands:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:crafting:scrapping_flat",
+                "value": {
+                  "raw": 1.25,
+                  "effective": 0.2,
+                  "boost": -1.05,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "legs": {
+            "id": "fixture-legs",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "legs",
+            "wear": "pants",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "legs",
+            "weight": 1500,
+            "name": "fixture_pants",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "legs:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:luck:cards_turn_percent",
+                "value": {
+                  "raw": 5,
+                  "effective": 0.8,
+                  "boost": -4.2,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "feet": {
+            "id": "fixture-feet",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "feet",
+            "wear": "boots",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "feet",
+            "weight": 1500,
+            "name": "fixture_boots",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "feet:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:stamina:relief_reduction",
+                "value": {
+                  "raw": 30,
+                  "effective": 4.8,
+                  "boost": -25.2,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "outer": {
+            "id": "fixture-outer",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "outer",
+            "wear": "cape",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "outer",
+            "weight": 1500,
+            "name": "fixture_cape",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "outer:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 2,
+                "boost": -10.5,
+                "boosted": true,
+                "power": 0.16
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:trading:conversion_pressure",
+                "value": {
+                  "raw": 2,
+                  "effective": 0.32,
+                  "boost": -1.68,
+                  "boosted": true,
+                  "multiplier": 0.16,
+                  "power": 0.16
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          }
+        },
+        "weight": [
+          0,
+          0,
+          0
+        ],
+        "links": {
+          "chest:perk:1": [
+            "head:perk:1"
+          ]
+        }
+      },
+      "mining": {
+        "week": 0,
+        "season": 0,
+        "server_now": 1790035200000,
+        "power": 0,
+        "boost": 1,
+        "base_multiplier": 1,
+        "multiplier": 1,
+        "flow": {
+          "active": false,
+          "started_at": 0,
+          "ends_at": 0,
+          "bonus": 5,
+          "focus_minutes": 5
+        }
+      }
+    }
+  },
+  {
+    "name": "veteran",
+    "value": {
+      "level": 200,
+      "experience": {
+        "total": 19900000,
+        "current": 0,
+        "next": 200000,
+        "percent": 0,
+        "level": 200
+      },
+      "traits": {
+        "inventory": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "mining": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "crafting": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "trading": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "stamina": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "luck": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "points": {
+        "total": 1200,
+        "used": 6,
+        "free": 1194,
+        "per_level": 6
+      },
+      "shards": {
+        "active": false,
+        "period": "2026-W39",
+        "set": null,
+        "progress": {
+          "unique": 0,
+          "required": 0,
+          "total": 0,
+          "completed": 0
+        },
+        "pieces": {}
+      },
+      "stamina": {
+        "current": 2208,
+        "quest_cost": 32,
+        "decay_per_hour": 552,
+        "potion_reference": 53655,
+        "max": 2208,
+        "recovery": 4.6,
+        "updated": 1790035200000,
+        "percent": 100
+      },
+      "systems": {
+        "grants": {
+          "attribute:stamina": 3.25,
+          "inventory:capacity_flat_g": 100.5,
+          "stamina:relief_reduction": 50,
+          "crafting:scrapping_flat": 1.25,
+          "luck:cards_turn_percent": 5,
+          "trading:conversion_pressure": 2
+        },
+        "inventory": {
+          "traits": {
+            "capacity": 1,
+            "levitation": 1,
+            "equipping": 1,
+            "overlevel": 1,
+            "exemption": 1
+          },
+          "capacity": {
+            "base": 5000,
+            "value": 5100,
+            "flat_g": 100.5,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 100.5,
+            "percent": 0
+          },
+          "levitation": {
+            "base_rate": 0,
+            "rate": 0,
+            "flat_g": 0,
+            "mastery_rank": 0,
+            "mastery_flat_g": 0,
+            "total_flat_g": 0,
+            "weight_percent": 0,
+            "remaining_percent": 100
+          },
+          "exemption": {
+            "base": 0,
+            "mastery_rank": 0,
+            "flat": 0,
+            "value": 0
+          },
+          "equipping": {
+            "rate": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "remaining_percent": 100
+          },
+          "overlevel": {
+            "gap_reduction": 0,
+            "flat": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "total_flat": 0,
+            "percent": 0,
+            "level": 200
+          }
+        },
+        "mining": {
+          "loot": {
+            "base": 10,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "rate": 10,
+            "rolls": {
+              "guaranteed": 0,
+              "chance": 10
+            }
+          },
+          "power": {
+            "base": 0,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "before_grants": 0,
+            "grant_percent": 0,
+            "value": 0
+          },
+          "flow": {
+            "base": 5,
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 5
+          },
+          "focus": {
+            "base": 5,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0,
+            "grant_minutes": 0,
+            "minutes": 5
+          },
+          "priority": {
+            "base": 0,
+            "value": 0,
+            "minutes": 0,
+            "trait_minutes": 0,
+            "mastery_rank": 0,
+            "mastery_minutes": 0
+          }
+        },
+        "crafting": {
+          "scrapping": {
+            "trait_recovery": 0,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_efficiency": 0,
+            "grant_flat": 1,
+            "recovery_rate": 0,
+            "flat": 1
+          },
+          "leveling": {
+            "trait_reduction": 0,
+            "trait_remaining": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "remaining": 100,
+            "reduction": 0
+          },
+          "merging": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "rarity": {
+            "trait_reduction": 0,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0,
+            "efficiency": 0,
+            "multiplier": 1,
+            "remaining": 100
+          },
+          "quality": {
+            "trait_pressure": 0,
+            "mastery_rank": 0,
+            "mastery_pressure": 0,
+            "grant_pressure": 0,
+            "pressure": 0,
+            "bias": 0
+          }
+        },
+        "trading": {
+          "fee": {
+            "base_rate": 30,
+            "rate": 30,
+            "reduction": 0,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "bid": {
+            "power": 0,
+            "effective_price_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "liquidity": {
+            "power": 0,
+            "required_percent": 100,
+            "mastery_rank": 0,
+            "mastery_efficiency": 0,
+            "grant_efficiency": 0
+          },
+          "conversion": {
+            "base_rate": 10,
+            "trait_rate": 12.500221798867468,
+            "mastery_rank": 0,
+            "mastery_flat": 0,
+            "grant_pressure": 2,
+            "grant_flat": 0,
+            "rate": 12.5002
+          },
+          "slots": {
+            "base": 1,
+            "mastery_rank": 0,
+            "mastery_slots": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 1
+          }
+        },
+        "stamina": {
+          "reserve": {
+            "base": 2208,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "value": 2208
+          },
+          "recovery": {
+            "base": 4.6,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "grant_flat": 0,
+            "per_minute": 4.6
+          },
+          "efficiency": {
+            "trait_rate": 0,
+            "mastery_rank": 0,
+            "mastery_rate": 0,
+            "grant_rate": 0,
+            "rate": 0,
+            "flat": 0
+          },
+          "relief": {
+            "mastery_rank": 0,
+            "mastery_weight_reduction": 0,
+            "power": 0,
+            "multiplier": 0.5599999999999999
+          },
+          "absorption": {
+            "mastery_rank": 0,
+            "mastery_bonus": 0,
+            "grant_bonus": 0,
+            "bonus": 0
+          }
+        },
+        "luck": {
+          "shards": {
+            "missing_bias": 0,
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "missing_weight": 1
+          },
+          "boxes": {
+            "mastery_rank": 0,
+            "mastery_percent": 0,
+            "grant_percent": 0,
+            "chance": 0.01,
+            "chance_percent": 1
+          },
+          "cards": {
+            "starter_turns": 1,
+            "trait_turns": 0,
+            "base_turns": 1,
+            "mastery_turns": 0,
+            "mastery_rank": 0,
+            "earned_turns": 0,
+            "grant_percent": 5,
+            "expected_turns": 1,
+            "guaranteed_turns": 1,
+            "extra_turn_chance": 0,
+            "turns": 1
+          },
+          "chance": {
+            "trait_chance": 1,
+            "mastery_rank": 0,
+            "mastery_weight_percent": 0,
+            "grant_weight_percent": 0,
+            "value": 1
+          },
+          "bonus": {
+            "base_power": 10,
+            "mastery_rank": 0,
+            "mastery_power": 0,
+            "effective_power": 10,
+            "reward_grant": 0,
+            "power": 10,
+            "discount_grant": 0,
+            "discount_rate": 4.545454545454546
+          }
+        }
+      },
+      "equipment": {
+        "slots": {
+          "head": {
+            "id": "fixture-head",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "head",
+            "wear": "helmet",
+            "rarity": "c",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "head",
+            "weight": 1500,
+            "name": "fixture_helmet",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "head:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "booster",
+                "effect": "perk:1",
+                "value": {
+                  "raw": 25,
+                  "effective": 25,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {
+                  "slot": "chest"
+                },
+                "condition": {},
+                "boosters": []
+              },
+              {
+                "type": "attribute_grant",
+                "effect": "attribute:stamina",
+                "value": {
+                  "raw": 3.25,
+                  "effective": 3.25,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              },
+              {
+                "type": "trait_grant",
+                "effect": "grant:inventory:capacity_flat_g",
+                "value": {
+                  "raw": 100.5,
+                  "effective": 100.5,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "chest": {
+            "id": "fixture-chest",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "chest",
+            "wear": "robe",
+            "rarity": "d",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "chest",
+            "weight": 1500,
+            "name": "fixture_robe",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "chest:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_terminal",
+                "effect": "trait:mining:focus",
+                "value": {
+                  "raw": 7.75,
+                  "effective": 15.5,
+                  "boost": 7.75,
+                  "boosted": true,
+                  "multiplier": 2,
+                  "multipliers": {
+                    "set": 2,
+                    "origin": 2
+                  }
+                },
+                "target": {},
+                "condition": {
+                  "slot": "feet",
+                  "aspect": "mining"
+                },
+                "step": 0.1,
+                "roll": 0.25,
+                "boosters": [
+                  "head:perk:1"
+                ]
+              },
+              {
+                "type": "trait_grant",
+                "effect": "grant:stamina:relief_reduction",
+                "value": {
+                  "raw": 20,
+                  "effective": 20,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "hands": {
+            "id": "fixture-hands",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "hands",
+            "wear": "gloves",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "hands",
+            "weight": 1500,
+            "name": "fixture_gloves",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "hands:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:crafting:scrapping_flat",
+                "value": {
+                  "raw": 1.25,
+                  "effective": 1.25,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "legs": {
+            "id": "fixture-legs",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "legs",
+            "wear": "pants",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "legs",
+            "weight": 1500,
+            "name": "fixture_pants",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "legs:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:luck:cards_turn_percent",
+                "value": {
+                  "raw": 5,
+                  "effective": 5,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "feet": {
+            "id": "fixture-feet",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "feet",
+            "wear": "boots",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "feet",
+            "weight": 1500,
+            "name": "fixture_boots",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "feet:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:stamina:relief_reduction",
+                "value": {
+                  "raw": 30,
+                  "effective": 30,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          },
+          "outer": {
+            "id": "fixture-outer",
+            "user": "fixture-player",
+            "kind": "clothing",
+            "slot": "outer",
+            "wear": "cape",
+            "rarity": "e",
+            "level": 50,
+            "location": "equipped",
+            "location_ref": "outer",
+            "weight": 1500,
+            "name": "fixture_cape",
+            "set": "ancient",
+            "origin": "shalor",
+            "aspect": {
+              "id": "outer:aspect:mining",
+              "value": {
+                "raw": 12.5,
+                "effective": 12.5,
+                "boost": 0,
+                "boosted": false
+              },
+              "step": 0.25
+            },
+            "perks": [
+              {
+                "type": "trait_grant",
+                "effect": "grant:trading:conversion_pressure",
+                "value": {
+                  "raw": 2,
+                  "effective": 2,
+                  "boost": 0,
+                  "boosted": false,
+                  "multiplier": 1
+                },
+                "target": {},
+                "condition": {},
+                "boosters": []
+              }
+            ]
+          }
+        },
+        "weight": [
+          0,
+          0,
+          0
+        ],
+        "links": {
+          "chest:perk:1": [
+            "head:perk:1"
+          ]
+        }
+      },
+      "mining": {
+        "week": 0,
+        "season": 0,
+        "server_now": 1790035200000,
+        "power": 0,
+        "boost": 1,
+        "base_multiplier": 1,
+        "multiplier": 1,
+        "flow": {
+          "active": false,
+          "started_at": 0,
+          "ends_at": 0,
+          "bonus": 5,
+          "focus_minutes": 5
+        }
+      }
+    }
+  }
+]
