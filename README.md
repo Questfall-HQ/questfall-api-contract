@@ -820,3 +820,19 @@ History result links belong to closing events (author unpublication, expiry or m
 New quests and edited Welcome quests persist player and moderator instruction documents. Plain text remains an authoring input, converted on save. Historical text is materialized by the coordinated database migration.
 
 New publication requests require `pricing_revision` and `idempotency_key`; `bounty-v1` is rejected. No-ID quotes now use `bounty-v3` without opt-in. Stored v1 receipts remain readable; existing paid publications retain v2 extension/refund rules. Direct avatar file uploads are rejected; settings accept `avatar_media_id` from the media upload API. This is prepared locally for the combined release, not published.
+
+### Email linking codes — v7.1.0
+
+Authenticated `POST /auth/link/email/request-otp` accepts `email` and returns
+`EmailLink`; `POST /auth/link/email/verify-otp` accepts `email` and `otp` and
+returns `AuthSession` with `linked: true`. Issuance never registers a user.
+Codes are bound to the initiating account and email, expire after 15 minutes,
+and lock after five failed attempts. Resends replace prior linking challenges.
+The renewed token must be saved because PocketBase invalidates the old session
+on email change. This flow has no sign-in side effect.
+
+Legacy magic-link request/preview/verify routes remain available for older
+clients. The verify response adds optional `token`, `record`, and `method` to
+`Profile` so new clients can renew their session; ordinary profile reads do
+not return them. Deploy compatible backend support before the new frontend.
+No storage schema change or user-data migration is required.

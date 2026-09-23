@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.46.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/7.1.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -6446,6 +6446,19 @@
         "mining_rewards": {
           "$ref": "#/$defs/MiningRewardsSummary",
           "description": "Optional current rewards summary included by /auth/me. Omitted if the independent rewards projection is unavailable."
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
+        },
+        "record": {
+          "$ref": "#/$defs/AuthRecord",
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
+        },
+        "method": {
+          "type": "string",
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
         }
       },
       "additionalProperties": true
@@ -6500,6 +6513,9 @@
         },
         "user": {
           "$ref": "#/$defs/ProfileUser"
+        },
+        "linked": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -6547,6 +6563,10 @@
         },
         "devLink": {
           "type": "string"
+        },
+        "devCode": {
+          "type": "string",
+          "pattern": "^[0-9]{6}$"
         }
       },
       "additionalProperties": true
