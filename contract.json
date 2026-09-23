@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "7.2.0",
+  "version": "7.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2735,6 +2735,87 @@
       },
       "response": {
         "schema": "ArtworkCatalog"
+      }
+    },
+    {
+      "operation": "news.list",
+      "method": "GET",
+      "path": "/news",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "NewsList"
+      }
+    },
+    {
+      "operation": "news.state",
+      "method": "GET",
+      "path": "/news/state",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
+      }
+    },
+    {
+      "operation": "news.detail",
+      "method": "GET",
+      "path": "/news/{id}",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsArticle"
+      }
+    },
+    {
+      "operation": "news.read",
+      "method": "POST",
+      "path": "/news/{id}/read",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
+      }
+    },
+    {
+      "operation": "news.readAll",
+      "method": "POST",
+      "path": "/news/read-all",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
       }
     }
   ],
