@@ -836,3 +836,12 @@ clients. The verify response adds optional `token`, `record`, and `method` to
 `Profile` so new clients can renew their session; ordinary profile reads do
 not return them. Deploy compatible backend support before the new frontend.
 No storage schema change or user-data migration is required.
+
+### Quest resolution covers — v7.2.0
+
+`QuestResolutionNotice.cover?: string` carries the public cover from the submitted
+publication, with the Author Space cover as fallback. It applies to accepted,
+rejected and cancelled reviews in both initial Feed and incremental responses.
+An empty value means no public cover is available; older servers may omit it.
+`QuestUpdate.cover?: string` also carries Welcome quest artwork for completion
+and reward notifications. Delivery receipts and acknowledgement semantics are unchanged.

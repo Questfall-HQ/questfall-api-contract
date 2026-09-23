@@ -106,4 +106,23 @@ describe('Feed resolution delivery', () => {
 		expect(schema('QuestResolutionNotice').required).not.toContain('id')
 		expect(schema('QuestUpdate').properties.status.enum).toEqual(['progress', 'claimable', 'claimed'])
 	})
+
+	test('accepts public resolution covers and preserves older responses without them', () => {
+		for (const status of ['accepted', 'rejected', 'cancelled']) {
+			const notice = {status, title: 'Reviewed quest', placement: 'feed', points: 0}
+			for (const cover of ['', 'https://media.questfall.xyz/published-cover.webp']) {
+				expect(validate('QuestResolutionNotice', {...notice, cover})).toEqual([])
+			}
+			expect(validate('QuestResolutionNotice', notice)).toEqual([])
+			expect(validate('QuestResolutionNotice', {...notice, cover: {url: 'invalid'}})).not.toEqual([])
+		}
+	})
+
+	test('Welcome updates accept an optional cover without changing completion or reward fields', () => {
+		const update = {quest_id:'welcome', title:'Welcome quest', status:'claimable', progress:{current:1,target:1}, reward:{kind:'gold',amount:3}}
+		expect(validate('QuestUpdate', update)).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:'https://media.questfall.xyz/welcome.webp'})).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:''})).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:42})).not.toEqual([])
+	})
 })

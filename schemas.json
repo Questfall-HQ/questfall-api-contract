@@ -4662,6 +4662,10 @@
         "title": {
           "type": "string"
         },
+        "cover": {
+          "type": "string",
+          "description": "Public cover URL from the submission's publication, with the Author Space cover as fallback. Empty when no public cover exists; optional for older servers."
+        },
         "placement": {
           "enum": [
             "feed",
@@ -4700,6 +4704,10 @@
         },
         "title": {
           "type": "string"
+        },
+        "cover": {
+          "type": "string",
+          "description": "Public Welcome quest cover URL, empty when unavailable. Optional for older servers."
         },
         "status": {
           "enum": [
