@@ -1,5 +1,12 @@
 # questfall-api-contract
 
+### Compact league characters — v7.4.0
+
+`GET /mining/leagues?details=summary` returns `LeagueBrowserSummary`: public identity, level, Mining Power, weekly points, seven-day quest count and position. It omits equipment/system cards and returns `selected: null`; selection is client state. Omitted `details` (or `details=full`) preserves the full `LeagueBrowser` response for existing clients. Other details values are rejected.
+
+`GET /mining/leagues/miners/{id}` returns the public `LeagueMinerBuild` on demand: id, Mining Power, six equipment slots and mining systems. It exposes no private inventory, balances or storage snapshot. Unverified or missing users return 404. Both reads retain the existing public/authenticated cache separation.
+
+
 ### Опубликованное оформление предметов
 
 `GET /rpg/artwork?keys=…` принимает до 100 ключей и возвращает `ArtworkCatalog`: версию каталога и только запрошенные опубликованные оформления. Без `keys` возвращается версия и пустой `artworks`. Каждое оформление содержит постоянный ID, редакцию, пять параметров позиционирования и шесть AVIF/WebP-вариантов с фактическими размерами, MIME и объёмом. Черновики, оригиналы и административные операции закрыты и не входят в публичную surface. Старое поле `image` сохраняется.

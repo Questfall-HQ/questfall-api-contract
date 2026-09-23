@@ -14660,6 +14660,248 @@
         }
       },
       "additionalProperties": false
+    },
+    "LeagueBrowserMinerSummary": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon",
+        "level",
+        "mining_power",
+        "points",
+        "quests_7d",
+        "viewer",
+        "position"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "avatar_icon": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mining_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quests_7d": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "boolean"
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserSummary": {
+      "type": "object",
+      "required": [
+        "server_now",
+        "viewer",
+        "league",
+        "leagues",
+        "series",
+        "view",
+        "sort",
+        "direction",
+        "page",
+        "items",
+        "selected",
+        "details"
+      ],
+      "properties": {
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "object",
+          "required": [
+            "id",
+            "league"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "league": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "league": {
+          "$ref": "#/$defs/MiningLeague"
+        },
+        "leagues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MiningLeagueSummary"
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserSeriesPoint"
+          }
+        },
+        "view": {
+          "enum": [
+            "field",
+            "list"
+          ]
+        },
+        "sort": {
+          "enum": [
+            "power",
+            "points",
+            "quests"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        },
+        "page": {
+          "type": "object",
+          "required": [
+            "number",
+            "per_page",
+            "total",
+            "pages",
+            "has_prev",
+            "has_next"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "per_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pages": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "has_prev": {
+              "type": "boolean"
+            },
+            "has_next": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserMinerSummary"
+          }
+        },
+        "selected": {
+          "type": "null"
+        },
+        "details": {
+          "const": "summary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserResponse": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LeagueBrowser"
+        },
+        {
+          "$ref": "#/$defs/LeagueBrowserSummary"
+        }
+      ]
+    },
+    "LeagueMinerBuild": {
+      "type": "object",
+      "required": [
+        "id",
+        "mining_power",
+        "equipment",
+        "systems"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mining_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "equipment": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserEquipment"
+          }
+        },
+        "systems": {
+          "type": "object",
+          "required": [
+            "flow",
+            "focus",
+            "boost",
+            "loot"
+          ],
+          "properties": {
+            "flow": {
+              "type": "number",
+              "minimum": 0
+            },
+            "focus": {
+              "type": "number",
+              "minimum": 0
+            },
+            "boost": {
+              "type": "number",
+              "minimum": 0
+            },
+            "loot": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
