@@ -2701,12 +2701,67 @@
       "response": {
         "schema": "ArtworkCatalog"
       }
+    },
+    {
+      "operation": "chat.list",
+      "method": "GET",
+      "path": "/chat/messages",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": ["before", "limit"]
+      },
+      "response": {"schema": "ChatMessagePage"}
+    },
+    {
+      "operation": "chat.create",
+      "method": "POST",
+      "path": "/chat/messages",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": ["idempotency_key"],
+        "optional": ["text", "images"]
+      },
+      "response": {"schema": "ChatMessage"}
+    },
+    {
+      "operation": "chat.status",
+      "method": "GET",
+      "path": "/chat/status",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {"schema": "ChatStatus"}
+    },
+    {
+      "operation": "chat.mark",
+      "method": "POST",
+      "path": "/chat/read",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": ["id"],
+        "optional": []
+      },
+      "response": {"schema": "ChatReadStatus"}
     }
   ],
   "pocketbase": {
     "collections": {
       "users": {
         "auth": true
+      },
+      "chat_messages": {
+        "auth": false
       }
     }
   }

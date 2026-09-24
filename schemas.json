@@ -14186,6 +14186,68 @@
         }
       },
       "additionalProperties": false
+    },
+    "ChatAuthor": {
+      "type": "object",
+      "required": ["id", "name", "avatar", "avatar_icon", "level", "moderation_status"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string"},
+        "avatar": {"type": "object"},
+        "avatar_icon": {"type": ["object", "null"]},
+        "level": {"type": "integer", "minimum": 1},
+        "moderation_status": {"enum": ["active", "restricted"]}
+      },
+      "additionalProperties": false
+    },
+    "ChatImage": {
+      "type": "object",
+      "required": ["id", "url", "thumb"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "minLength": 1},
+        "thumb": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "ChatMessage": {
+      "type": "object",
+      "required": ["id", "user", "author", "text", "images", "created"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "user": {"type": "string", "minLength": 1},
+        "author": {"$ref": "#/$defs/ChatAuthor"},
+        "text": {"type": "string", "maxLength": 2000},
+        "images": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/ChatImage"}},
+        "created": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "ChatMessagePage": {
+      "type": "object",
+      "required": ["items", "next"],
+      "properties": {
+        "items": {"type": "array", "items": {"$ref": "#/$defs/ChatMessage"}},
+        "next": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "ChatStatus": {
+      "type": "object",
+      "required": ["unread", "online"],
+      "properties": {
+        "unread": {"type": "integer", "minimum": 0, "maximum": 100},
+        "online": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "ChatReadStatus": {
+      "type": "object",
+      "required": ["unread"],
+      "properties": {
+        "unread": {"type": "integer", "minimum": 0, "maximum": 100}
+      },
+      "additionalProperties": false
     }
   }
 }
