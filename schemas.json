@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.46.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/8.0.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -14277,11 +14277,21 @@
       },
       "additionalProperties": false
     },
+    "ChatReadCursor": {
+      "type": "object",
+      "required": ["id", "created"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 32},
+        "created": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
     "ChatStatus": {
       "type": "object",
-      "required": ["unread", "attention_unread", "online", "frequent"],
+      "required": ["has_unread", "read_cursor", "attention_unread", "online", "frequent"],
       "properties": {
-        "unread": {"type": "integer", "minimum": 0, "maximum": 100},
+        "has_unread": {"type": "boolean"},
+        "read_cursor": {"anyOf": [{"$ref": "#/$defs/ChatReadCursor"}, {"type": "null"}]},
         "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100},
         "online": {"type": "integer", "minimum": 0},
         "frequent": {"type": "array", "maxItems": 7, "items": {"type": "string", "maxLength": 16}}
@@ -14290,9 +14300,10 @@
     },
     "ChatReadStatus": {
       "type": "object",
-      "required": ["unread"],
+      "required": ["has_unread", "read_cursor"],
       "properties": {
-        "unread": {"type": "integer", "minimum": 0, "maximum": 100}
+        "has_unread": {"type": "boolean"},
+        "read_cursor": {"anyOf": [{"$ref": "#/$defs/ChatReadCursor"}, {"type": "null"}]}
       },
       "additionalProperties": false
     },
