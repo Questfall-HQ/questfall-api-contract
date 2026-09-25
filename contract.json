@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.51.0-feedback.1",
+  "version": "6.51.0-feedback.2",
   "routes": [
     {
       "operation": "auth.me",
@@ -342,6 +342,30 @@
       "access": "optional",
       "request": { "transport": "query", "params": ["id", "asset"], "required": [], "optional": ["variant"] },
       "response": { "schema": "MediaAccess" }
+    },
+    {
+      "operation": "feedback.ideas.list",
+      "method": "GET",
+      "path": "/feedback/ideas",
+      "access": "optional",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine"] },
+      "response": { "schema": "IdeaList" }
+    },
+    {
+      "operation": "feedback.ideas.create",
+      "method": "POST",
+      "path": "/feedback/ideas",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["title", "description", "benefit"], "optional": ["images"] },
+      "response": { "schema": "Idea" }
+    },
+    {
+      "operation": "feedback.ideas.vote",
+      "method": "POST",
+      "path": "/feedback/ideas/{id}/vote",
+      "access": "verified",
+      "request": { "transport": "body", "params": ["id"], "required": ["voted"], "optional": [] },
+      "response": { "schema": "Idea" }
     },
     {
       "operation": "character.levelUp",

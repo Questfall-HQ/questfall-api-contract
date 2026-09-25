@@ -15,8 +15,17 @@ describe('contract manifest', () => {
     expect(validate('BugReviewUpdate',{...review,reviewer:undefined}).length).toBeGreaterThan(0)
     expect(schema('BugReport').properties.updates.items.$ref).toBe('#/$defs/BugReviewUpdate')
   })
+  test('idea reviews carry a decision maker and optional first-decision reward', () => {
+    const reviewer = {id:'moderator',name:'Idea Moderator',avatar:{mode:'generated',version:1,seed:'moderator'},avatar_icon:null}
+    const review = {status:'rejected',note:'Useful direction, but outside the current plan.',award_gold:12,created:Date.now(),reviewer}
+    expect(validate('IdeaReviewUpdate',review)).toEqual([])
+    expect(validate('IdeaReviewUpdate',{...review,reviewer:undefined}).length).toBeGreaterThan(0)
+    expect(schema('Idea').properties.images.items.$ref).toBe('#/$defs/IdeaImage')
+    expect(operations['feedback.ideas.create'].request.optional).toContain('images')
+    expect(operations['feedback.ideas.vote'].request.required).toEqual(['voted'])
+  })
   test('accepts an isolated branch prerelease version', () => {
-    expect(validateContract({...contract,version:'6.51.0-feedback.1'},schemas)).toEqual([])
+    expect(validateContract({...contract,version:'6.51.0-feedback.2'},schemas)).toEqual([])
     expect(validateContract({...contract,version:'6.51'},schemas)).toContain('contract.version must be semver')
   })
   test('retirement is an optional boolean on historical lifecycles', () => {
@@ -95,7 +104,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(130)
+		expect(contract.routes.length).toBe(133)
   })
 
   test('builds parameterized paths safely', () => {

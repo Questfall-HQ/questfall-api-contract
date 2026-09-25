@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.51.0-feedback.1/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.51.0-feedback.2/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -7564,6 +7564,58 @@
       "required": ["items", "total"],
       "properties": {
         "items": { "type": "array", "items": { "$ref": "#/$defs/BugReport" } },
+        "total": { "type": "integer" }
+      },
+      "additionalProperties": true
+    },
+    "IdeaImage": {
+      "type": "object",
+      "required": ["id", "url", "thumb"],
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "thumb": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "IdeaReviewUpdate": {
+      "type": "object",
+      "required": ["status", "note", "award_gold", "created", "reviewer"],
+      "properties": {
+        "status": { "enum": ["planned", "implemented", "rejected"] },
+        "note": { "type": "string" },
+        "award_gold": { "type": "integer" },
+        "created": { "type": "integer" },
+        "reviewer": { "$ref": "#/$defs/PublicUser" }
+      },
+      "additionalProperties": true
+    },
+    "Idea": {
+      "type": "object",
+      "required": ["id", "title", "description", "summary", "benefit", "images", "status", "updates", "award", "votes", "voted", "author", "created", "updated"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "summary": { "type": "string" },
+        "benefit": { "type": "string" },
+        "images": { "type": "array", "items": { "$ref": "#/$defs/IdeaImage" } },
+        "status": { "enum": ["open", "planned", "implemented", "rejected"] },
+        "updates": { "type": "array", "items": { "$ref": "#/$defs/IdeaReviewUpdate" } },
+        "award": { "type": "integer" },
+        "votes": { "type": "integer" },
+        "voted": { "type": "boolean" },
+        "author": { "$ref": "#/$defs/PublicUser" },
+        "created": { "type": "integer" },
+        "updated": { "type": "integer" }
+      },
+      "additionalProperties": true
+    },
+    "IdeaList": {
+      "type": "object",
+      "required": ["items", "total"],
+      "properties": {
+        "items": { "type": "array", "items": { "$ref": "#/$defs/Idea" } },
         "total": { "type": "integer" }
       },
       "additionalProperties": true
