@@ -14987,6 +14987,664 @@
         }
       },
       "additionalProperties": false
+    },
+    "ChatAuthor": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon",
+        "level",
+        "moderation_status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "object"
+        },
+        "avatar_icon": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "moderation_status": {
+          "enum": [
+            "active",
+            "restricted"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatImage": {
+      "type": "object",
+      "required": [
+        "id",
+        "url",
+        "thumb"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "thumb": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReply": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "author",
+        "text",
+        "image"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "image": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReaction": {
+      "type": "object",
+      "required": [
+        "emoji",
+        "count",
+        "mine",
+        "actors"
+      ],
+      "properties": {
+        "emoji": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mine": {
+          "type": "boolean"
+        },
+        "actors": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ChatAuthor"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatMention": {
+      "type": "object",
+      "required": [
+        "user",
+        "start",
+        "end",
+        "name"
+      ],
+      "properties": {
+        "user": {
+          "type": "string",
+          "minLength": 1,
+          "description": "User ID, or the reserved everyone target for an admin @everyone mention"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatMessage": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "author",
+        "text",
+        "mentions",
+        "images",
+        "reply",
+        "reactions",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "mentions": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/$defs/ChatMention"
+          }
+        },
+        "images": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ChatImage"
+          }
+        },
+        "reply": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatReply"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChatReaction"
+          }
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatMessagePage": {
+      "type": "object",
+      "required": [
+        "items",
+        "next"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChatMessage"
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatPeople": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/$defs/ChatAuthor"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReadCursor": {
+      "type": "object",
+      "required": [
+        "id",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatStatus": {
+      "type": "object",
+      "required": [
+        "has_unread",
+        "read_cursor",
+        "attention_unread",
+        "online",
+        "frequent",
+        "can_mention_everyone",
+        "chat_ban"
+      ],
+      "properties": {
+        "has_unread": {
+          "type": "boolean"
+        },
+        "read_cursor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatReadCursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attention_unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "can_mention_everyone": {
+          "type": "boolean"
+        },
+        "chat_ban": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatBan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "online": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frequent": {
+          "type": "array",
+          "maxItems": 21,
+          "items": {
+            "type": "string",
+            "maxLength": 16
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReadStatus": {
+      "type": "object",
+      "required": [
+        "has_unread",
+        "read_cursor"
+      ],
+      "properties": {
+        "has_unread": {
+          "type": "boolean"
+        },
+        "read_cursor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatReadCursor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatAttentionStatus": {
+      "type": "object",
+      "required": [
+        "attention_unread"
+      ],
+      "properties": {
+        "attention_unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatBan": {
+      "type": "object",
+      "required": [
+        "until"
+      ],
+      "properties": {
+        "until": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatBanResult": {
+      "type": "object",
+      "required": [
+        "user",
+        "until"
+      ],
+      "properties": {
+        "user": {
+          "type": "string",
+          "minLength": 1
+        },
+        "until": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReportReceipt": {
+      "type": "object",
+      "required": [
+        "id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "open",
+            "dismissed",
+            "banned"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatEvidenceMessage": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "author",
+        "text",
+        "images",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "images": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ChatImage"
+          }
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReportItem": {
+      "type": "object",
+      "required": [
+        "id",
+        "message",
+        "reporter",
+        "subject",
+        "reason",
+        "status",
+        "created",
+        "resolved_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reporter": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "subject": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "status": {
+          "enum": [
+            "open",
+            "dismissed",
+            "banned"
+          ]
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "resolved_at": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReportPage": {
+      "type": "object",
+      "required": [
+        "items",
+        "next"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChatReportItem"
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReportDetail": {
+      "type": "object",
+      "required": [
+        "id",
+        "message",
+        "reporter",
+        "subject",
+        "reason",
+        "status",
+        "created",
+        "resolved_at",
+        "snapshot",
+        "resolution",
+        "resolved_by",
+        "ban"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reporter": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "subject": {
+          "$ref": "#/$defs/ChatAuthor"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "status": {
+          "enum": [
+            "open",
+            "dismissed",
+            "banned"
+          ]
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "resolved_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "snapshot": {
+          "type": "array",
+          "maxItems": 21,
+          "items": {
+            "$ref": "#/$defs/ChatEvidenceMessage"
+          }
+        },
+        "resolution": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "resolved_by": {
+          "type": "string"
+        },
+        "ban": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatBan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatReactionResult": {
+      "type": "object",
+      "required": [
+        "message",
+        "reactions",
+        "frequent",
+        "added",
+        "events"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChatReaction"
+          }
+        },
+        "frequent": {
+          "type": "array",
+          "maxItems": 21,
+          "items": {
+            "type": "string",
+            "maxLength": 16
+          }
+        },
+        "added": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

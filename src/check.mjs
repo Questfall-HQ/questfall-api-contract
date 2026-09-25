@@ -6,7 +6,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const CONTRACT_FILE = path.join(ROOT, 'contract.json')
 const SCHEMAS_FILE = path.join(ROOT, 'schemas.json')
 const METHODS = { get: 'GET', post: 'POST' }
-const ACCESS = new Set(['public', 'optional', 'authenticated', 'verified'])
+const ACCESS = new Set(['public', 'optional', 'authenticated', 'verified', 'admin'])
 const TRANSPORTS = new Set(['none', 'query', 'body', 'multipart'])
 
 const routeKey = route => `${route.method.toUpperCase()} ${route.path}`
@@ -222,6 +222,7 @@ export function compareApplication(frontend, contract) {
     if (!declaredRoutes.has(key)) failures.push(`route ${key} is not declared in the contract`)
   }
   for (const route of contract.routes) {
+    if (route.access === 'admin') continue
     const key = routeKey(route)
     if (!usedRoutes.has(key)) failures.push(`contract route ${key} is not used by application src/api.imba`)
   }
