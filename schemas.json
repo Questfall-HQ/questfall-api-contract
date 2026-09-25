@@ -14294,7 +14294,7 @@
         "read_cursor": {"anyOf": [{"$ref": "#/$defs/ChatReadCursor"}, {"type": "null"}]},
         "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100},
         "online": {"type": "integer", "minimum": 0},
-        "frequent": {"type": "array", "maxItems": 20, "items": {"type": "string", "maxLength": 16}}
+        "frequent": {"type": "array", "maxItems": 21, "items": {"type": "string", "maxLength": 16}}
       },
       "additionalProperties": false
     },
@@ -14321,7 +14321,7 @@
       "properties": {
         "message": {"type": "string", "minLength": 1},
         "reactions": {"type": "array", "items": {"$ref": "#/$defs/ChatReaction"}},
-        "frequent": {"type": "array", "maxItems": 20, "items": {"type": "string", "maxLength": 16}},
+        "frequent": {"type": "array", "maxItems": 21, "items": {"type": "string", "maxLength": 16}},
         "added": {"type": "boolean"},
         "events": {"type": "array", "maxItems": 2, "items": {"type": "string"}}
       },

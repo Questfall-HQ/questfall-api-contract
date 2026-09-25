@@ -11,8 +11,8 @@ test('chat exposes an exact read cursor and a boolean unread signal',()=>{
  expect(validate('ChatReadStatus',{has_unread:0,read_cursor:cursor}).length).toBeGreaterThan(0)
 })
 
-test('chat returns up to twenty recent reaction emoji',()=>{
- const frequent=Array.from({length:20},(_,index)=>String(index))
+test('chat returns up to twenty-one recent reaction emoji',()=>{
+ const frequent=Array.from({length:21},(_,index)=>String(index))
  const status={has_unread:false,read_cursor:null,attention_unread:0,online:0,frequent}
  const reaction={message:'message123',reactions:[],frequent,added:true,events:[]}
  expect(validate('ChatStatus',status)).toEqual([])

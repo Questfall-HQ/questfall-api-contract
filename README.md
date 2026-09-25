@@ -1,5 +1,9 @@
 # questfall-api-contract
 
+### Recent chat reactions — v8.2.0
+
+`ChatStatus.frequent` and `ChatReactionResult.frequent` now return up to 21 distinct emoji in the current user's most recently used order. The chat menu shows them in three rows of seven above its actions or expanded emoji search.
+
 ### Recent chat reactions — v8.1.0
 
 `ChatStatus.frequent` and `ChatReactionResult.frequent` return up to 20 distinct emoji in the current user's most recently used order. Choosing a reaction moves it to the front; the oldest entry drops off when the list exceeds 20. The history is private to that user.
