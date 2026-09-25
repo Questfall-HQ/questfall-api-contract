@@ -1,5 +1,9 @@
 # questfall-api-contract
 
+### Recent chat reactions — v8.1.0
+
+`ChatStatus.frequent` and `ChatReactionResult.frequent` return up to 20 distinct emoji in the current user's most recently used order. Choosing a reaction moves it to the front; the oldest entry drops off when the list exceeds 20. The history is private to that user.
+
 ### Community chat read cursor — v8.0.0
 
 `GET /chat/status` возвращает `has_unread` и точную позицию `read_cursor` (`id` и `created`) вместо числа обычных непрочитанных сообщений. `POST /chat/read` принимает ID последнего видимого сообщения и возвращает те же поля. Сервер проверяет только наличие более нового чужого сообщения. `attention_unread` остаётся числом непрочитанных обращений к пользователю.
