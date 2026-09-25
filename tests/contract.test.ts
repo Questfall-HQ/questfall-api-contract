@@ -9,6 +9,16 @@ import {
 } from '../src/check.mjs'
 
 describe('contract manifest', () => {
+  test('bug reviews include the administrator who made each decision', () => {
+    const review = {status:'confirmed',note:'Reproduced',award_gold:47,created:Date.now(),reviewer:{id:'moderator',name:'Bug Moderator',avatar:{mode:'generated',version:1,seed:'moderator'},avatar_icon:null}}
+    expect(validate('BugReviewUpdate',review)).toEqual([])
+    expect(validate('BugReviewUpdate',{...review,reviewer:undefined}).length).toBeGreaterThan(0)
+    expect(schema('BugReport').properties.updates.items.$ref).toBe('#/$defs/BugReviewUpdate')
+  })
+  test('accepts an isolated branch prerelease version', () => {
+    expect(validateContract({...contract,version:'6.51.0-feedback.1'},schemas)).toEqual([])
+    expect(validateContract({...contract,version:'6.51'},schemas)).toContain('contract.version must be semver')
+  })
   test('retirement is an optional boolean on historical lifecycles', () => {
     const life = schema('QuestLifecycle')
     expect(life.required).not.toContain('retired')

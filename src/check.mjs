@@ -74,7 +74,7 @@ export function validateContract(contract, schemas) {
   const definitions = schemas?.$defs
 
   if (!contract || typeof contract !== 'object') return ['contract must be an object']
-  if (!/^\d+\.\d+\.\d+$/.test(contract.version || '')) failures.push('contract.version must be semver')
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/.test(contract.version || '')) failures.push('contract.version must be semver')
   if (!Array.isArray(contract.routes)) failures.push('contract.routes must be an array')
   if (!definitions || typeof definitions !== 'object' || Array.isArray(definitions)) {
     failures.push('schemas.$defs must be an object')

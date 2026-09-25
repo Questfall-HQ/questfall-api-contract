@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.37.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/6.51.0-feedback.1/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -7517,7 +7517,19 @@
         "id": { "type": "string" },
         "name": { "type": "string" },
         "avatar": { "$ref": "#/$defs/Avatar" },
-        "avatar_icon": { "$ref": "#/$defs/Avatar" }
+        "avatar_icon": { "anyOf": [{ "$ref": "#/$defs/Avatar" }, { "type": "null" }] }
+      },
+      "additionalProperties": true
+    },
+    "BugReviewUpdate": {
+      "type": "object",
+      "required": ["status", "note", "award_gold", "created", "reviewer"],
+      "properties": {
+        "status": { "enum": ["confirmed", "rejected", "closed"] },
+        "note": { "type": "string" },
+        "award_gold": { "type": "integer" },
+        "created": { "type": "integer" },
+        "reviewer": { "$ref": "#/$defs/PublicUser" }
       },
       "additionalProperties": true
     },
@@ -7539,7 +7551,7 @@
         "screenshots": { "type": "array", "items": { "type": "string" } },
         "screenshots_public": { "type": "boolean" },
         "status": { "enum": ["open", "confirmed", "rejected", "closed"] },
-        "updates": { "type": "array", "items": { "type": "object" } },
+        "updates": { "type": "array", "items": { "$ref": "#/$defs/BugReviewUpdate" } },
         "award": { "type": "integer" },
         "author": { "$ref": "#/$defs/PublicUser" },
         "created": { "type": "integer" },
