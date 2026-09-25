@@ -320,6 +320,30 @@
       }
     },
     {
+      "operation": "feedback.bugs.list",
+      "method": "GET",
+      "path": "/feedback/bugs",
+      "access": "optional",
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine"] },
+      "response": { "schema": "BugReportList" }
+    },
+    {
+      "operation": "feedback.bugs.create",
+      "method": "POST",
+      "path": "/feedback/bugs",
+      "access": "verified",
+      "request": { "transport": "body", "params": [], "required": ["title", "description", "steps", "expected", "actual", "version"], "optional": ["area", "os", "browser", "screenshots", "screenshots_public"] },
+      "response": { "schema": "BugReport" }
+    },
+    {
+      "operation": "feedback.bugs.imageAccess",
+      "method": "GET",
+      "path": "/feedback/bugs/{id}/images/{asset}/access",
+      "access": "optional",
+      "request": { "transport": "query", "params": ["id", "asset"], "required": [], "optional": ["variant"] },
+      "response": { "schema": "MediaAccess" }
+    },
+    {
       "operation": "character.levelUp",
       "method": "POST",
       "path": "/rpg/character/level-up",

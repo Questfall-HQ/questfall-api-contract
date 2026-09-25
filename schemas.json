@@ -7510,6 +7510,52 @@
       },
       "additionalProperties": true
     },
+    "PublicUser": {
+      "type": "object",
+      "required": ["id", "name", "avatar"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "$ref": "#/$defs/Avatar" },
+        "avatar_icon": { "$ref": "#/$defs/Avatar" }
+      },
+      "additionalProperties": true
+    },
+    "BugReport": {
+      "type": "object",
+      "required": ["id", "title", "description", "summary", "steps", "expected", "actual", "screenshots", "screenshots_public", "status", "updates", "award", "author", "created", "updated"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "summary": { "type": "string" },
+        "area": { "type": "string" },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "expected": { "type": "string" },
+        "actual": { "type": "string" },
+        "os": { "type": "string" },
+        "browser": { "type": "string" },
+        "version": { "type": "string" },
+        "screenshots": { "type": "array", "items": { "type": "string" } },
+        "screenshots_public": { "type": "boolean" },
+        "status": { "enum": ["open", "confirmed", "rejected", "closed"] },
+        "updates": { "type": "array", "items": { "type": "object" } },
+        "award": { "type": "integer" },
+        "author": { "$ref": "#/$defs/PublicUser" },
+        "created": { "type": "integer" },
+        "updated": { "type": "integer" }
+      },
+      "additionalProperties": true
+    },
+    "BugReportList": {
+      "type": "object",
+      "required": ["items", "total"],
+      "properties": {
+        "items": { "type": "array", "items": { "$ref": "#/$defs/BugReport" } },
+        "total": { "type": "integer" }
+      },
+      "additionalProperties": true
+    },
     "MediaAccess": {
       "type": "object",
       "required": [
