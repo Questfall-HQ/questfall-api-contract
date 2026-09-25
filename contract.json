@@ -2716,6 +2716,19 @@
       "response": {"schema": "ChatMessagePage"}
     },
     {
+      "operation": "chat.people",
+      "method": "GET",
+      "path": "/chat/people",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": ["q"]
+      },
+      "response": {"schema": "ChatPeople"}
+    },
+    {
       "operation": "chat.create",
       "method": "POST",
       "path": "/chat/messages",
@@ -2724,7 +2737,7 @@
         "transport": "body",
         "params": [],
         "required": ["idempotency_key"],
-        "optional": ["text", "images", "reply_to"]
+        "optional": ["text", "images", "reply_to", "mentions"]
       },
       "response": {"schema": "ChatMessage"}
     },
@@ -2753,6 +2766,19 @@
         "optional": []
       },
       "response": {"schema": "ChatReadStatus"}
+    },
+    {
+      "operation": "chat.acknowledge",
+      "method": "POST",
+      "path": "/chat/attention/read",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": ["messages"],
+        "optional": []
+      },
+      "response": {"schema": "ChatAttentionStatus"}
     },
     {
       "operation": "chat.react",

@@ -14233,14 +14233,26 @@
       },
       "additionalProperties": false
     },
+    "ChatMention": {
+      "type": "object",
+      "required": ["user", "start", "end", "name"],
+      "properties": {
+        "user": {"type": "string", "minLength": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1},
+        "name": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
     "ChatMessage": {
       "type": "object",
-      "required": ["id", "user", "author", "text", "images", "reply", "reactions", "created"],
+      "required": ["id", "user", "author", "text", "mentions", "images", "reply", "reactions", "created"],
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "user": {"type": "string", "minLength": 1},
         "author": {"$ref": "#/$defs/ChatAuthor"},
         "text": {"type": "string", "maxLength": 2000},
+        "mentions": {"type": "array", "maxItems": 10, "items": {"$ref": "#/$defs/ChatMention"}},
         "images": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/ChatImage"}},
         "reply": {"anyOf": [{"$ref": "#/$defs/ChatReply"}, {"type": "null"}]},
         "reactions": {"type": "array", "items": {"$ref": "#/$defs/ChatReaction"}},
@@ -14257,11 +14269,20 @@
       },
       "additionalProperties": false
     },
+    "ChatPeople": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {"type": "array", "maxItems": 10, "items": {"$ref": "#/$defs/ChatAuthor"}}
+      },
+      "additionalProperties": false
+    },
     "ChatStatus": {
       "type": "object",
-      "required": ["unread", "online", "frequent"],
+      "required": ["unread", "attention_unread", "online", "frequent"],
       "properties": {
         "unread": {"type": "integer", "minimum": 0, "maximum": 100},
+        "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100},
         "online": {"type": "integer", "minimum": 0},
         "frequent": {"type": "array", "maxItems": 7, "items": {"type": "string", "maxLength": 16}}
       },
@@ -14272,6 +14293,14 @@
       "required": ["unread"],
       "properties": {
         "unread": {"type": "integer", "minimum": 0, "maximum": 100}
+      },
+      "additionalProperties": false
+    },
+    "ChatAttentionStatus": {
+      "type": "object",
+      "required": ["attention_unread"],
+      "properties": {
+        "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100}
       },
       "additionalProperties": false
     },
