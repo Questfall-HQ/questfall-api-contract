@@ -7535,7 +7535,7 @@
     },
     "BugReport": {
       "type": "object",
-      "required": ["id", "title", "description", "summary", "steps", "expected", "actual", "screenshots", "screenshots_public", "status", "updates", "award", "author", "created", "updated"],
+      "required": ["id", "title", "description", "summary", "steps", "expected", "actual", "screenshots", "screenshots_public", "status", "hidden", "hidden_note", "updates", "award", "author", "created", "updated"],
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
@@ -7551,6 +7551,8 @@
         "screenshots": { "type": "array", "items": { "type": "string" } },
         "screenshots_public": { "type": "boolean" },
         "status": { "enum": ["open", "confirmed", "rejected", "closed"] },
+        "hidden": { "type": "boolean" },
+        "hidden_note": { "type": "string" },
         "updates": { "type": "array", "items": { "$ref": "#/$defs/BugReviewUpdate" } },
         "award": { "type": "integer" },
         "author": { "$ref": "#/$defs/PublicUser" },
@@ -7561,10 +7563,13 @@
     },
     "BugReportList": {
       "type": "object",
-      "required": ["items", "total"],
+      "required": ["items", "total", "page", "per_page", "pages"],
       "properties": {
         "items": { "type": "array", "items": { "$ref": "#/$defs/BugReport" } },
-        "total": { "type": "integer" }
+        "total": { "type": "integer" },
+        "page": { "type": "integer" },
+        "per_page": { "type": "integer" },
+        "pages": { "type": "integer" }
       },
       "additionalProperties": true
     },
@@ -7592,7 +7597,7 @@
     },
     "Idea": {
       "type": "object",
-      "required": ["id", "title", "description", "summary", "images", "status", "updates", "award", "votes", "voted", "author", "created", "updated"],
+      "required": ["id", "title", "description", "summary", "images", "status", "hidden", "hidden_note", "updates", "award", "votes", "voted", "author", "created", "updated"],
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
@@ -7600,6 +7605,8 @@
         "summary": { "type": "string" },
         "images": { "type": "array", "items": { "$ref": "#/$defs/IdeaImage" } },
         "status": { "enum": ["open", "planned", "implemented", "rejected"] },
+        "hidden": { "type": "boolean" },
+        "hidden_note": { "type": "string" },
         "updates": { "type": "array", "items": { "$ref": "#/$defs/IdeaReviewUpdate" } },
         "award": { "type": "integer" },
         "votes": { "type": "integer" },
@@ -7612,10 +7619,13 @@
     },
     "IdeaList": {
       "type": "object",
-      "required": ["items", "total"],
+      "required": ["items", "total", "page", "per_page", "pages"],
       "properties": {
         "items": { "type": "array", "items": { "$ref": "#/$defs/Idea" } },
-        "total": { "type": "integer" }
+        "total": { "type": "integer" },
+        "page": { "type": "integer" },
+        "per_page": { "type": "integer" },
+        "pages": { "type": "integer" }
       },
       "additionalProperties": true
     },

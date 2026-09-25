@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "7.0.0-feedback.1",
+  "version": "7.0.0-feedback.2",
   "routes": [
     {
       "operation": "auth.me",
@@ -324,7 +324,7 @@
       "method": "GET",
       "path": "/feedback/bugs",
       "access": "optional",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine"] },
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine", "page", "per_page"] },
       "response": { "schema": "BugReportList" }
     },
     {
@@ -348,7 +348,7 @@
       "method": "GET",
       "path": "/feedback/ideas",
       "access": "optional",
-      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine"] },
+      "request": { "transport": "query", "params": [], "required": [], "optional": ["filter", "mine", "page", "per_page"] },
       "response": { "schema": "IdeaList" }
     },
     {
@@ -358,6 +358,14 @@
       "access": "verified",
       "request": { "transport": "body", "params": [], "required": ["title", "description"], "optional": ["images"] },
       "response": { "schema": "Idea" }
+    },
+    {
+      "operation": "feedback.ideas.imageAccess",
+      "method": "GET",
+      "path": "/feedback/ideas/{id}/images/{asset}/access",
+      "access": "optional",
+      "request": { "transport": "query", "params": ["id", "asset"], "required": [], "optional": ["variant"] },
+      "response": { "schema": "MediaAccess" }
     },
     {
       "operation": "feedback.ideas.vote",

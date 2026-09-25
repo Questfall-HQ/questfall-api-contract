@@ -26,6 +26,17 @@ describe('contract manifest', () => {
     expect(schema('Idea').properties).not.toHaveProperty('benefit')
     expect(operations['feedback.ideas.vote'].request.required).toEqual(['voted'])
   })
+  test('feedback lists expose real pages and protect hidden content', () => {
+    for (const kind of ['bugs','ideas']) {
+      const route = operations[`feedback.${kind}.list`]
+      expect(route.request.optional).toEqual(['filter','mine','page','per_page'])
+      const list = schema(kind === 'bugs' ? 'BugReportList' : 'IdeaList')
+      expect(list.required).toEqual(['items','total','page','per_page','pages'])
+      const item = schema(kind === 'bugs' ? 'BugReport' : 'Idea')
+      expect(item.required).toContain('hidden')
+    }
+    expect(operations['feedback.ideas.imageAccess'].access).toBe('optional')
+  })
   test('accepts an isolated branch prerelease version', () => {
     expect(validateContract({...contract,version:'7.0.0-feedback.1'},schemas)).toEqual([])
     expect(validateContract({...contract,version:'6.51'},schemas)).toContain('contract.version must be semver')
@@ -106,7 +117,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(133)
+		expect(contract.routes.length).toBe(134)
   })
 
   test('builds parameterized paths safely', () => {
