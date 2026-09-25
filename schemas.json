@@ -14288,12 +14288,13 @@
     },
     "ChatStatus": {
       "type": "object",
-      "required": ["has_unread", "read_cursor", "attention_unread", "online", "frequent", "can_mention_everyone"],
+      "required": ["has_unread", "read_cursor", "attention_unread", "online", "frequent", "can_mention_everyone", "chat_ban"],
       "properties": {
         "has_unread": {"type": "boolean"},
         "read_cursor": {"anyOf": [{"$ref": "#/$defs/ChatReadCursor"}, {"type": "null"}]},
         "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100},
         "can_mention_everyone": {"type": "boolean"},
+        "chat_ban": {"anyOf": [{"$ref": "#/$defs/ChatBan"}, {"type": "null"}]},
         "online": {"type": "integer", "minimum": 0},
         "frequent": {"type": "array", "maxItems": 21, "items": {"type": "string", "maxLength": 16}}
       },
@@ -14313,6 +14314,86 @@
       "required": ["attention_unread"],
       "properties": {
         "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100}
+      },
+      "additionalProperties": false
+    },
+    "ChatBan": {
+      "type": "object",
+      "required": ["until"],
+      "properties": {"until": {"type": ["integer", "null"], "minimum": 1}},
+      "additionalProperties": false
+    },
+    "ChatBanResult": {
+      "type": "object",
+      "required": ["user", "until"],
+      "properties": {
+        "user": {"type": "string", "minLength": 1},
+        "until": {"type": ["integer", "null"], "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "ChatReportReceipt": {
+      "type": "object",
+      "required": ["id", "status"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["open", "dismissed", "banned"]}
+      },
+      "additionalProperties": false
+    },
+    "ChatEvidenceMessage": {
+      "type": "object",
+      "required": ["id", "user", "author", "text", "images", "created"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "user": {"type": "string", "minLength": 1},
+        "author": {"$ref": "#/$defs/ChatAuthor"},
+        "text": {"type": "string", "maxLength": 2000},
+        "images": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/ChatImage"}},
+        "created": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "ChatReportItem": {
+      "type": "object",
+      "required": ["id", "message", "reporter", "subject", "reason", "status", "created", "resolved_at"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "reporter": {"$ref": "#/$defs/ChatAuthor"},
+        "subject": {"$ref": "#/$defs/ChatAuthor"},
+        "reason": {"type": "string", "maxLength": 1000},
+        "status": {"enum": ["open", "dismissed", "banned"]},
+        "created": {"type": "integer", "minimum": 1},
+        "resolved_at": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "ChatReportPage": {
+      "type": "object",
+      "required": ["items", "next"],
+      "properties": {
+        "items": {"type": "array", "items": {"$ref": "#/$defs/ChatReportItem"}},
+        "next": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "ChatReportDetail": {
+      "type": "object",
+      "required": ["id", "message", "reporter", "subject", "reason", "status", "created", "resolved_at", "snapshot", "resolution", "resolved_by", "ban"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "reporter": {"$ref": "#/$defs/ChatAuthor"},
+        "subject": {"$ref": "#/$defs/ChatAuthor"},
+        "reason": {"type": "string", "maxLength": 1000},
+        "status": {"enum": ["open", "dismissed", "banned"]},
+        "created": {"type": "integer", "minimum": 1},
+        "resolved_at": {"type": "integer", "minimum": 0},
+        "snapshot": {"type": "array", "maxItems": 21, "items": {"$ref": "#/$defs/ChatEvidenceMessage"}},
+        "resolution": {"type": "string", "maxLength": 1000},
+        "resolved_by": {"type": "string"},
+        "ban": {"anyOf": [{"$ref": "#/$defs/ChatBan"}, {"type": "null"}]}
       },
       "additionalProperties": false
     },

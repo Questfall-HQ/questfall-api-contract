@@ -1,5 +1,9 @@
 # questfall-api-contract
 
+### Community chat reports and writing bans — v10.0.0
+
+`POST /chat/reports` lets a verified member report another member's message with an optional note. The team queue keeps a snapshot of the message, up to 15 preceding messages, and up to 5 messages already following it when the report is filed. Admin routes under `/admin/chat` list and resolve reports, issue a writing ban for 1, 4, or 12 hours, 1 day, 1 week, 30 days, 365 days, or permanently, and revoke a ban. `ChatStatus.chat_ban` is null or contains the expiry time; permanent bans have a null expiry. A chat ban blocks messages, reactions, and chat image upload intents while preserving read access. Community profile restriction still only changes public identity display.
+
 ### Admin @everyone mention — v9.0.0
 
 `ChatStatus.can_mention_everyone` сообщает, может ли текущий пользователь обратиться ко всему чату. Только пользователь с серверным флагом `admin` может отправить упоминание `{user:"everyone",start,end}`; указанный фрагмент текста должен быть точным `@everyone`. Клиент предлагает его после четырёх введённых букв. Остальные упоминания содержат ID пользователя. `ChatStatus.attention_unread` включает непросмотренные `@everyone` для существовавших на момент отправки пользователей, исключая автора, и считает сообщение один раз при сочетании `@everyone` с личным упоминанием или ответом. `POST /chat/attention/read` отмечает просмотр без создания записей для всей аудитории при отправке.

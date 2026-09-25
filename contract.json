@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "8.0.0",
+  "version": "10.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2792,6 +2792,54 @@
         "optional": []
       },
       "response": {"schema": "ChatReactionResult"}
+    },
+    {
+      "operation": "chat.report",
+      "method": "POST",
+      "path": "/chat/reports",
+      "access": "verified",
+      "request": {"transport": "body", "params": [], "required": ["message"], "optional": ["reason"]},
+      "response": {"schema": "ChatReportReceipt"}
+    },
+    {
+      "operation": "admin.chat.reports",
+      "method": "GET",
+      "path": "/admin/chat/reports",
+      "access": "admin",
+      "request": {"transport": "query", "params": [], "required": [], "optional": ["status", "before", "limit"]},
+      "response": {"schema": "ChatReportPage"}
+    },
+    {
+      "operation": "admin.chat.reportDetail",
+      "method": "GET",
+      "path": "/admin/chat/reports/{id}",
+      "access": "admin",
+      "request": {"transport": "query", "params": ["id"], "required": [], "optional": []},
+      "response": {"schema": "ChatReportDetail"}
+    },
+    {
+      "operation": "admin.chat.resolveReport",
+      "method": "POST",
+      "path": "/admin/chat/reports/{id}/resolve",
+      "access": "admin",
+      "request": {"transport": "body", "params": ["id"], "required": ["action"], "optional": ["duration", "note"]},
+      "response": {"schema": "ChatReportDetail"}
+    },
+    {
+      "operation": "admin.chat.ban",
+      "method": "POST",
+      "path": "/admin/chat/bans",
+      "access": "admin",
+      "request": {"transport": "body", "params": [], "required": ["user", "duration"], "optional": ["reason"]},
+      "response": {"schema": "ChatBanResult"}
+    },
+    {
+      "operation": "admin.chat.revokeBan",
+      "method": "POST",
+      "path": "/admin/chat/bans/revoke",
+      "access": "admin",
+      "request": {"transport": "body", "params": [], "required": ["user"], "optional": ["reason"]},
+      "response": {"schema": "ChatBanResult"}
     }
   ],
   "pocketbase": {
