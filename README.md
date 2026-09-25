@@ -1,5 +1,9 @@
 # questfall-api-contract
 
+### Admin @all mention — v8.3.0
+
+`ChatStatus.can_mention_all` сообщает, может ли текущий пользователь обратиться ко всему чату. Только пользователь с серверным флагом `admin` может отправить упоминание `{user:"all",start,end}`; указанный фрагмент текста должен быть точным `@all`. Остальные упоминания по-прежнему содержат ID пользователя. `ChatStatus.attention_unread` включает непросмотренные `@all` для существовавших на момент отправки пользователей, исключая автора, и считает сообщение один раз при сочетании `@all` с личным упоминанием или ответом. `POST /chat/attention/read` отмечает просмотр `@all` без создания записей для всей аудитории при отправке.
+
 ### Recent chat reactions — v8.2.0
 
 `ChatStatus.frequent` and `ChatReactionResult.frequent` now return up to 21 distinct emoji in the current user's most recently used order. The chat menu shows them in three rows of seven above its actions or expanded emoji search.
