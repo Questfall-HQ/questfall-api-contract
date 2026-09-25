@@ -14237,7 +14237,7 @@
       "type": "object",
       "required": ["user", "start", "end", "name"],
       "properties": {
-        "user": {"type": "string", "minLength": 1, "description": "User ID, or the reserved all target in an admin broadcast"},
+        "user": {"type": "string", "minLength": 1, "description": "User ID, or the reserved everyone target for an admin @everyone mention"},
         "start": {"type": "integer", "minimum": 0},
         "end": {"type": "integer", "minimum": 1},
         "name": {"type": "string"}
@@ -14288,12 +14288,12 @@
     },
     "ChatStatus": {
       "type": "object",
-      "required": ["has_unread", "read_cursor", "attention_unread", "online", "frequent", "can_mention_all"],
+      "required": ["has_unread", "read_cursor", "attention_unread", "online", "frequent", "can_mention_everyone"],
       "properties": {
         "has_unread": {"type": "boolean"},
         "read_cursor": {"anyOf": [{"$ref": "#/$defs/ChatReadCursor"}, {"type": "null"}]},
         "attention_unread": {"type": "integer", "minimum": 0, "maximum": 100},
-        "can_mention_all": {"type": "boolean"},
+        "can_mention_everyone": {"type": "boolean"},
         "online": {"type": "integer", "minimum": 0},
         "frequent": {"type": "array", "maxItems": 21, "items": {"type": "string", "maxLength": 16}}
       },
