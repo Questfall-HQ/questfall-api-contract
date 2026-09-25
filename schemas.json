@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/7.5.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/10.1.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -15645,6 +15645,363 @@
         }
       },
       "additionalProperties": false
+    },
+    "BugReport": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "summary",
+        "steps",
+        "expected",
+        "actual",
+        "screenshots",
+        "screenshots_public",
+        "status",
+        "hidden",
+        "hidden_note",
+        "updates",
+        "award",
+        "author",
+        "created",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "area": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expected": {
+          "type": "string"
+        },
+        "actual": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "screenshots_public": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "confirmed",
+            "rejected",
+            "closed"
+          ]
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "hidden_note": {
+          "type": "string"
+        },
+        "updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BugReviewUpdate"
+          }
+        },
+        "award": {
+          "type": "integer"
+        },
+        "author": {
+          "$ref": "#/$defs/PublicUser"
+        },
+        "created": {
+          "type": "integer"
+        },
+        "updated": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "BugReportList": {
+      "type": "object",
+      "required": [
+        "items",
+        "total",
+        "page",
+        "per_page",
+        "pages"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BugReport"
+          }
+        },
+        "total": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "BugReviewUpdate": {
+      "type": "object",
+      "required": [
+        "status",
+        "note",
+        "award_gold",
+        "created",
+        "reviewer"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "confirmed",
+            "rejected",
+            "closed"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "award_gold": {
+          "type": "integer"
+        },
+        "created": {
+          "type": "integer"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/PublicUser"
+        }
+      },
+      "additionalProperties": true
+    },
+    "Idea": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "summary",
+        "images",
+        "status",
+        "hidden",
+        "hidden_note",
+        "updates",
+        "award",
+        "votes",
+        "voted",
+        "author",
+        "created",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IdeaImage"
+          }
+        },
+        "status": {
+          "enum": [
+            "open",
+            "planned",
+            "implemented",
+            "rejected"
+          ]
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "hidden_note": {
+          "type": "string"
+        },
+        "updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IdeaReviewUpdate"
+          }
+        },
+        "award": {
+          "type": "integer"
+        },
+        "votes": {
+          "type": "integer"
+        },
+        "voted": {
+          "type": "boolean"
+        },
+        "author": {
+          "$ref": "#/$defs/PublicUser"
+        },
+        "created": {
+          "type": "integer"
+        },
+        "updated": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "IdeaImage": {
+      "type": "object",
+      "required": [
+        "id",
+        "url",
+        "thumb"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "thumb": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "IdeaList": {
+      "type": "object",
+      "required": [
+        "items",
+        "total",
+        "page",
+        "per_page",
+        "pages"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Idea"
+          }
+        },
+        "total": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "IdeaReviewUpdate": {
+      "type": "object",
+      "required": [
+        "status",
+        "note",
+        "award_gold",
+        "created",
+        "reviewer"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "planned",
+            "implemented",
+            "rejected"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "award_gold": {
+          "type": "integer"
+        },
+        "created": {
+          "type": "integer"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/PublicUser"
+        }
+      },
+      "additionalProperties": true
+    },
+    "PublicUser": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "avatar_icon": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Avatar"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
     }
   }
 }

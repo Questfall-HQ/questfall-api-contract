@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "10.0.0",
+  "version": "10.1.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -3092,6 +3092,153 @@
       },
       "response": {
         "schema": "ChatBanResult"
+      }
+    },
+    {
+      "operation": "feedback.bugs.list",
+      "method": "GET",
+      "path": "/feedback/bugs",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "filter",
+          "mine",
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "BugReportList"
+      }
+    },
+    {
+      "operation": "feedback.bugs.create",
+      "method": "POST",
+      "path": "/feedback/bugs",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "title",
+          "description",
+          "steps",
+          "expected",
+          "actual",
+          "version"
+        ],
+        "optional": [
+          "area",
+          "os",
+          "browser",
+          "screenshots",
+          "screenshots_public"
+        ]
+      },
+      "response": {
+        "schema": "BugReport"
+      }
+    },
+    {
+      "operation": "feedback.bugs.imageAccess",
+      "method": "GET",
+      "path": "/feedback/bugs/{id}/images/{asset}/access",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id",
+          "asset"
+        ],
+        "required": [],
+        "optional": [
+          "variant"
+        ]
+      },
+      "response": {
+        "schema": "MediaAccess"
+      }
+    },
+    {
+      "operation": "feedback.ideas.list",
+      "method": "GET",
+      "path": "/feedback/ideas",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "filter",
+          "mine",
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "IdeaList"
+      }
+    },
+    {
+      "operation": "feedback.ideas.create",
+      "method": "POST",
+      "path": "/feedback/ideas",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "title",
+          "description"
+        ],
+        "optional": [
+          "images"
+        ]
+      },
+      "response": {
+        "schema": "Idea"
+      }
+    },
+    {
+      "operation": "feedback.ideas.imageAccess",
+      "method": "GET",
+      "path": "/feedback/ideas/{id}/images/{asset}/access",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id",
+          "asset"
+        ],
+        "required": [],
+        "optional": [
+          "variant"
+        ]
+      },
+      "response": {
+        "schema": "MediaAccess"
+      }
+    },
+    {
+      "operation": "feedback.ideas.vote",
+      "method": "POST",
+      "path": "/feedback/ideas/{id}/vote",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "voted"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Idea"
       }
     }
   ],
