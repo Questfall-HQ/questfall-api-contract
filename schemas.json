@@ -14224,11 +14224,12 @@
     },
     "ChatReaction": {
       "type": "object",
-      "required": ["emoji", "count", "mine"],
+      "required": ["emoji", "count", "mine", "actors"],
       "properties": {
         "emoji": {"type": "string", "minLength": 1, "maxLength": 16},
         "count": {"type": "integer", "minimum": 1},
-        "mine": {"type": "boolean"}
+        "mine": {"type": "boolean"},
+        "actors": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/ChatAuthor"}}
       },
       "additionalProperties": false
     },
