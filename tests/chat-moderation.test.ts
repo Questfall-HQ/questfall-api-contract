@@ -18,3 +18,13 @@ test('report evidence stays bounded and private to admin routes', () => {
 	expect(validate('ChatReportDetail',{...item,snapshot:Array.from({length:22},()=>message),resolution:'',resolved_by:'',ban:null}).length).toBeGreaterThan(0)
 	for (const route of contract.routes.filter(route=>route.path.startsWith('/admin/chat/'))) expect(route.access).toBe('admin')
 })
+
+test('chat edit response marks revisions and admin detail may show previous text', () => {
+	const message = {id:'message123',user:'user123',author,text:'Revised',mentions:[],images:[],reply:null,reactions:[],created:1790000000000,edited:1790000001000}
+	expect(validate('ChatMessage',message)).toEqual([])
+	const route = contract.routes.find(route => route.operation === 'chat.update')
+	expect(route?.path).toBe('/chat/messages/edit')
+	expect(route?.request.required).toEqual(['id','text','mentions','edited'])
+	const report = {id:'report123',message:'message123',reporter:author,subject:author,reason:'Abuse',status:'open',created:1790000000000,resolved_at:0,snapshot:[],edits:[{text:'Original',created:1790000001000}],edits_more:false,resolution:'',resolved_by:'',ban:null}
+	expect(validate('ChatReportDetail',report)).toEqual([])
+})

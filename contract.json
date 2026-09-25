@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2906,6 +2906,26 @@
           "reply_to",
           "mentions"
         ]
+      },
+      "response": {
+        "schema": "ChatMessage"
+      }
+    },
+    {
+      "operation": "chat.update",
+      "method": "POST",
+      "path": "/chat/messages/edit",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "text",
+          "mentions",
+          "edited"
+        ],
+        "optional": []
       },
       "response": {
         "schema": "ChatMessage"

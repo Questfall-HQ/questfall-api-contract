@@ -15203,6 +15203,10 @@
         "created": {
           "type": "integer",
           "minimum": 1
+        },
+        "edited": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -15457,6 +15461,24 @@
       },
       "additionalProperties": false
     },
+    "ChatEdit": {
+      "type": "object",
+      "required": [
+        "text",
+        "created"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
     "ChatReportItem": {
       "type": "object",
       "required": [
@@ -15584,6 +15606,16 @@
           "items": {
             "$ref": "#/$defs/ChatEvidenceMessage"
           }
+        },
+        "edits": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/ChatEdit"
+          }
+        },
+        "edits_more": {
+          "type": "boolean"
         },
         "resolution": {
           "type": "string",
