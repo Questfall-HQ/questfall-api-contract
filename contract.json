@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.51.0-feedback.2",
+  "version": "7.0.0-feedback.1",
   "routes": [
     {
       "operation": "auth.me",
@@ -356,7 +356,7 @@
       "method": "POST",
       "path": "/feedback/ideas",
       "access": "verified",
-      "request": { "transport": "body", "params": [], "required": ["title", "description", "benefit"], "optional": ["images"] },
+      "request": { "transport": "body", "params": [], "required": ["title", "description"], "optional": ["images"] },
       "response": { "schema": "Idea" }
     },
     {

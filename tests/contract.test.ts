@@ -21,11 +21,13 @@ describe('contract manifest', () => {
     expect(validate('IdeaReviewUpdate',review)).toEqual([])
     expect(validate('IdeaReviewUpdate',{...review,reviewer:undefined}).length).toBeGreaterThan(0)
     expect(schema('Idea').properties.images.items.$ref).toBe('#/$defs/IdeaImage')
-    expect(operations['feedback.ideas.create'].request.optional).toContain('images')
+    expect(operations['feedback.ideas.create'].request.required).toEqual(['title','description'])
+    expect(operations['feedback.ideas.create'].request.optional).toEqual(['images'])
+    expect(schema('Idea').properties).not.toHaveProperty('benefit')
     expect(operations['feedback.ideas.vote'].request.required).toEqual(['voted'])
   })
   test('accepts an isolated branch prerelease version', () => {
-    expect(validateContract({...contract,version:'6.51.0-feedback.2'},schemas)).toEqual([])
+    expect(validateContract({...contract,version:'7.0.0-feedback.1'},schemas)).toEqual([])
     expect(validateContract({...contract,version:'6.51'},schemas)).toContain('contract.version must be semver')
   })
   test('retirement is an optional boolean on historical lifecycles', () => {
