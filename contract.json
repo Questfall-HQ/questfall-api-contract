@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "6.37.0",
+  "version": "7.5.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -17,7 +17,8 @@
       },
       "response": {
         "schema": "Profile"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "player.state",
@@ -130,6 +131,41 @@
       }
     },
     {
+      "operation": "auth.link.emailRequestOtp",
+      "method": "POST",
+      "path": "/auth/link/email/request-otp",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "email"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "EmailLink"
+      }
+    },
+    {
+      "operation": "auth.link.emailVerifyOtp",
+      "method": "POST",
+      "path": "/auth/link/email/verify-otp",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "email",
+          "otp"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "AuthSession"
+      }
+    },
+    {
       "operation": "auth.link.emailPreview",
       "method": "POST",
       "path": "/auth/link/email/preview",
@@ -224,7 +260,8 @@
       },
       "response": {
         "schema": "Profile"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "profile.stats",
@@ -320,6 +357,23 @@
       }
     },
     {
+      "operation": "character.markIntroSeen",
+      "method": "POST",
+      "path": "/rpg/character/intro",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PlayerResult"
+      }
+    },
+    {
       "operation": "character.levelUp",
       "method": "POST",
       "path": "/rpg/character/level-up",
@@ -336,7 +390,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "character.attribute",
@@ -355,6 +410,22 @@
       },
       "response": {
         "schema": "PlayerResult"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+    },
+    {
+      "operation": "character.resetQuote",
+      "method": "GET",
+      "path": "/rpg/character/attributes/reset/quote",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "AttributeResetQuote"
       }
     },
     {
@@ -367,12 +438,14 @@
         "params": [],
         "required": [],
         "optional": [
-          "response_version"
+          "response_version",
+          "quote_token"
         ]
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "economy.goldToSilver",
@@ -391,7 +464,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "inventory.load",
@@ -410,7 +484,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "items.equip",
@@ -430,7 +505,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "items.unequip",
@@ -450,7 +526,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "items.quote",
@@ -486,7 +563,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "items.upgrade",
@@ -505,7 +583,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "marketplace.list",
@@ -530,7 +609,8 @@
           "seller",
           "sort",
           "page",
-          "perPage"
+          "perPage",
+          "kind"
         ]
       },
       "response": {
@@ -571,7 +651,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "marketplace.reprice",
@@ -591,7 +672,8 @@
       },
       "response": {
         "schema": "MarketplaceMutationResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "marketplace.cancel",
@@ -610,7 +692,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "marketplace.buy",
@@ -629,7 +712,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "marketplace.claim",
@@ -648,7 +732,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "lootboxes.open",
@@ -667,7 +752,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "lootboxes.check",
@@ -687,7 +773,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "lootboxes.choose",
@@ -707,7 +794,8 @@
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "lootboxes.buy",
@@ -719,12 +807,14 @@
         "params": [],
         "required": [],
         "optional": [
-          "response_version"
+          "response_version",
+          "quantity"
         ]
       },
       "response": {
         "schema": "PlayerResult"
-      }
+      },
+      "description": "Buys 1 to 100 Common Lootboxes in one atomic purchase. quantity defaults to 1 when omitted. Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.feed",
@@ -747,7 +837,8 @@
       },
       "response": {
         "schema": "QuestFeed"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.feedChanges",
@@ -774,7 +865,8 @@
       },
       "response": {
         "schema": "QuestFeedChanges"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.feedViewer",
@@ -908,7 +1000,7 @@
       "response": {
         "schema": "QuestCompletionResult"
       },
-      "description": " Content v10 supports explicit identity.version=2: automatic authenticated Questfall identity and screenshot/url without a source account. Individual result links are single-use per quest, even after rejection or republication; exact idempotent replay does not create another submission."
+      "description": " Content v10 supports explicit identity.version=2: automatic authenticated Questfall identity and screenshot/url without a source account. Individual result links are single-use per quest, even after rejection or republication; exact idempotent replay does not create another submission. Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.report",
@@ -1301,14 +1393,14 @@
         ],
         "optional": [
           "response_version",
-          "idempotency_key",
-          "expected_case_id"
+          "expected_case_id",
+          "idempotency_key"
         ]
       },
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Author quest appeals opt into response_version=2 with an 8–128 character idempotency_key. V2 requires access to the quest; case_id must identify the current decision. Owner or quests_publish permission is required to appeal a quest block. Legacy response remains available."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -1367,7 +1459,8 @@
       },
       "response": {
         "schema": "QuestRewardClaimResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.welcome.sync",
@@ -1417,11 +1510,12 @@
           "direction",
           "page",
           "per_page",
-          "miner"
+          "miner",
+          "details"
         ]
       },
       "response": {
-        "schema": "LeagueBrowser"
+        "schema": "LeagueBrowserResponse"
       }
     },
     {
@@ -1485,8 +1579,9 @@
         ]
       },
       "response": {
-        "schema": "MiningRewardsClaimResultResult"
-      }
+        "schema": "MiningRewardsClaimResult"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "authorSpaces.mine",
@@ -1560,8 +1655,9 @@
         ]
       },
       "response": {
-        "schema": "AuthorRewardWithdrawalResultResult"
-      }
+        "schema": "AuthorRewardWithdrawalResult"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "spaces.load",
@@ -1656,7 +1752,8 @@
       },
       "response": {
         "schema": "AuthorSpaceBalanceMutationResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "authorSpaces.balance.history",
@@ -1696,7 +1793,8 @@
       },
       "response": {
         "schema": "AuthorSpaceBalanceMutationResult"
-      }
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "authorSpaces.groups.create",
@@ -1772,7 +1870,6 @@
           "id",
           "slug",
           "type",
-          "instructions",
           "config",
           "tag_ids",
           "group",
@@ -1898,13 +1995,13 @@
         "required": [
           "id",
           "pricing_version",
-          "max_cost"
+          "max_cost",
+          "pricing_revision",
+          "idempotency_key"
         ],
         "optional": [
           "bounty",
           "duration",
-          "pricing_revision",
-          "idempotency_key",
           "moderation_version"
         ]
       },
@@ -2238,8 +2335,9 @@
         ]
       },
       "response": {
-        "schema": "AuthorQuestHistoryResponse"
-      }
+        "schema": "AuthorQuestHistory"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "authorSpaces.quests",
@@ -2481,6 +2579,279 @@
       },
       "response": {
         "schema": "AccountClaim"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.results",
+      "method": "GET",
+      "path": "/author-spaces/quests/results",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "slug",
+          "id"
+        ],
+        "optional": [
+          "answers_page",
+          "publication_id"
+        ]
+      },
+      "response": {
+        "schema": "AuthorQuestResults"
+      }
+    },
+    {
+      "operation": "quests.comment",
+      "method": "POST",
+      "path": "/quests/comments",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "publication_id",
+          "text",
+          "idempotency_key"
+        ],
+        "optional": [
+          "content_version",
+          "moderation_version"
+        ]
+      },
+      "response": {
+        "schema": "QuestCommentReceipt"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.comments",
+      "method": "GET",
+      "path": "/author-spaces/quests/comments",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": [
+          "before",
+          "limit",
+          "status"
+        ]
+      },
+      "response": {
+        "schema": "QuestCommentList"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.readcomments",
+      "method": "POST",
+      "path": "/author-spaces/quests/comments/read",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "comment_ids"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestCommentSummary"
+      }
+    },
+    {
+      "operation": "authorSpaces.quests.commentstatus",
+      "method": "POST",
+      "path": "/author-spaces/quests/comments/status",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id",
+          "comment_id",
+          "status"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "QuestCommentReview"
+      }
+    },
+    {
+      "operation": "items.consume",
+      "method": "POST",
+      "path": "/items/consume",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PotionConsumeResult"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+    },
+    {
+      "operation": "items.merge",
+      "method": "POST",
+      "path": "/items/merge",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "ingredientId"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PotionMergeResult"
+      },
+      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+    },
+    {
+      "operation": "stamina.config",
+      "method": "GET",
+      "path": "/rpg/stamina/config",
+      "access": "public",
+      "request": {
+        "transport": "none",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "StaminaConfig"
+      }
+    },
+    {
+      "operation": "artwork.get",
+      "method": "GET",
+      "path": "/rpg/artwork",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "keys"
+        ]
+      },
+      "response": {
+        "schema": "ArtworkCatalog"
+      }
+    },
+    {
+      "operation": "news.list",
+      "method": "GET",
+      "path": "/news",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "NewsList"
+      }
+    },
+    {
+      "operation": "news.state",
+      "method": "GET",
+      "path": "/news/state",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
+      }
+    },
+    {
+      "operation": "news.detail",
+      "method": "GET",
+      "path": "/news/{id}",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsArticle"
+      }
+    },
+    {
+      "operation": "news.read",
+      "method": "POST",
+      "path": "/news/{id}/read",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
+      }
+    },
+    {
+      "operation": "news.readAll",
+      "method": "POST",
+      "path": "/news/read-all",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "NewsState"
+      }
+    },
+    {
+      "operation": "mining.leagues.miner",
+      "method": "GET",
+      "path": "/mining/leagues/miners/{id}",
+      "access": "public",
+      "request": {
+        "transport": "none",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "LeagueMinerBuild"
       }
     }
   ],

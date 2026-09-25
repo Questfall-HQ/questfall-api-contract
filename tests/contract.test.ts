@@ -85,7 +85,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(127)
+		expect(contract.routes.length).toBe(146)
   })
 
   test('builds parameterized paths safely', () => {
@@ -95,8 +95,8 @@ describe('contract manifest', () => {
   })
 
   test('exports stable public schemas', () => {
-    expect(schema('Player').required).toContain('character')
-		expect(schema('Player').properties.character.properties.mining.$ref).toBe('#/$defs/PlayerMining')
+    expect(schema('PlayerResult').required).toContain('effects')
+		expect(schema('CharacterState').properties.mining.$ref).toBe('#/$defs/PlayerMining')
 		expect(schema('PlayerMining').required).toEqual(['week', 'season', 'server_now', 'power', 'boost', 'base_multiplier', 'multiplier', 'flow'])
 		expect(schema('PlayerFlow').required).toEqual(['active', 'started_at', 'ends_at', 'bonus', 'focus_minutes'])
     expect(schema('Item').properties.rarity.enum).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
@@ -189,8 +189,9 @@ describe('contract manifest', () => {
 		expect(operations['quests.complete'].request.optional).toContain('proof_url')
 		expect(operations['quests.complete'].request.optional).toContain('proof_media_ids')
 		expect(operations['quests.complete'].request.optional).toContain('platform_account')
-		expect(schema('QuestType').enum).toContain('transaction')
-		expect(schema('QuestCompletion').required).toContain('status')
+		expect(schema('QuestType').enum).toEqual(['text', 'quiz', 'survey', 'action', 'event', 'screenshot'])
+		expect(schema('QuestAuthorConfig').properties.verification.enum).toEqual(['screenshot', 'url', 'confirmation'])
+		expect(schema('QuestCompletionResult').required).toContain('status')
 		expect(operations['moderation.assignments.claim'].response.schema).toBe('ModerationAssignmentResult')
 		expect(operations['moderation.assignments.claim'].request.optional).toContain('case_id')
 		expect(operations['moderation.guest.preview'].access).toBe('public')
@@ -336,7 +337,8 @@ describe('contract manifest', () => {
 			},
 		})).toEqual([])
 		expect(validate('QuestCardAssignment', {id: 'assignment', slot: 1, effective_bounty: 100, expires: 1, requires_rating: false})).toEqual([])
-		expect(validate('QuestCompletion', {
+		expect(validate('QuestCompletionResult', {
+            response_version:2,effects:{owner:'user',server_now:1,upsert:[],remove:[],invalidate:[]},
 			id: 'submission',
 			quest_id: 'quest',
 			accepted: false,
@@ -442,7 +444,7 @@ routerAdd 'POST', '/media/uploads/{id}/complete', do(e)
 describe('consumer comparisons', () => {
   const fixture = {
     version: '0.0.0',
-    routes: [{ operation: 'inventory.load', method: 'GET', path: '/inventory/load', access: 'verified', request: { transport: 'query', required: [], optional: [] }, response: { schema: 'PlayerEnvelope' } }],
+    routes: [{ operation: 'inventory.load', method: 'GET', path: '/inventory/load', access: 'verified', request: { transport: 'query', required: [], optional: [] }, response: { schema: 'PlayerResult' } }],
     pocketbase: { collections: { users: { auth: true } } },
   }
 

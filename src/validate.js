@@ -88,6 +88,12 @@ function inspect(rule, value, at, failures) {
   if (typeof value === 'number' && rule.minimum !== undefined && value < rule.minimum) {
     failures.push(`${at} must be at least ${rule.minimum}`)
   }
+  if (typeof value === 'number' && rule.exclusiveMinimum !== undefined && value <= rule.exclusiveMinimum) {
+    failures.push(`${at} must be greater than ${rule.exclusiveMinimum}`)
+  }
+  if (typeof value === 'number' && rule.exclusiveMaximum !== undefined && value >= rule.exclusiveMaximum) {
+    failures.push(`${at} must be less than ${rule.exclusiveMaximum}`)
+  }
   if (typeof value === 'number' && rule.maximum !== undefined && value > rule.maximum) {
     failures.push(`${at} must be at most ${rule.maximum}`)
   }
@@ -102,9 +108,11 @@ function inspect(rule, value, at, failures) {
     for (const [field, child] of Object.entries(rule.properties || {})) {
       if (field in value) inspect(child, value[field], `${at}.${field}`, failures)
     }
-    if (rule.additionalProperties === false) {
-      for (const field of Object.keys(value)) {
-        if (!(field in (rule.properties || {}))) failures.push(`${at}.${field} is not allowed`)
+    for (const field of Object.keys(value)) {
+      if (Object.hasOwn(rule.properties || {}, field)) continue
+      if (rule.additionalProperties === false) failures.push(`${at}.${field} is not allowed`)
+      else if (rule.additionalProperties && typeof rule.additionalProperties === 'object') {
+        inspect(rule.additionalProperties, value[field], `${at}.${field}`, failures)
       }
     }
   }

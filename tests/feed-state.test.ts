@@ -9,6 +9,14 @@ const viewer = {
 }
 
 describe('canonical Feed attempt and publication state', () => {
+	test('includes optional Welcome cards in the first personal Feed snapshot', () => {
+		const feed = schema('QuestFeed')
+		expect(feed.required).not.toContain('welcome')
+		expect(feed.properties.welcome.items.$ref).toBe('#/$defs/QuestCard')
+		const response = {tab:'feed',server_now:1,feed_revision:1,assignment_revision:1,items:[],welcome:[],next_cursor:'',next_assignment_check:0}
+		expect(validate('QuestFeed',response)).toEqual([])
+		expect(validate('QuestFeed',{...response,welcome:'none'})).not.toEqual([])
+	})
 	test('bounds refreshed heads separately from updated cards already loaded below them', () => {
 		for (const [name, payload] of [['QuestFeedChanges', 'upsert'], ['QuestFeedViewer', 'upsert'], ['QuestRatingAssignments', 'cards']]) {
 			expect(schema(name).properties[payload].maxItems).toBe(100)
@@ -105,5 +113,24 @@ describe('Feed resolution delivery', () => {
 		expect(validate('QuestResolutionNotice', {...notice, id: '', resolved: -1})).not.toEqual([])
 		expect(schema('QuestResolutionNotice').required).not.toContain('id')
 		expect(schema('QuestUpdate').properties.status.enum).toEqual(['progress', 'claimable', 'claimed'])
+	})
+
+	test('accepts public resolution covers and preserves older responses without them', () => {
+		for (const status of ['accepted', 'rejected', 'cancelled']) {
+			const notice = {status, title: 'Reviewed quest', placement: 'feed', points: 0}
+			for (const cover of ['', 'https://media.questfall.xyz/published-cover.webp']) {
+				expect(validate('QuestResolutionNotice', {...notice, cover})).toEqual([])
+			}
+			expect(validate('QuestResolutionNotice', notice)).toEqual([])
+			expect(validate('QuestResolutionNotice', {...notice, cover: {url: 'invalid'}})).not.toEqual([])
+		}
+	})
+
+	test('Welcome updates accept an optional cover without changing completion or reward fields', () => {
+		const update = {quest_id:'welcome', title:'Welcome quest', status:'claimable', progress:{current:1,target:1}, reward:{kind:'gold',amount:3}}
+		expect(validate('QuestUpdate', update)).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:'https://media.questfall.xyz/welcome.webp'})).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:''})).toEqual([])
+		expect(validate('QuestUpdate', {...update, cover:42})).not.toEqual([])
 	})
 })

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/6.37.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/7.5.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -429,28 +429,6 @@
         },
         "page": {
           "$ref": "#/$defs/AuthorSpaceBalancePage"
-        }
-      },
-      "additionalProperties": true
-    },
-    "AuthorSpaceBalanceMutation": {
-      "type": "object",
-      "required": [
-        "space",
-        "account",
-        "entry"
-      ],
-      "properties": {
-        "space": {
-          "type": "object",
-          "additionalProperties": true
-        },
-        "account": {
-          "type": "object",
-          "additionalProperties": true
-        },
-        "entry": {
-          "$ref": "#/$defs/AuthorSpaceBalanceEntry"
         }
       },
       "additionalProperties": true
@@ -1201,7 +1179,8 @@
         "idempotent",
         "withdrawal",
         "balances",
-        "player"
+        "response_version",
+        "effects"
       ],
       "properties": {
         "idempotent": {
@@ -1216,8 +1195,11 @@
             "$ref": "#/$defs/AuthorRewardBalance"
           }
         },
-        "player": {
-          "$ref": "#/$defs/Player"
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
         }
       },
       "additionalProperties": false
@@ -1228,9 +1210,7 @@
         "text",
         "quiz",
         "survey",
-        "question",
         "action",
-        "transaction",
         "event",
         "screenshot"
       ]
@@ -1429,12 +1409,10 @@
           "type": "string",
           "enum": [
             "screenshot",
-            "platform",
             "url",
-            "community",
             "confirmation"
           ],
-          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol. Unscoped confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements. Scoped confirmation requires content_version=6 and uses the published platform plus platform_account; moderators receive the external username and service favicon."
+          "description": "Screenshot evidence, a participant result URL, or confirmation checked against the author guide. URL requires content_version >= 4; confirmation requires >= 5, or >= 6 with a service identity. The published configuration owns the identity requirements."
         },
         "link_mode": {
           "type": "string",
@@ -1446,7 +1424,7 @@
         "platform_domain": {
           "type": "string",
           "maxLength": 253,
-          "description": "Canonical external platform domain, normalized by the server. Presence opts Action into content_version=3; empty means screenshots without an external platform. Shared derives it from the published target URL; individual requires an author-selected domain. With v4, community requires an author-selected domain; url may leave it empty to accept any nonblocked HTTP(S) site without an identity claim, or set it to restrict result links and scope usernames. Restrictions apply to canonical hosts and known aliases, not URL paths. With content_version=6, confirmation may also select a nonempty service domain and atomically claim its username. An empty domain retains the v5 confirmation protocol without an identity claim. The current author form selects one common service for screenshot, url, and confirmation."
+          "description": "Canonical service or blockchain explorer selected by the author. A nonempty value scopes the participant identity and any submitted result URL, including known service aliases. It is never overridden by completion input. An empty domain keeps URL and confirmation unscoped; identity v2 submitter also clears it."
         },
         "platform_favicon": {
           "$ref": "#/$defs/DomainFavicon"
@@ -1958,6 +1936,11 @@
         "title": {
           "type": "string"
         },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 240,
+          "description": "Optional short Welcome quest subtitle. When unset, clients may show a short excerpt of the legacy description."
+        },
         "description": {
           "type": "string"
         },
@@ -1972,6 +1955,10 @@
         },
         "cover": {
           "type": "string"
+        },
+        "card_image": {
+          "type": "string",
+          "description": "Optional square Welcome quest icon URL used by both its Feed card and compact page header. Empty when no dedicated image is set; clients show a system icon."
         },
         "bounty": {
           "type": "integer",
@@ -1997,6 +1984,11 @@
         "completion_count": {
           "type": "integer",
           "minimum": 0
+        },
+        "submission_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "All saved submissions for this quest across every publication and status, including repeat attempts. Counts sends, not unique participants or accepted completions. Optional for compatibility with older servers."
         },
         "published": {
           "type": "integer",
@@ -2071,6 +2063,13 @@
             "$ref": "#/$defs/QuestCard"
           }
         },
+        "welcome": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestCard"
+          },
+          "description": "Personal Welcome quest cards included on the first authenticated Feed page. An empty array means no Welcome quests remain; omitted for guests and other tabs."
+        },
         "next_cursor": {
           "type": "string"
         },
@@ -2086,11 +2085,7 @@
           }
         },
         "response_version": {
-          "type": "integer",
-          "enum": [
-            1,
-            2
-          ]
+          "const": 2
         },
         "effects": {
           "$ref": "#/$defs/EntityEffects"
@@ -2165,11 +2160,7 @@
           }
         },
         "response_version": {
-          "type": "integer",
-          "enum": [
-            1,
-            2
-          ]
+          "const": 2
         },
         "effects": {
           "$ref": "#/$defs/EntityEffects"
@@ -4092,10 +4083,9 @@
             "screenshot",
             "platform",
             "url",
-            "community",
             "confirmation"
           ],
-          "description": "Completion evidence method. url and community require content_version=4; both use kind=platform or the initial quest review. url needs a result URL without requiring an account for unrestricted sites; community needs the published platform and username, with navigation in the quest description. Unscoped confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements. Scoped confirmation requires content_version=6 and uses the published platform plus platform_account; moderators receive the external username and service favicon."
+          "description": "Evidence method from the frozen quest conditions. URL and confirmation use direct judging; platform remains a moderation marker for historical snapshots and direct checks, not an author-selectable quest mode."
         },
         "identity": {
           "anyOf": [
@@ -4380,7 +4370,10 @@
         "mode",
         "level",
         "status",
-        "stake"
+        "stake",
+        "response_version",
+        "effects",
+        "idempotent"
       ],
       "properties": {
         "ok": {
@@ -4411,6 +4404,15 @@
             1000,
             10000
           ]
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "idempotent": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -4647,141 +4649,6 @@
       },
       "additionalProperties": true
     },
-    "QuestCompletion": {
-      "type": "object",
-      "required": [
-        "id",
-        "quest_id",
-        "status",
-        "accepted",
-        "exhausted",
-        "attempt",
-        "attempt_multiplier",
-        "points",
-        "assignment_id",
-        "rating_vote",
-        "idempotent",
-        "claimable"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "quest_id": {
-          "type": "string"
-        },
-        "status": {
-          "enum": [
-            "pending",
-            "accepted",
-            "rejected",
-            "cancelled"
-          ]
-        },
-        "accepted": {
-          "type": "boolean"
-        },
-        "exhausted": {
-          "type": "boolean"
-        },
-        "attempt": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 5
-        },
-        "attempt_multiplier": {
-          "enum": [
-            1,
-            0.8,
-            0.6,
-            0.4,
-            0.2
-          ]
-        },
-        "points": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "assignment_id": {
-          "type": "string"
-        },
-        "rating_vote": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "minimum": 0,
-          "maximum": 10,
-          "description": "The assignment's immutable vote, including when this particular quest attempt was rejected; null for ordinary completions."
-        },
-        "idempotent": {
-          "type": "boolean"
-        },
-        "claimable": {
-          "type": "boolean"
-        },
-        "reward": {
-          "type": "object",
-          "properties": {
-            "shards": {
-              "anyOf": [
-                {
-                  "$ref": "#/$defs/ShardReward"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            }
-          },
-          "additionalProperties": true
-        },
-        "player": {
-          "$ref": "#/$defs/Player"
-        },
-        "compensation": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/QuestCompensation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "moderation": {
-          "type": "object",
-          "properties": {
-            "stage": {
-              "type": "string",
-              "enum": [
-                "witnessing",
-                "judging",
-                "waiting_instructions",
-                "accepted",
-                "rejected",
-                "cancelled"
-              ]
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "queued",
-                "open",
-                "paused",
-                "resolved",
-                "cancelled"
-              ]
-            },
-            "reason": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": true
-    },
     "QuestResolutionNotice": {
       "type": "object",
       "description": "A completion resolution notification. In explicit acknowledgement mode, id is an opaque receipt tied to this exact resolution, not a quest or submission identifier to parse on the client.",
@@ -4810,6 +4677,10 @@
         },
         "title": {
           "type": "string"
+        },
+        "cover": {
+          "type": "string",
+          "description": "Public cover URL from the submission's publication, with the Author Space cover as fallback. Empty when no public cover exists; optional for older servers."
         },
         "placement": {
           "enum": [
@@ -4850,6 +4721,10 @@
         "title": {
           "type": "string"
         },
+        "cover": {
+          "type": "string",
+          "description": "Public Welcome quest cover URL, empty when unavailable. Optional for older servers."
+        },
         "status": {
           "enum": [
             "progress",
@@ -4862,41 +4737,6 @@
         },
         "reward": {
           "$ref": "#/$defs/QuestReward"
-        }
-      },
-      "additionalProperties": true
-    },
-    "QuestRewardClaim": {
-      "type": "object",
-      "required": [
-        "quest_id",
-        "reward",
-        "settlement",
-        "idempotent",
-        "player"
-      ],
-      "properties": {
-        "quest_id": {
-          "type": "string"
-        },
-        "reward": {
-          "$ref": "#/$defs/QuestReward"
-        },
-        "settlement": {
-          "type": "object",
-          "additionalProperties": true
-        },
-        "idempotent": {
-          "type": "boolean"
-        },
-        "player": {
-          "$ref": "#/$defs/Player"
-        },
-        "quest_updates": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/QuestUpdate"
-          }
         }
       },
       "additionalProperties": true
@@ -6141,7 +5981,8 @@
       "required": [
         "idempotent",
         "claim",
-        "player"
+        "response_version",
+        "effects"
       ],
       "properties": {
         "idempotent": {
@@ -6150,8 +5991,11 @@
         "claim": {
           "$ref": "#/$defs/MiningClaim"
         },
-        "player": {
-          "$ref": "#/$defs/Player"
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
         }
       },
       "additionalProperties": false
@@ -6626,6 +6470,19 @@
         "mining_rewards": {
           "$ref": "#/$defs/MiningRewardsSummary",
           "description": "Optional current rewards summary included by /auth/me. Omitted if the independent rewards projection is unavailable."
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
+        },
+        "record": {
+          "$ref": "#/$defs/AuthRecord",
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
+        },
+        "method": {
+          "type": "string",
+          "description": "Optional renewed session returned after email linking; absent from ordinary profile reads."
         }
       },
       "additionalProperties": true
@@ -6680,6 +6537,9 @@
         },
         "user": {
           "$ref": "#/$defs/ProfileUser"
+        },
+        "linked": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -6727,6 +6587,10 @@
         },
         "devLink": {
           "type": "string"
+        },
+        "devCode": {
+          "type": "string",
+          "pattern": "^[0-9]{6}$"
         }
       },
       "additionalProperties": true
@@ -6766,7 +6630,9 @@
         "level",
         "location",
         "location_ref",
-        "weight"
+        "weight",
+        "aspect",
+        "perks"
       ],
       "properties": {
         "id": {
@@ -6777,7 +6643,8 @@
         },
         "kind": {
           "enum": [
-            "clothing"
+            "clothing",
+            "potion"
           ]
         },
         "slot": {
@@ -6787,7 +6654,8 @@
             "hands",
             "legs",
             "feet",
-            "outer"
+            "outer",
+            ""
           ]
         },
         "wear": {
@@ -6805,7 +6673,7 @@
         },
         "level": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 0
         },
         "location": {
           "enum": [
@@ -6836,17 +6704,87 @@
         },
         "aspect": {
           "type": "object",
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "value": {
+              "$ref": "#/$defs/EquipmentValue"
+            },
+            "step": {
+              "type": "number"
+            }
+          },
           "additionalProperties": true
         },
         "perks": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": true
+            "$ref": "#/$defs/EquipmentPerk"
           }
+        },
+        "potion": {
+          "$ref": "#/$defs/PotionEffect"
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "kind": {
+                  "const": "clothing"
+                },
+                "level": {
+                  "minimum": 1
+                },
+                "slot": {
+                  "enum": [
+                    "head",
+                    "chest",
+                    "hands",
+                    "legs",
+                    "feet",
+                    "outer"
+                  ]
+                },
+                "aspect": {
+                  "$ref": "#/$defs/EquipmentAspect"
+                }
+              }
+            },
+            {
+              "required": [
+                "potion"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "potion"
+                },
+                "level": {
+                  "const": 0
+                },
+                "slot": {
+                  "const": ""
+                },
+                "wear": {
+                  "const": ""
+                },
+                "location": {
+                  "enum": [
+                    "inventory",
+                    "marketplace"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     "InventoryChange": {
       "oneOf": [
@@ -7069,169 +7007,6 @@
       },
       "additionalProperties": false
     },
-    "Player": {
-      "type": "object",
-      "required": [
-        "id",
-        "account",
-        "character",
-        "lootboxes"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "level": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "avatar": {
-          "$ref": "#/$defs/Avatar"
-        },
-        "avatar_icon": {
-          "$ref": "#/$defs/Avatar"
-        },
-        "account": {
-          "type": "object",
-          "required": [
-            "gold",
-            "silver"
-          ],
-          "properties": {
-            "gold": {
-              "type": "integer"
-            },
-            "silver": {
-              "type": "number"
-            }
-          },
-          "additionalProperties": true
-        },
-        "character": {
-          "type": "object",
-          "required": [
-            "level",
-            "experience",
-            "traits",
-            "points",
-            "essence",
-            "shards",
-            "stamina",
-            "systems",
-            "equipment",
-            "inventory",
-            "mining"
-          ],
-          "properties": {
-            "level": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "experience": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "traits": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "points": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "essence": {
-              "type": "integer"
-            },
-            "shards": {
-              "$ref": "#/$defs/ShardState"
-            },
-            "stamina": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "systems": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "equipment": {
-              "type": "object",
-              "additionalProperties": true
-            },
-            "inventory": {
-              "$ref": "#/$defs/Inventory"
-            },
-            "mining": {
-              "$ref": "#/$defs/PlayerMining"
-            }
-          },
-          "additionalProperties": true
-        },
-        "lootboxes": {
-          "type": "object",
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": true
-    },
-    "PlayerEnvelope": {
-      "type": "object",
-      "required": [
-        "player"
-      ],
-      "properties": {
-        "player": {
-          "$ref": "#/$defs/Player"
-        },
-        "item": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/Item"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Item"
-          }
-        },
-        "ledger": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "additionalProperties": true
-        },
-        "notices": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": true
-          }
-        },
-        "quest_updates": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/QuestUpdate"
-          }
-        }
-      },
-      "additionalProperties": true
-    },
     "CraftQuote": {
       "type": "object",
       "required": [
@@ -7240,7 +7015,18 @@
       "properties": {
         "quote": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "properties": {
+            "item": {
+              "$ref": "#/$defs/Item"
+            },
+            "consume": {
+              "$ref": "#/$defs/PotionConsume"
+            },
+            "merge": {
+              "$ref": "#/$defs/PotionMerge"
+            }
+          }
         }
       },
       "additionalProperties": true
@@ -7535,6 +7321,9 @@
           "$ref": "#/$defs/QuestContentParagraph"
         },
         {
+          "$ref": "#/$defs/QuestContentCallout"
+        },
+        {
           "$ref": "#/$defs/QuestContentImage"
         },
         {
@@ -7670,12 +7459,63 @@
                 "heading",
                 "image",
                 "bulletList",
-                "orderedList"
+                "orderedList",
+                "callout"
               ]
             }
           }
         }
       ]
+    },
+    "QuestContentCallout": {
+      "type": "object",
+      "required": [
+        "type",
+        "attrs",
+        "content"
+      ],
+      "properties": {
+        "type": {
+          "const": "callout"
+        },
+        "attrs": {
+          "type": "object",
+          "required": [
+            "title",
+            "icon"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 90,
+              "pattern": "\\S"
+            },
+            "icon": {
+              "enum": [
+                "shield",
+                "info",
+                "warning",
+                "connection",
+                "wallet",
+                "key",
+                "success",
+                "reward",
+                "guide"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestContentParagraph"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
     },
     "QuestContentDocument": {
       "type": "object",
@@ -7729,12 +7569,10 @@
           "type": "string",
           "enum": [
             "screenshot",
-            "platform",
             "url",
-            "community",
             "confirmation"
           ],
-          "description": "Screenshots, a participant result URL, or a community check by username. url and community require content_version=4 and use instructions in the quest description, without a separate author target URL. platform retains the legacy shared/individual protocol. Unscoped confirmation requires content_version=5: participants confirm completion without a URL, screenshots, external platform, or username. Moderators verify the action using the author guide; existing publications retain their evidence requirements. Scoped confirmation requires content_version=6 and uses the published platform plus platform_account; moderators receive the external username and service favicon."
+          "description": "Screenshot evidence, a participant result URL, or confirmation checked against the author guide. URL requires content_version >= 4; confirmation requires >= 5, or >= 6 with a service identity. The published configuration owns the identity requirements."
         },
         "link_mode": {
           "type": "string",
@@ -7746,7 +7584,7 @@
         "platform_domain": {
           "type": "string",
           "maxLength": 253,
-          "description": "Canonical external platform domain, normalized by the server. Presence opts Action into content_version=3; empty means screenshots without an external platform. Shared derives it from the published target URL; individual requires an author-selected domain. With v4, community requires an author-selected domain; url may leave it empty to accept any nonblocked HTTP(S) site without an identity claim, or set it to restrict result links and scope usernames. Restrictions apply to canonical hosts and known aliases, not URL paths. With content_version=6, confirmation may also select a nonempty service domain and atomically claim its username. An empty domain retains the v5 confirmation protocol without an identity claim. The current author form selects one common service for screenshot, url, and confirmation."
+          "description": "Canonical service or blockchain explorer selected by the author. A nonempty value scopes the participant identity and any submitted result URL, including known service aliases. It is never overridden by completion input. An empty domain keeps URL and confirmation unscoped; identity v2 submitter also clears it."
         },
         "identity": {
           "$ref": "#/$defs/QuestIdentity"
@@ -7780,8 +7618,19 @@
               "type": {
                 "enum": [
                   "bold",
-                  "italic"
+                  "italic",
+                  "underline",
+                  "link"
                 ]
+              },
+              "attrs": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "additionalProperties": false
@@ -7904,7 +7753,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Action verification=screenshot requires exactly screenshot_count media IDs (1–5); earlier publications without screenshot_count accept 1–5 media IDs. It requires no link. Action verification=platform accepts no media IDs; proof_url is required only for link_mode=individual, while shared uses the author’s published target link. Unified Action requires content_version=2. With config.platform_domain present, content_version=3 is required: a nonempty domain fixes identity scope from the publication, including screenshots, and an omitted or blank platform_account uses the current Questfall name. The first successful submission atomically claims the normalized identity; another owner is rejected without spending resources. Shared and individual URLs must match that canonical platform, including known aliases. Empty platform_domain keeps screenshots unscoped. Before v3, screenshot platform_account is optional participant-provided evidence without an identity claim, while platform verification requires an explicit account. Legacy Screenshot keeps its exact screenshot_count and optional platform_account; legacy Action keeps 1–4 screenshots plus URL and account. A supplied account is trimmed and limited to 128 characters. content_version=4 also supports verification=url (one result URL, no screenshots, optional author domain restriction) and community (no evidence URL or images; instructions are in the description and the published platform scopes the username). Unrestricted url submissions do not infer or claim a platform identity from the submitted URL. Both use direct platform judging without a witness stage. Existing publications keep their earlier protocol. With content_version=5, verification=confirmation accepts no screenshots and ignores supplied URLs, platform names and usernames. It creates a direct moderation review, without claiming an external identity. The v5 author form offered screenshot (exactly one), unrestricted url, or confirmation, with no platform settings; prior screenshot counts and platform-scoped publications remain supported. With content_version=6 and a nonempty published platform_domain, confirmation accepts platform_account (blank defaults to the Questfall name), atomically claims that service identity, and exposes it to moderators. Supplied URLs remain ignored and screenshots rejected. The service can never be overridden by completion input. Username uniqueness is per canonical service; the same username may belong to different users on different services. Existing v5 unscoped confirmations keep their original behavior. With content_version>=7, platform_account must be explicitly provided and nonblank after trimming whenever the published configuration uses a service identity. Legacy Action/Screenshot forms that display a username also require it. The server rejects missing or whitespace-only usernames before identity claims, submissions, or resource charges; it never substitutes the Questfall name for these requests. Explicitly unscoped publications keep their prior protocol without a username requirement. Earlier clients retain the previous fallback behavior, and already accepted requests still replay idempotently. Content v10 identity.version=2: omit platform_account for submitter and account + questfall.xyz; the server uses the authenticated participant and creates no external account binding. Other account/wallet settings require an explicit platform_account. Each individual result URL (trimmed exact URL) may be submitted only once per quest across users, statuses and publications, even after rejection. The same idempotency-key replay still returns its original receipt. Screenshot variants are prepared by the client with the account watermark before media upload; historical evidence is unchanged."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -8287,7 +8136,9 @@
       "required": [
         "quest",
         "items",
-        "next_cursor"
+        "next_cursor",
+        "response_version",
+        "server_now"
       ],
       "properties": {
         "quest": {
@@ -8302,15 +8153,16 @@
               "created",
               "kind",
               "message",
-              "silver",
-              "quest_id"
+              "quest_id",
+              "changes"
             ],
             "properties": {
               "id": {
                 "type": "string"
               },
               "created": {
-                "type": "number"
+                "type": "integer",
+                "minimum": 0
               },
               "kind": {
                 "type": "string"
@@ -8318,11 +8170,33 @@
               "message": {
                 "type": "string"
               },
-              "silver": {
-                "type": "number"
-              },
               "quest_id": {
                 "type": "string"
+              },
+              "root_case_id": {
+                "type": "string"
+              },
+              "decision_id": {
+                "type": "string"
+              },
+              "phase": {
+                "enum": [
+                  "open",
+                  "resolved"
+                ]
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/AuthorCaseChange"
+                }
+              },
+              "finance_available": {
+                "type": "boolean"
+              },
+              "publication_id": {
+                "type": "string",
+                "description": "Related publication. Closing events (including author unpublication, expiry and moderation) expose this ID for viewing their results. Publication-start events retain it for older clients."
               }
             },
             "additionalProperties": false
@@ -8330,6 +8204,13 @@
         },
         "next_cursor": {
           "type": "string"
+        },
+        "response_version": {
+          "const": 2
+        },
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -8402,6 +8283,10 @@
         "mining"
       ],
       "properties": {
+        "intro_version": {
+          "type": "integer",
+          "minimum": 0
+        },
         "level": {
           "type": "integer",
           "minimum": 1
@@ -8411,27 +8296,22 @@
           "additionalProperties": true
         },
         "traits": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/CharacterTraits"
         },
         "points": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/CharacterPoints"
         },
         "shards": {
           "$ref": "#/$defs/ShardState"
         },
         "stamina": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/Stamina"
         },
         "systems": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/CharacterSystems"
         },
         "equipment": {
-          "type": "object",
-          "additionalProperties": true
+          "$ref": "#/$defs/CharacterEquipment"
         },
         "mining": {
           "$ref": "#/$defs/PlayerMining"
@@ -8839,7 +8719,7 @@
       },
       "additionalProperties": false
     },
-    "CompactPlayerEnvelope": {
+    "PlayerResult": {
       "type": "object",
       "required": [
         "response_version",
@@ -8896,16 +8776,6 @@
       },
       "additionalProperties": true
     },
-    "PlayerResult": {
-      "oneOf": [
-        {
-          "$ref": "#/$defs/PlayerEnvelope"
-        },
-        {
-          "$ref": "#/$defs/CompactPlayerEnvelope"
-        }
-      ]
-    },
     "MarketplaceMineState": {
       "type": "object",
       "required": [
@@ -8957,36 +8827,7 @@
       },
       "additionalProperties": false
     },
-    "MarketplaceMutation": {
-      "type": "object",
-      "required": [
-        "listing",
-        "marketplace",
-        "ledger"
-      ],
-      "properties": {
-        "listing": {
-          "$ref": "#/$defs/MarketplaceListing"
-        },
-        "marketplace": {
-          "$ref": "#/$defs/MarketplaceMineState"
-        },
-        "ledger": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": true
-    },
-    "MarketplaceMutationV2": {
+    "MarketplaceMutationResult": {
       "type": "object",
       "required": [
         "listing",
@@ -9023,28 +8864,7 @@
       },
       "additionalProperties": true
     },
-    "MarketplaceMutationResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/MarketplaceMutation"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/MarketplaceMutationV2"
-        }
-      ]
-    },
-    "QuestCompletionV2": {
+    "QuestCompletionResult": {
       "type": "object",
       "required": [
         "id",
@@ -9184,28 +9004,7 @@
       },
       "additionalProperties": true
     },
-    "QuestCompletionResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/QuestCompletion"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/QuestCompletionV2"
-        }
-      ]
-    },
-    "QuestRewardClaimV2": {
+    "QuestRewardClaimResult": {
       "type": "object",
       "required": [
         "quest_id",
@@ -9243,124 +9042,6 @@
         }
       },
       "additionalProperties": true
-    },
-    "QuestRewardClaimResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/QuestRewardClaim"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/QuestRewardClaimV2"
-        }
-      ]
-    },
-    "MiningRewardsClaimResultV2": {
-      "type": "object",
-      "required": [
-        "idempotent",
-        "claim",
-        "response_version",
-        "effects"
-      ],
-      "properties": {
-        "idempotent": {
-          "type": "boolean"
-        },
-        "claim": {
-          "$ref": "#/$defs/MiningClaim"
-        },
-        "response_version": {
-          "const": 2
-        },
-        "effects": {
-          "$ref": "#/$defs/EntityEffects"
-        }
-      },
-      "additionalProperties": false
-    },
-    "MiningRewardsClaimResultResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/MiningRewardsClaimResult"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/MiningRewardsClaimResultV2"
-        }
-      ]
-    },
-    "AuthorRewardWithdrawalResultV2": {
-      "type": "object",
-      "required": [
-        "idempotent",
-        "withdrawal",
-        "balances",
-        "response_version",
-        "effects"
-      ],
-      "properties": {
-        "idempotent": {
-          "type": "boolean"
-        },
-        "withdrawal": {
-          "$ref": "#/$defs/AuthorRewardWithdrawal"
-        },
-        "balances": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/AuthorRewardBalance"
-          }
-        },
-        "response_version": {
-          "const": 2
-        },
-        "effects": {
-          "$ref": "#/$defs/EntityEffects"
-        }
-      },
-      "additionalProperties": false
-    },
-    "AuthorRewardWithdrawalResultResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/AuthorRewardWithdrawalResult"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/AuthorRewardWithdrawalResultV2"
-        }
-      ]
     },
     "AuthorPermissions": {
       "type": "object",
@@ -9496,8 +9177,17 @@
           "type": "integer",
           "minimum": 0
         },
+        "feedback_unread": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unread quest feedback across this space for the authenticated team member. Omitted by older servers."
+        },
         "access": {
           "$ref": "#/$defs/AuthorAccess"
+        },
+        "feedback_open": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -9718,6 +9408,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -9808,6 +9501,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -10061,7 +9757,7 @@
       },
       "additionalProperties": false
     },
-    "AuthorSpaceBalanceMutationV2": {
+    "AuthorSpaceBalanceMutationResult": {
       "type": "object",
       "required": [
         "response_version",
@@ -10088,27 +9784,6 @@
         }
       },
       "additionalProperties": false
-    },
-    "AuthorSpaceBalanceMutationResult": {
-      "oneOf": [
-        {
-          "allOf": [
-            {
-              "$ref": "#/$defs/AuthorSpaceBalanceMutation"
-            },
-            {
-              "properties": {
-                "response_version": {
-                  "const": 1
-                }
-              }
-            }
-          ]
-        },
-        {
-          "$ref": "#/$defs/AuthorSpaceBalanceMutationV2"
-        }
-      ]
     },
     "MiningRewardsDetails": {
       "type": "object",
@@ -10402,6 +10077,9 @@
         "cover_original": {
           "type": "string",
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
         }
       },
       "additionalProperties": true
@@ -10783,96 +10461,6 @@
         },
         {
           "$ref": "#/$defs/AuthorAppealMutation"
-        }
-      ]
-    },
-    "AuthorQuestHistoryV2": {
-      "type": "object",
-      "required": [
-        "quest",
-        "items",
-        "next_cursor",
-        "response_version",
-        "server_now"
-      ],
-      "properties": {
-        "quest": {
-          "$ref": "#/$defs/AuthorSpaceRatedQuest"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "id",
-              "created",
-              "kind",
-              "message",
-              "quest_id",
-              "changes"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "created": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "kind": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
-              },
-              "quest_id": {
-                "type": "string"
-              },
-              "root_case_id": {
-                "type": "string"
-              },
-              "decision_id": {
-                "type": "string"
-              },
-              "phase": {
-                "enum": [
-                  "open",
-                  "resolved"
-                ]
-              },
-              "changes": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/$defs/AuthorCaseChange"
-                }
-              },
-              "finance_available": {
-                "type": "boolean"
-              }
-            },
-            "additionalProperties": false
-          }
-        },
-        "next_cursor": {
-          "type": "string"
-        },
-        "response_version": {
-          "const": 2
-        },
-        "server_now": {
-          "type": "integer",
-          "minimum": 0
-        }
-      },
-      "additionalProperties": false
-    },
-    "AuthorQuestHistoryResponse": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/AuthorQuestHistory"
-        },
-        {
-          "$ref": "#/$defs/AuthorQuestHistoryV2"
         }
       ]
     },
@@ -11658,6 +11246,3747 @@
           ]
         }
       ]
+    },
+    "AuthorQuestResults": {
+      "type": "object",
+      "required": [
+        "total",
+        "timezone",
+        "series",
+        "survey",
+        "ratings"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ratings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timezone": {
+          "const": "UTC"
+        },
+        "series": {
+          "type": "array",
+          "minItems": 30,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "required": [
+              "day",
+              "count"
+            ],
+            "properties": {
+              "day": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "survey": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "total",
+            "items"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "index",
+                  "count",
+                  "percent"
+                ],
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "quiz": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "total",
+            "items"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "index",
+                  "count",
+                  "percent"
+                ],
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "question": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "total",
+            "accepted",
+            "rejected"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accepted": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": [
+                  "answer",
+                  "count",
+                  "percent"
+                ],
+                "properties": {
+                  "answer": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "rejected": {
+              "type": "object",
+              "required": [
+                "items",
+                "page"
+              ],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "answer",
+                      "count",
+                      "percent"
+                    ],
+                    "properties": {
+                      "answer": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "percent": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "page": {
+                  "type": "object",
+                  "required": [
+                    "page",
+                    "per_page",
+                    "total",
+                    "pages"
+                  ],
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "per_page": {
+                      "const": 5
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "publication": {
+          "$ref": "#/$defs/AuthorQuestPublication"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentSummary": {
+      "type": "object",
+      "required": [
+        "total",
+        "unread",
+        "latest"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unread": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latest": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "done": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentReceipt": {
+      "type": "object",
+      "required": [
+        "id",
+        "quest_id",
+        "publication_id",
+        "text",
+        "created"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "publication_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentUser": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {},
+        "avatar_icon": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "level": {
+          "type": "integer"
+        },
+        "moderation_status": {
+          "enum": [
+            "active",
+            "restricted"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestComment": {
+      "type": "object",
+      "required": [
+        "id",
+        "quest_id",
+        "publication_id",
+        "text",
+        "created",
+        "user",
+        "unread"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quest_id": {
+          "type": "string"
+        },
+        "publication_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "user": {
+          "$ref": "#/$defs/QuestCommentUser"
+        },
+        "unread": {
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "#/$defs/QuestCommentStatus"
+        },
+        "done_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "done_by": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuestCommentUser"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentList": {
+      "type": "object",
+      "required": [
+        "items",
+        "comments",
+        "next"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestComment"
+          }
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AttributeResetQuote": {
+      "type": "object",
+      "required": [
+        "gold",
+        "balance",
+        "league",
+        "free_reason",
+        "points",
+        "token",
+        "enabled",
+        "reason"
+      ],
+      "properties": {
+        "gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "balance": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "league": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "free_reason": {
+          "enum": [
+            "beginner",
+            "new_league",
+            ""
+          ]
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestCommentStatus": {
+      "enum": [
+        "open",
+        "done"
+      ]
+    },
+    "QuestCommentReview": {
+      "type": "object",
+      "required": [
+        "comment",
+        "comments"
+      ],
+      "properties": {
+        "comment": {
+          "$ref": "#/$defs/QuestComment"
+        },
+        "comments": {
+          "$ref": "#/$defs/QuestCommentSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PotionEffect": {
+      "type": "object",
+      "required": [
+        "type",
+        "restore_percent"
+      ],
+      "properties": {
+        "type": {
+          "const": "stamina"
+        },
+        "restore_percent": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "PotionConsume": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "restore",
+        "restore_percent",
+        "absorption_bonus",
+        "current",
+        "maximum",
+        "after"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "restore": {
+          "type": "number",
+          "minimum": 0
+        },
+        "restore_percent": {
+          "type": "number",
+          "minimum": 0
+        },
+        "absorption_bonus": {
+          "type": "number",
+          "minimum": 0
+        },
+        "current": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "after": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "PotionMerge": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "reason",
+        "cost",
+        "base_cost",
+        "ingredient_id",
+        "available",
+        "next_rarity",
+        "restore_percent"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "base_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ingredient_id": {
+          "type": "string"
+        },
+        "available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "next_rarity": {
+          "enum": [
+            "",
+            "e",
+            "d",
+            "c",
+            "b",
+            "a"
+          ]
+        },
+        "restore_percent": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "PotionConsumeResult": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PlayerResult"
+        },
+        {
+          "type": "object",
+          "required": [
+            "consume",
+            "ledger"
+          ],
+          "properties": {
+            "consume": {
+              "$ref": "#/$defs/PotionConsume"
+            },
+            "ledger": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PotionMergeResult": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PlayerResult"
+        },
+        {
+          "type": "object",
+          "required": [
+            "merge",
+            "ledger"
+          ],
+          "properties": {
+            "merge": {
+              "$ref": "#/$defs/PotionMerge"
+            },
+            "ledger": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Stamina": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "minimum": 1
+        },
+        "recovery": {
+          "type": "number",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "number"
+        },
+        "percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "quest_cost": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "decay_per_hour": {
+          "type": "number",
+          "minimum": 0
+        },
+        "potion_reference": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "current",
+        "max",
+        "recovery",
+        "updated",
+        "percent",
+        "quest_cost"
+      ]
+    },
+    "AuthorQuestPublication": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "id",
+        "sequence",
+        "status",
+        "end_reason",
+        "bounty",
+        "starts",
+        "ends",
+        "closed",
+        "completion_count",
+        "rating",
+        "content"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "active",
+            "ended",
+            "stopped",
+            "banned"
+          ]
+        },
+        "end_reason": {
+          "type": "string"
+        },
+        "bounty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "starts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ends": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "closed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "content": {
+          "type": "object",
+          "required": [
+            "title",
+            "description",
+            "instructions",
+            "type",
+            "config",
+            "cover",
+            "cover_original",
+            "content_media"
+          ],
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "instructions": {
+              "type": "string"
+            },
+            "type": {
+              "$ref": "#/$defs/QuestType"
+            },
+            "config": {
+              "$ref": "#/$defs/QuestAuthorConfig"
+            },
+            "cover": {
+              "type": "string"
+            },
+            "cover_original": {
+              "type": "string"
+            },
+            "content_media": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/MediaAsset"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "CharacterInventoryTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, levitation, equipping, overlevel, capacity, exemption.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "levitation"
+        },
+        {
+          "type": "number",
+          "description": "equipping"
+        },
+        {
+          "type": "number",
+          "description": "overlevel"
+        },
+        {
+          "type": "number",
+          "description": "capacity"
+        },
+        {
+          "type": "number",
+          "description": "exemption"
+        }
+      ]
+    },
+    "CharacterMiningTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, priority, flow, focus, power, loot.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "priority"
+        },
+        {
+          "type": "number",
+          "description": "flow"
+        },
+        {
+          "type": "number",
+          "description": "focus"
+        },
+        {
+          "type": "number",
+          "description": "power"
+        },
+        {
+          "type": "number",
+          "description": "loot"
+        }
+      ]
+    },
+    "CharacterCraftingTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, scrapping, leveling, merging, rarity, quality.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "scrapping"
+        },
+        {
+          "type": "number",
+          "description": "leveling"
+        },
+        {
+          "type": "number",
+          "description": "merging"
+        },
+        {
+          "type": "number",
+          "description": "rarity"
+        },
+        {
+          "type": "number",
+          "description": "quality"
+        }
+      ]
+    },
+    "CharacterTradingTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, fee, bid, liquidity, conversion, slots.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "fee"
+        },
+        {
+          "type": "number",
+          "description": "bid"
+        },
+        {
+          "type": "number",
+          "description": "liquidity"
+        },
+        {
+          "type": "number",
+          "description": "conversion"
+        },
+        {
+          "type": "number",
+          "description": "slots"
+        }
+      ]
+    },
+    "CharacterStaminaTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, efficiency, absorption, reserve, recovery, relief.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "efficiency"
+        },
+        {
+          "type": "number",
+          "description": "absorption"
+        },
+        {
+          "type": "number",
+          "description": "reserve"
+        },
+        {
+          "type": "number",
+          "description": "recovery"
+        },
+        {
+          "type": "number",
+          "description": "relief"
+        }
+      ]
+    },
+    "CharacterLuckTraits": {
+      "type": "array",
+      "description": "Compact row: invested points, effective attribute, shards, boxes, chance, bonus, cards.",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Invested attribute points"
+        },
+        {
+          "type": "number",
+          "description": "Effective attribute value"
+        },
+        {
+          "type": "number",
+          "description": "shards"
+        },
+        {
+          "type": "number",
+          "description": "boxes"
+        },
+        {
+          "type": "number",
+          "description": "chance"
+        },
+        {
+          "type": "number",
+          "description": "bonus"
+        },
+        {
+          "type": "number",
+          "description": "cards"
+        }
+      ]
+    },
+    "CharacterTraits": {
+      "type": "object",
+      "required": [
+        "inventory",
+        "mining",
+        "crafting",
+        "trading",
+        "stamina",
+        "luck"
+      ],
+      "properties": {
+        "inventory": {
+          "$ref": "#/$defs/CharacterInventoryTraits"
+        },
+        "mining": {
+          "$ref": "#/$defs/CharacterMiningTraits"
+        },
+        "crafting": {
+          "$ref": "#/$defs/CharacterCraftingTraits"
+        },
+        "trading": {
+          "$ref": "#/$defs/CharacterTradingTraits"
+        },
+        "stamina": {
+          "$ref": "#/$defs/CharacterStaminaTraits"
+        },
+        "luck": {
+          "$ref": "#/$defs/CharacterLuckTraits"
+        }
+      },
+      "additionalProperties": true
+    },
+    "CharacterPoints": {
+      "type": "object",
+      "required": [
+        "total",
+        "used",
+        "free",
+        "per_level"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "used": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "free": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "per_level": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "CharacterEquipment": {
+      "type": "object",
+      "required": [
+        "slots",
+        "weight"
+      ],
+      "properties": {
+        "slots": {
+          "type": "object",
+          "properties": {
+            "head": {
+              "$ref": "#/$defs/EquippedItem"
+            },
+            "chest": {
+              "$ref": "#/$defs/EquippedItem"
+            },
+            "hands": {
+              "$ref": "#/$defs/EquippedItem"
+            },
+            "legs": {
+              "$ref": "#/$defs/EquippedItem"
+            },
+            "feet": {
+              "$ref": "#/$defs/EquippedItem"
+            },
+            "outer": {
+              "$ref": "#/$defs/EquippedItem"
+            }
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/EquippedItem"
+          }
+        },
+        "weight": {
+          "type": "array",
+          "description": "Raw, effective and ignored equipment weight.",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "links": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "StaminaConfig": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "base_reserve": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_root": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_power": {
+              "type": "number",
+              "minimum": 0
+            },
+            "reserve_exponent": {
+              "type": "number",
+              "minimum": 0
+            },
+            "overflow_decay_rate": {
+              "type": "number",
+              "minimum": 0
+            },
+            "relief_power": {
+              "type": "number",
+              "minimum": 0
+            },
+            "recovery_minutes": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "efficiency_curve": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "absorption_limit": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "absorption_curve": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "quest_cost": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "efficiency_floor": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "reduction_limit": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 100
+            },
+            "mastery": {
+              "type": "object",
+              "properties": {
+                "efficiency": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "absorption": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "reserve": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "recovery": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "relief": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "efficiency",
+                "absorption",
+                "reserve",
+                "recovery",
+                "relief"
+              ],
+              "additionalProperties": false
+            },
+            "potions": {
+              "type": "object",
+              "properties": {
+                "chance": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "tiers": {
+                  "type": "object",
+                  "properties": {
+                    "f": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "e": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "d": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "c": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "b": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "a": {
+                      "type": "object",
+                      "properties": {
+                        "restore_percent": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "drop_weight": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "merge_fee": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "restore_percent",
+                        "weight",
+                        "drop_weight",
+                        "merge_fee"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "f",
+                    "e",
+                    "d",
+                    "c",
+                    "b",
+                    "a"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "chance",
+                "tiers"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "base_reserve",
+            "reserve_root",
+            "reserve_power",
+            "reserve_exponent",
+            "overflow_decay_rate",
+            "relief_power",
+            "recovery_minutes",
+            "efficiency_curve",
+            "absorption_limit",
+            "absorption_curve",
+            "quest_cost",
+            "efficiency_floor",
+            "reduction_limit",
+            "mastery",
+            "potions"
+          ],
+          "additionalProperties": false
+        },
+        "starter": {
+          "$ref": "#/$defs/Stamina"
+        }
+      },
+      "required": [
+        "parameters",
+        "starter"
+      ],
+      "additionalProperties": false
+    },
+    "CharacterInventorySystem": {
+      "type": "object",
+      "properties": {
+        "traits": {
+          "type": "object",
+          "properties": {
+            "capacity": {
+              "type": "number"
+            },
+            "levitation": {
+              "type": "number"
+            },
+            "equipping": {
+              "type": "number"
+            },
+            "overlevel": {
+              "type": "number"
+            },
+            "exemption": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "capacity",
+            "levitation",
+            "equipping",
+            "overlevel",
+            "exemption"
+          ]
+        },
+        "capacity": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            },
+            "flat_g": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat_g": {
+              "type": "number"
+            },
+            "total_flat_g": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "value",
+            "flat_g",
+            "mastery_rank",
+            "mastery_flat_g",
+            "total_flat_g",
+            "percent"
+          ]
+        },
+        "levitation": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "flat_g": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat_g": {
+              "type": "number"
+            },
+            "total_flat_g": {
+              "type": "number"
+            },
+            "weight_percent": {
+              "type": "number"
+            },
+            "remaining_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "rate",
+            "flat_g",
+            "mastery_rank",
+            "mastery_flat_g",
+            "total_flat_g",
+            "weight_percent",
+            "remaining_percent"
+          ]
+        },
+        "exemption": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "flat",
+            "value"
+          ]
+        },
+        "equipping": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "total_flat": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            },
+            "remaining_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "rate",
+            "flat",
+            "mastery_rank",
+            "mastery_flat",
+            "total_flat",
+            "percent",
+            "remaining_percent"
+          ]
+        },
+        "overlevel": {
+          "type": "object",
+          "properties": {
+            "gap_reduction": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "total_flat": {
+              "type": "number"
+            },
+            "percent": {
+              "type": "number"
+            },
+            "level": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "gap_reduction",
+            "flat",
+            "mastery_rank",
+            "mastery_flat",
+            "total_flat",
+            "percent",
+            "level"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "traits",
+        "capacity",
+        "levitation",
+        "exemption",
+        "equipping",
+        "overlevel"
+      ]
+    },
+    "CharacterMiningSystem": {
+      "type": "object",
+      "properties": {
+        "loot": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "rolls": {
+              "type": "object",
+              "properties": {
+                "guaranteed": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "chance": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": true,
+              "required": [
+                "guaranteed",
+                "chance"
+              ]
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "rate",
+            "rolls"
+          ]
+        },
+        "power": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "before_grants": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "before_grants",
+            "grant_percent",
+            "value"
+          ]
+        },
+        "flow": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "bonus": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "bonus"
+          ]
+        },
+        "focus": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "trait_minutes": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_minutes": {
+              "type": "number"
+            },
+            "grant_minutes": {
+              "type": "number"
+            },
+            "minutes": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "trait_minutes",
+            "mastery_rank",
+            "mastery_minutes",
+            "grant_minutes",
+            "minutes"
+          ]
+        },
+        "priority": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            },
+            "minutes": {
+              "type": "number"
+            },
+            "trait_minutes": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_minutes": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "value",
+            "minutes",
+            "trait_minutes",
+            "mastery_rank",
+            "mastery_minutes"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "loot",
+        "power",
+        "flow",
+        "focus",
+        "priority"
+      ]
+    },
+    "CharacterCraftingSystem": {
+      "type": "object",
+      "properties": {
+        "scrapping": {
+          "type": "object",
+          "properties": {
+            "trait_recovery": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "recovery_rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_recovery",
+            "mastery_rank",
+            "mastery_flat",
+            "grant_efficiency",
+            "grant_flat",
+            "recovery_rate",
+            "flat"
+          ]
+        },
+        "leveling": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "trait_remaining": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "trait_remaining",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "remaining",
+            "reduction"
+          ]
+        },
+        "merging": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "multiplier",
+            "remaining"
+          ]
+        },
+        "rarity": {
+          "type": "object",
+          "properties": {
+            "trait_reduction": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            },
+            "efficiency": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            },
+            "remaining": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_reduction",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency",
+            "efficiency",
+            "multiplier",
+            "remaining"
+          ]
+        },
+        "quality": {
+          "type": "object",
+          "properties": {
+            "trait_pressure": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_pressure": {
+              "type": "number"
+            },
+            "grant_pressure": {
+              "type": "number"
+            },
+            "pressure": {
+              "type": "number"
+            },
+            "bias": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_pressure",
+            "mastery_rank",
+            "mastery_pressure",
+            "grant_pressure",
+            "pressure",
+            "bias"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "scrapping",
+        "leveling",
+        "merging",
+        "rarity",
+        "quality"
+      ]
+    },
+    "CharacterTradingSystem": {
+      "type": "object",
+      "properties": {
+        "fee": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "reduction": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "rate",
+            "reduction",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "bid": {
+          "type": "object",
+          "properties": {
+            "power": {
+              "type": "number"
+            },
+            "effective_price_percent": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "power",
+            "effective_price_percent",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "liquidity": {
+          "type": "object",
+          "properties": {
+            "power": {
+              "type": "number"
+            },
+            "required_percent": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_efficiency": {
+              "type": "number"
+            },
+            "grant_efficiency": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "power",
+            "required_percent",
+            "mastery_rank",
+            "mastery_efficiency",
+            "grant_efficiency"
+          ]
+        },
+        "conversion": {
+          "type": "object",
+          "properties": {
+            "base_rate": {
+              "type": "number"
+            },
+            "trait_rate": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_flat": {
+              "type": "number"
+            },
+            "grant_pressure": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_rate",
+            "trait_rate",
+            "mastery_rank",
+            "mastery_flat",
+            "grant_pressure",
+            "grant_flat",
+            "rate"
+          ]
+        },
+        "slots": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_slots": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_slots",
+            "grant_percent",
+            "grant_flat",
+            "value"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "fee",
+        "bid",
+        "liquidity",
+        "conversion",
+        "slots"
+      ]
+    },
+    "CharacterStaminaSystem": {
+      "type": "object",
+      "properties": {
+        "reserve": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "grant_flat",
+            "value"
+          ]
+        },
+        "recovery": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "grant_flat": {
+              "type": "number"
+            },
+            "per_minute": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "grant_flat",
+            "per_minute"
+          ]
+        },
+        "efficiency": {
+          "type": "object",
+          "properties": {
+            "trait_rate": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_rate": {
+              "type": "number"
+            },
+            "grant_rate": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "flat": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_rate",
+            "mastery_rank",
+            "mastery_rate",
+            "grant_rate",
+            "rate",
+            "flat"
+          ]
+        },
+        "relief": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_weight_reduction": {
+              "type": "number"
+            },
+            "power": {
+              "type": "number"
+            },
+            "multiplier": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_weight_reduction",
+            "power",
+            "multiplier"
+          ]
+        },
+        "absorption": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_bonus": {
+              "type": "number"
+            },
+            "grant_bonus": {
+              "type": "number"
+            },
+            "bonus": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_bonus",
+            "grant_bonus",
+            "bonus"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "reserve",
+        "recovery",
+        "efficiency",
+        "relief",
+        "absorption"
+      ]
+    },
+    "CharacterLuckSystem": {
+      "type": "object",
+      "properties": {
+        "shards": {
+          "type": "object",
+          "properties": {
+            "missing_bias": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "missing_weight": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "missing_bias",
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "missing_weight"
+          ]
+        },
+        "boxes": {
+          "type": "object",
+          "properties": {
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_percent": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "chance": {
+              "type": "number"
+            },
+            "chance_percent": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "mastery_rank",
+            "mastery_percent",
+            "grant_percent",
+            "chance",
+            "chance_percent"
+          ]
+        },
+        "cards": {
+          "type": "object",
+          "properties": {
+            "starter_turns": {
+              "type": "number"
+            },
+            "trait_turns": {
+              "type": "number"
+            },
+            "base_turns": {
+              "type": "number"
+            },
+            "mastery_turns": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "earned_turns": {
+              "type": "number"
+            },
+            "grant_percent": {
+              "type": "number"
+            },
+            "expected_turns": {
+              "type": "number"
+            },
+            "guaranteed_turns": {
+              "type": "number"
+            },
+            "extra_turn_chance": {
+              "type": "number"
+            },
+            "turns": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "starter_turns",
+            "trait_turns",
+            "base_turns",
+            "mastery_turns",
+            "mastery_rank",
+            "earned_turns",
+            "grant_percent",
+            "expected_turns",
+            "guaranteed_turns",
+            "extra_turn_chance",
+            "turns"
+          ]
+        },
+        "chance": {
+          "type": "object",
+          "properties": {
+            "trait_chance": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_weight_percent": {
+              "type": "number"
+            },
+            "grant_weight_percent": {
+              "type": "number"
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "trait_chance",
+            "mastery_rank",
+            "mastery_weight_percent",
+            "grant_weight_percent",
+            "value"
+          ]
+        },
+        "bonus": {
+          "type": "object",
+          "properties": {
+            "base_power": {
+              "type": "number"
+            },
+            "mastery_rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mastery_power": {
+              "type": "number"
+            },
+            "effective_power": {
+              "type": "number"
+            },
+            "reward_grant": {
+              "type": "number"
+            },
+            "power": {
+              "type": "number"
+            },
+            "discount_grant": {
+              "type": "number"
+            },
+            "discount_rate": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "base_power",
+            "mastery_rank",
+            "mastery_power",
+            "effective_power",
+            "reward_grant",
+            "power",
+            "discount_grant",
+            "discount_rate"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "shards",
+        "boxes",
+        "cards",
+        "chance",
+        "bonus"
+      ]
+    },
+    "CharacterSystems": {
+      "type": "object",
+      "properties": {
+        "grants": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "inventory": {
+          "$ref": "#/$defs/CharacterInventorySystem"
+        },
+        "mining": {
+          "$ref": "#/$defs/CharacterMiningSystem"
+        },
+        "crafting": {
+          "$ref": "#/$defs/CharacterCraftingSystem"
+        },
+        "trading": {
+          "$ref": "#/$defs/CharacterTradingSystem"
+        },
+        "stamina": {
+          "$ref": "#/$defs/CharacterStaminaSystem"
+        },
+        "luck": {
+          "$ref": "#/$defs/CharacterLuckSystem"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "grants",
+        "inventory",
+        "mining",
+        "crafting",
+        "trading",
+        "stamina",
+        "luck"
+      ],
+      "description": "Resolved public RPG values. The server owns formulas; the contract describes results, not balance constants. Numeric maps allow new grant identifiers."
+    },
+    "EquipmentValue": {
+      "type": "object",
+      "properties": {
+        "raw": {
+          "type": "number"
+        },
+        "effective": {
+          "type": "number"
+        },
+        "boost": {
+          "type": "number"
+        },
+        "boosted": {
+          "type": "boolean"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "power": {
+          "type": "number"
+        },
+        "multipliers": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "raw",
+        "effective",
+        "boost",
+        "boosted"
+      ],
+      "description": "Resolved item value. Negative boost is valid when equipment power is reduced; optional multipliers describe the contributing effects."
+    },
+    "EquipmentSelector": {
+      "type": "object",
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "wear": {
+          "type": "string"
+        },
+        "rarity": {
+          "type": "string"
+        },
+        "aspect": {
+          "type": "string"
+        },
+        "attr": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "EquipmentAspect": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/EquipmentValue"
+        },
+        "step": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "value"
+      ]
+    },
+    "EquipmentPerk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "trait_terminal",
+            "booster",
+            "trait_grant",
+            "attribute_grant"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "effect": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/$defs/EquipmentSelector"
+        },
+        "condition": {
+          "$ref": "#/$defs/EquipmentSelector"
+        },
+        "filter": {
+          "$ref": "#/$defs/EquipmentSelector"
+        },
+        "value": {
+          "$ref": "#/$defs/EquipmentValue"
+        },
+        "step": {
+          "type": "number"
+        },
+        "roll": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "boosters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "effect",
+        "target",
+        "condition",
+        "value"
+      ]
+    },
+    "EquippedItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "kind": {
+          "const": "clothing"
+        },
+        "slot": {
+          "enum": [
+            "head",
+            "chest",
+            "hands",
+            "legs",
+            "feet",
+            "outer"
+          ]
+        },
+        "wear": {
+          "type": "string"
+        },
+        "rarity": {
+          "enum": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "location": {
+          "enum": [
+            "inventory",
+            "equipped",
+            "marketplace"
+          ]
+        },
+        "location_ref": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0
+        },
+        "image": {},
+        "image_url": {
+          "type": "string"
+        },
+        "set": {
+          "type": "string"
+        },
+        "origin": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "aspect": {
+          "$ref": "#/$defs/EquipmentAspect"
+        },
+        "perks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EquipmentPerk"
+          }
+        },
+        "essence_invested": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true,
+      "description": "Public equipped clothing snapshot with complete item metadata and resolved aspect/perk values. Empty equipment slots are omitted. Storage atoms use numeric values internally; that form is not a public response.",
+      "required": [
+        "id",
+        "kind",
+        "slot",
+        "wear",
+        "rarity",
+        "level",
+        "location",
+        "location_ref",
+        "weight",
+        "aspect",
+        "perks"
+      ]
+    },
+    "ArtworkAppearance": {
+      "type": "object",
+      "required": [
+        "scale",
+        "left",
+        "top",
+        "brightness",
+        "hue"
+      ],
+      "properties": {
+        "scale": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 200
+        },
+        "left": {
+          "type": "number",
+          "minimum": -240,
+          "maximum": 240
+        },
+        "top": {
+          "type": "number",
+          "minimum": -240,
+          "maximum": 240
+        },
+        "brightness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 500
+        },
+        "hue": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArtworkVariant": {
+      "type": "object",
+      "required": [
+        "name",
+        "url",
+        "mime",
+        "width",
+        "height",
+        "bytes"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "mime": {
+          "type": "string",
+          "enum": [
+            "image/avif",
+            "image/webp"
+          ]
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 960
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 960
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2097152
+        }
+      },
+      "additionalProperties": false
+    },
+    "Artwork": {
+      "type": "object",
+      "required": [
+        "id",
+        "revision",
+        "appearance",
+        "variants"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "appearance": {
+          "$ref": "#/$defs/ArtworkAppearance"
+        },
+        "variants": {
+          "type": "object",
+          "required": [
+            "s96_avif",
+            "s96_webp",
+            "s320_avif",
+            "s320_webp",
+            "s960_avif",
+            "s960_webp"
+          ],
+          "properties": {
+            "s96_avif": {
+              "$ref": "#/$defs/ArtworkVariant"
+            },
+            "s96_webp": {
+              "$ref": "#/$defs/ArtworkVariant"
+            },
+            "s320_avif": {
+              "$ref": "#/$defs/ArtworkVariant"
+            },
+            "s320_webp": {
+              "$ref": "#/$defs/ArtworkVariant"
+            },
+            "s960_avif": {
+              "$ref": "#/$defs/ArtworkVariant"
+            },
+            "s960_webp": {
+              "$ref": "#/$defs/ArtworkVariant"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArtworkCatalog": {
+      "type": "object",
+      "required": [
+        "version",
+        "artworks"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "artworks": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/Artwork"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "NewsImage": {
+      "type": "object",
+      "required": [
+        "id",
+        "url",
+        "thumb"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "thumb": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NewsDocument": {
+      "type": "object",
+      "required": [
+        "version",
+        "content"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "content": {
+          "type": "object",
+          "required": [
+            "type",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "const": "doc"
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/NewsBlock"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "NewsSummary": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "subtitle",
+        "date",
+        "cover",
+        "revision",
+        "published_at",
+        "updated"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subtitle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "cover": {
+          "$ref": "#/$defs/NewsImage"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "published_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "NewsArticle": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/NewsSummary"
+        },
+        {
+          "type": "object",
+          "required": [
+            "document",
+            "images"
+          ],
+          "properties": {
+            "document": {
+              "$ref": "#/$defs/NewsDocument"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/NewsImage"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "NewsList": {
+      "type": "object",
+      "required": [
+        "items",
+        "page",
+        "more",
+        "version"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NewsSummary"
+          }
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "more": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NewsState": {
+      "type": "object",
+      "required": [
+        "unread_ids",
+        "unread",
+        "version"
+      ],
+      "properties": {
+        "unread_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unread": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NewsMark": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "bold"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "italic"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "underline"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "attrs"
+          ],
+          "properties": {
+            "type": {
+              "const": "link"
+            },
+            "attrs": {
+              "type": "object",
+              "required": [
+                "href"
+              ],
+              "properties": {
+                "href": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "pattern": "^(?:/(?!/)|https?://)"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "NewsInline": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "text"
+          ],
+          "properties": {
+            "type": {
+              "const": "text"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "marks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/NewsMark"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "const": "hardBreak"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "NewsBlock": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "const": "paragraph"
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/NewsInline"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "attrs",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "const": "heading"
+            },
+            "attrs": {
+              "type": "object",
+              "required": [
+                "level"
+              ],
+              "properties": {
+                "level": {
+                  "enum": [
+                    2,
+                    3
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/NewsInline"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "const": "bulletList"
+            },
+            "content": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/NewsListItem"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "attrs",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "const": "orderedList"
+            },
+            "attrs": {
+              "type": "object",
+              "required": [
+                "start"
+              ],
+              "properties": {
+                "start": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                }
+              },
+              "additionalProperties": false
+            },
+            "content": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/NewsListItem"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "attrs"
+          ],
+          "properties": {
+            "type": {
+              "const": "image"
+            },
+            "attrs": {
+              "type": "object",
+              "required": [
+                "media_id",
+                "caption"
+              ],
+              "properties": {
+                "media_id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]{15}$"
+                },
+                "caption": {
+                  "type": "string",
+                  "maxLength": 1000
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "NewsListItem": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "properties": {
+        "type": {
+          "const": "listItem"
+        },
+        "content": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NewsBlock"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserMinerSummary": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon",
+        "level",
+        "mining_power",
+        "points",
+        "quests_7d",
+        "viewer",
+        "position"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "avatar_icon": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mining_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quests_7d": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "boolean"
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserSummary": {
+      "type": "object",
+      "required": [
+        "server_now",
+        "viewer",
+        "league",
+        "leagues",
+        "series",
+        "view",
+        "sort",
+        "direction",
+        "page",
+        "items",
+        "selected",
+        "details"
+      ],
+      "properties": {
+        "server_now": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "object",
+          "required": [
+            "id",
+            "league"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "league": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "league": {
+          "$ref": "#/$defs/MiningLeague"
+        },
+        "leagues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MiningLeagueSummary"
+          }
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserSeriesPoint"
+          }
+        },
+        "view": {
+          "enum": [
+            "field",
+            "list"
+          ]
+        },
+        "sort": {
+          "enum": [
+            "power",
+            "points",
+            "quests"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        },
+        "page": {
+          "type": "object",
+          "required": [
+            "number",
+            "per_page",
+            "total",
+            "pages",
+            "has_prev",
+            "has_next"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "per_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pages": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "has_prev": {
+              "type": "boolean"
+            },
+            "has_next": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserMinerSummary"
+          }
+        },
+        "selected": {
+          "type": "null"
+        },
+        "details": {
+          "const": "summary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LeagueBrowserResponse": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LeagueBrowser"
+        },
+        {
+          "$ref": "#/$defs/LeagueBrowserSummary"
+        }
+      ]
+    },
+    "LeagueMinerBuild": {
+      "type": "object",
+      "required": [
+        "id",
+        "mining_power",
+        "equipment",
+        "systems"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mining_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "equipment": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/LeagueBrowserEquipment"
+          }
+        },
+        "systems": {
+          "type": "object",
+          "required": [
+            "flow",
+            "focus",
+            "boost",
+            "loot"
+          ],
+          "properties": {
+            "flow": {
+              "type": "number",
+              "minimum": 0
+            },
+            "focus": {
+              "type": "number",
+              "minimum": 0
+            },
+            "boost": {
+              "type": "number",
+              "minimum": 0
+            },
+            "loot": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
