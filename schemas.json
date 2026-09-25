@@ -14210,15 +14210,39 @@
       },
       "additionalProperties": false
     },
+    "ChatReply": {
+      "type": "object",
+      "required": ["id", "user", "author", "text", "image"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "user": {"type": "string", "minLength": 1},
+        "author": {"type": "string"},
+        "text": {"type": "string", "maxLength": 160},
+        "image": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "ChatReaction": {
+      "type": "object",
+      "required": ["emoji", "count", "mine"],
+      "properties": {
+        "emoji": {"type": "string", "minLength": 1, "maxLength": 16},
+        "count": {"type": "integer", "minimum": 1},
+        "mine": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
     "ChatMessage": {
       "type": "object",
-      "required": ["id", "user", "author", "text", "images", "created"],
+      "required": ["id", "user", "author", "text", "images", "reply", "reactions", "created"],
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "user": {"type": "string", "minLength": 1},
         "author": {"$ref": "#/$defs/ChatAuthor"},
         "text": {"type": "string", "maxLength": 2000},
         "images": {"type": "array", "maxItems": 4, "items": {"$ref": "#/$defs/ChatImage"}},
+        "reply": {"anyOf": [{"$ref": "#/$defs/ChatReply"}, {"type": "null"}]},
+        "reactions": {"type": "array", "items": {"$ref": "#/$defs/ChatReaction"}},
         "created": {"type": "integer", "minimum": 1}
       },
       "additionalProperties": false
@@ -14234,10 +14258,11 @@
     },
     "ChatStatus": {
       "type": "object",
-      "required": ["unread", "online"],
+      "required": ["unread", "online", "frequent"],
       "properties": {
         "unread": {"type": "integer", "minimum": 0, "maximum": 100},
-        "online": {"type": "integer", "minimum": 0}
+        "online": {"type": "integer", "minimum": 0},
+        "frequent": {"type": "array", "maxItems": 7, "items": {"type": "string", "maxLength": 16}}
       },
       "additionalProperties": false
     },
@@ -14246,6 +14271,18 @@
       "required": ["unread"],
       "properties": {
         "unread": {"type": "integer", "minimum": 0, "maximum": 100}
+      },
+      "additionalProperties": false
+    },
+    "ChatReactionResult": {
+      "type": "object",
+      "required": ["message", "reactions", "frequent", "added", "events"],
+      "properties": {
+        "message": {"type": "string", "minLength": 1},
+        "reactions": {"type": "array", "items": {"$ref": "#/$defs/ChatReaction"}},
+        "frequent": {"type": "array", "maxItems": 7, "items": {"type": "string", "maxLength": 16}},
+        "added": {"type": "boolean"},
+        "events": {"type": "array", "maxItems": 2, "items": {"type": "string"}}
       },
       "additionalProperties": false
     }

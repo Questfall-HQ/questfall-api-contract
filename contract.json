@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "7.0.0",
+  "version": "7.5.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -2724,7 +2724,7 @@
         "transport": "body",
         "params": [],
         "required": ["idempotency_key"],
-        "optional": ["text", "images"]
+        "optional": ["text", "images", "reply_to"]
       },
       "response": {"schema": "ChatMessage"}
     },
@@ -2753,6 +2753,19 @@
         "optional": []
       },
       "response": {"schema": "ChatReadStatus"}
+    },
+    {
+      "operation": "chat.react",
+      "method": "POST",
+      "path": "/chat/reactions",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": ["message", "emoji"],
+        "optional": []
+      },
+      "response": {"schema": "ChatReactionResult"}
     }
   ],
   "pocketbase": {
@@ -2761,6 +2774,9 @@
         "auth": true
       },
       "chat_messages": {
+        "auth": false
+      },
+      "chat_reactions": {
         "auth": false
       }
     }
