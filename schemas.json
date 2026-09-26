@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/12.1.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/12.2.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",
@@ -6330,6 +6330,12 @@
           "type": "integer",
           "minimum": 1
         },
+        "role": {
+          "enum": [null, "team", "owner"]
+        },
+        "admin": {
+          "type": "boolean"
+        },
         "joined": {
           "type": [
             "integer",
@@ -6506,6 +6512,12 @@
         "level": {
           "type": "integer",
           "minimum": 1
+        },
+        "role": {
+          "enum": [null, "team", "owner"]
+        },
+        "admin": {
+          "type": "boolean"
         },
         "verified": {
           "type": "boolean"
@@ -15019,6 +15031,12 @@
           "type": "integer",
           "minimum": 1
         },
+        "role": {
+          "enum": [null, "team", "owner"]
+        },
+        "admin": {
+          "type": "boolean"
+        },
         "moderation_status": {
           "enum": [
             "active",
@@ -15787,6 +15805,12 @@
         },
         "name": {
           "type": "string"
+        },
+        "role": {
+          "enum": [null, "team", "owner"]
+        },
+        "admin": {
+          "type": "boolean"
         },
         "avatar": {
           "$ref": "#/$defs/Avatar"

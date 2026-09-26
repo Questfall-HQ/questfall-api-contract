@@ -1,5 +1,14 @@
 # questfall-api-contract
 
+### User roles — v12.2.0
+
+User profiles (`/auth/me` and custom auth responses), auth session records, public user identities,
+and chat authors expose `role: null | "team" | "owner"` for representation and
+an independent `admin` boolean for access. Both fields are optional in the
+schema during rollout to accept responses from older servers. Only users with
+an assigned role receive a badge. Admin routes and chat moderation require
+`admin: true` regardless of role.
+
 ### Chat moderation — v12.1.0
 
 `POST /admin/chat/messages/delete` accepts an optional `duration` and `reason`.

@@ -29,6 +29,11 @@ test('profile can embed the lightweight summary without breaking older responses
  const user={id:'a',name:'Miner',level:1,verify:true,email:{address:null,verify:0},wallet:{address:null,verify:0,data:{}}}
  expect(operations['auth.me'].response.schema).toBe('Profile')
  expect(validate('Profile',{user})).toEqual([])
+ for (const role of [null,'team','owner']) expect(validate('Profile',{user:{...user,role,admin:true}})).toEqual([])
+ expect(validate('Profile',{user:{...user,role:'moderator'}}).length).toBeGreaterThan(0)
+ expect(validate('Profile',{user:{...user,admin:'yes'}}).length).toBeGreaterThan(0)
+ expect(validate('AuthRecord',{id:'a',verified:true,role:null,admin:false})).toEqual([])
+ expect(validate('AuthRecord',{id:'a',verified:true,role:'team',admin:true})).toEqual([])
  expect(validate('Profile',{user,mining_rewards:summary})).toEqual([])
  expect(validate('Profile',{user,mining_rewards:{...summary,history:[]}}).length).toBeGreaterThan(0)
 })
