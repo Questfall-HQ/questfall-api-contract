@@ -1,5 +1,12 @@
 # questfall-api-contract
 
+### Chat moderation — v12.1.0
+
+`POST /admin/chat/messages/delete` accepts an optional `duration` and `reason`.
+With a duration, the server deletes the message and bans its author in one
+transaction, using the same durations as `POST /admin/chat/bans`. Without a
+duration, it only deletes the message. The response remains `{id}`.
+
 ### Marketplace search and artwork cache
 
 `GET /marketplace/list` remains public for browsing and structured filters.

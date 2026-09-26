@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/12.0.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/12.1.0/schemas.json",
   "$defs": {
     "Object": {
       "type": "object",

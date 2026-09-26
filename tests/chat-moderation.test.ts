@@ -13,6 +13,7 @@ test('chat marks team members and exposes moderation only to admins', () => {
 	const deletion = contract.routes.find(route => route.operation === 'admin.chat.deleteMessage')
 	expect(deletion?.path).toBe('/admin/chat/messages/delete')
 	expect(deletion?.access).toBe('admin')
+	expect(deletion?.request.optional).toEqual(['duration','reason'])
 	expect(validate('ChatDeleteResult',{id:message.id})).toEqual([])
 	for (const route of contract.routes.filter(route=>route.path.startsWith('/admin/chat/'))) expect(route.access).toBe('admin')
 	expect(contract.routes.some(route=>route.path.includes('/chat/reports'))).toBe(false)
