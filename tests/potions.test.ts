@@ -11,4 +11,5 @@ test('potion commands require verified ownership and explicit merge ingredient',
  const consume=contract.routes.find(r=>r.operation==='items.consume');const merge=contract.routes.find(r=>r.operation==='items.merge');
  expect(consume.access).toBe('verified');expect(merge.access).toBe('verified');expect(merge.request.required).toEqual(['itemId','ingredientId']);
  expect(contract.routes.find(r=>r.operation==='marketplace.list').request.optional).toContain('kind');
+ expect(contract.routes.find(r=>r.operation==='marketplace.list').request.optional).toContain('categories');
 });

@@ -1,5 +1,16 @@
 # questfall-api-contract
 
+### Marketplace categories — v10.3.0
+
+`GET /marketplace/list?categories=…` accepts a comma-separated selection of
+Marketplace categories. A clothing item uses its equipment slot (`head`,
+`chest`, `hands`, `legs`, `feet`, `outer`); other item kinds use their `kind`
+(currently `potion`). An omitted or empty value includes every category,
+including future item kinds; `none` returns no listings. Categories are applied
+before sorting and pagination, so mixed clothing and potion results form one
+ordered list. The existing `kind` and `slots` filters remain available and, when
+combined with `categories`, are applied as additional constraints.
+
 ### Common Lootbox bulk purchase — v7.5.0 (local preparation)
 
 `POST /lootboxes/buy` принимает необязательный `quantity` от 1 до 100.
