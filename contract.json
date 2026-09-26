@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "12.2.0",
+  "version": "12.3.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -3060,6 +3060,132 @@
       },
       "response": {
         "schema": "ChatBanResult"
+      }
+    },
+    {
+      "operation": "admin.feedback.bugs.list",
+      "method": "GET",
+      "path": "/admin/feedback/bugs",
+      "access": "admin",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "filter",
+          "mine",
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "BugReportList"
+      }
+    },
+    {
+      "operation": "admin.feedback.bugs.status",
+      "method": "POST",
+      "path": "/admin/feedback/bugs/{id}/status",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "status"
+        ],
+        "optional": [
+          "note",
+          "award_gold"
+        ]
+      },
+      "response": {
+        "schema": "BugReport"
+      }
+    },
+    {
+      "operation": "admin.feedback.bugs.visibility",
+      "method": "POST",
+      "path": "/admin/feedback/bugs/{id}/visibility",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "hidden"
+        ],
+        "optional": [
+          "note"
+        ]
+      },
+      "response": {
+        "schema": "BugReport"
+      }
+    },
+    {
+      "operation": "admin.feedback.ideas.list",
+      "method": "GET",
+      "path": "/admin/feedback/ideas",
+      "access": "admin",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "filter",
+          "mine",
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "IdeaList"
+      }
+    },
+    {
+      "operation": "admin.feedback.ideas.status",
+      "method": "POST",
+      "path": "/admin/feedback/ideas/{id}/status",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "status"
+        ],
+        "optional": [
+          "note",
+          "award_gold"
+        ]
+      },
+      "response": {
+        "schema": "Idea"
+      }
+    },
+    {
+      "operation": "admin.feedback.ideas.visibility",
+      "method": "POST",
+      "path": "/admin/feedback/ideas/{id}/visibility",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "hidden"
+        ],
+        "optional": [
+          "note"
+        ]
+      },
+      "response": {
+        "schema": "Idea"
       }
     },
     {
