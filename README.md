@@ -1,5 +1,20 @@
 # questfall-api-contract
 
+### Marketplace search and artwork cache
+
+`GET /marketplace/list` remains public for browsing and structured filters.
+Nonblank free-text `q` (or the older `search` alias) requires a registered
+PocketBase user token. Anonymous search returns 401 before reading listings;
+authenticated search is private and is excluded from the shared CDN cache.
+
+`GET /rpg/artwork` without `keys` provides a short-lived revision check. The
+optional `version` query field lets clients request published metadata with a
+revision-specific URL. Keyed responses with the current version are cached for
+one day in browsers and 30 days at the CDN; legacy or mismatched versions retain
+the short TTL. Image file URLs already use immutable one-year caching. A new
+publication increments the public artwork revision and moves clients to a new
+metadata URL.
+
 ### Marketplace categories — v10.3.0
 
 `GET /marketplace/list?categories=…` accepts a comma-separated selection of

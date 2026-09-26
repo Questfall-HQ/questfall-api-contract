@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "11.0.0",
+  "version": "12.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -597,6 +597,7 @@
         "required": [],
         "optional": [
           "q",
+          "search",
           "categories",
           "slots",
           "rarities",
@@ -616,7 +617,8 @@
       },
       "response": {
         "schema": "MarketplacePage"
-      }
+      },
+      "description": "Anonymous listing reads are public. A nonblank q (or legacy search alias) requires an authenticated user and bypasses the shared cache."
     },
     {
       "operation": "marketplace.mine",
@@ -2750,12 +2752,14 @@
         "params": [],
         "required": [],
         "optional": [
-          "keys"
+          "keys",
+          "version"
         ]
       },
       "response": {
         "schema": "ArtworkCatalog"
-      }
+      },
+      "description": "Version-only reads keep a short cache. When keys and the current version are supplied, published artwork metadata can be cached for one day in browsers and 30 days at the CDN; a publication increments the version and changes the URL."
     },
     {
       "operation": "news.list",

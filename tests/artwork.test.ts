@@ -5,7 +5,7 @@ const variants=Object.fromEntries([96,320,960].flatMap(size=>['avif','webp'].map
 const appearance={scale:150,left:-10,top:3,brightness:0,hue:14};
 const catalog={version:5,artworks:{legacykey:{id:'permanent-id',revision:2,appearance,variants}}};
 test('artwork resolves bounded key queries without exposing drafts or private sources',()=>{
- expect(operations['artwork.get']).toMatchObject({path:'/rpg/artwork',method:'GET',access:'public',request:{optional:['keys'],required:[]}});
+ expect(operations['artwork.get']).toMatchObject({path:'/rpg/artwork',method:'GET',access:'public',request:{optional:['keys','version'],required:[]}});
  expect(validate('ArtworkCatalog',catalog)).toEqual([]);
  expect(validate('ArtworkCatalog',{version:5,artworks:{}})).toEqual([]);
  for(const bad of [{...catalog,version:-1},{...catalog,draft:{}},{version:5,artworks:{x:{...catalog.artworks.legacykey,variants:{...variants,source:{url:'https://private/source'}}}}}])expect(validate('ArtworkCatalog',bad).length).toBeGreaterThan(0);
