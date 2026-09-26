@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "10.2.0",
+  "version": "11.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -3000,80 +3000,20 @@
       }
     },
     {
-      "operation": "chat.report",
+      "operation": "admin.chat.deleteMessage",
       "method": "POST",
-      "path": "/chat/reports",
-      "access": "verified",
+      "path": "/admin/chat/messages/delete",
+      "access": "admin",
       "request": {
         "transport": "body",
         "params": [],
         "required": [
-          "message"
-        ],
-        "optional": [
-          "reason"
-        ]
-      },
-      "response": {
-        "schema": "ChatReportReceipt"
-      }
-    },
-    {
-      "operation": "admin.chat.reports",
-      "method": "GET",
-      "path": "/admin/chat/reports",
-      "access": "admin",
-      "request": {
-        "transport": "query",
-        "params": [],
-        "required": [],
-        "optional": [
-          "status",
-          "before",
-          "limit"
-        ]
-      },
-      "response": {
-        "schema": "ChatReportPage"
-      }
-    },
-    {
-      "operation": "admin.chat.reportDetail",
-      "method": "GET",
-      "path": "/admin/chat/reports/{id}",
-      "access": "admin",
-      "request": {
-        "transport": "query",
-        "params": [
           "id"
         ],
-        "required": [],
         "optional": []
       },
       "response": {
-        "schema": "ChatReportDetail"
-      }
-    },
-    {
-      "operation": "admin.chat.resolveReport",
-      "method": "POST",
-      "path": "/admin/chat/reports/{id}/resolve",
-      "access": "admin",
-      "request": {
-        "transport": "body",
-        "params": [
-          "id"
-        ],
-        "required": [
-          "action"
-        ],
-        "optional": [
-          "duration",
-          "note"
-        ]
-      },
-      "response": {
-        "schema": "ChatReportDetail"
+        "schema": "ChatDeleteResult"
       }
     },
     {
