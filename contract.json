@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "13.0.0",
+  "version": "13.1.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -3419,7 +3419,7 @@
       "response": {
         "schema": "BugReportList"
       },
-      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route."
+      "description": "filter accepts all (every public status), active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route."
     },
     {
       "operation": "feedback.bugs.create",
@@ -3447,6 +3447,63 @@
       },
       "response": {
         "schema": "BugReport"
+      }
+    },
+    {
+      "operation": "feedback.bugs.detail",
+      "method": "GET",
+      "path": "/feedback/bugs/{id}",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "BugReport"
+      }
+    },
+    {
+      "operation": "feedback.bugs.comments.list",
+      "method": "GET",
+      "path": "/feedback/bugs/{id}/comments",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "FeedbackCommentList"
+      }
+    },
+    {
+      "operation": "feedback.bugs.comments.create",
+      "method": "POST",
+      "path": "/feedback/bugs/{id}/comments",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "text",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FeedbackComment"
       }
     },
     {
@@ -3489,7 +3546,7 @@
       "response": {
         "schema": "IdeaList"
       },
-      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route."
+      "description": "filter accepts all (every public status), active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route."
     },
     {
       "operation": "feedback.ideas.create",
@@ -3509,6 +3566,63 @@
       },
       "response": {
         "schema": "Idea"
+      }
+    },
+    {
+      "operation": "feedback.ideas.detail",
+      "method": "GET",
+      "path": "/feedback/ideas/{id}",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "Idea"
+      }
+    },
+    {
+      "operation": "feedback.ideas.comments.list",
+      "method": "GET",
+      "path": "/feedback/ideas/{id}/comments",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "page",
+          "per_page"
+        ]
+      },
+      "response": {
+        "schema": "FeedbackCommentList"
+      }
+    },
+    {
+      "operation": "feedback.ideas.comments.create",
+      "method": "POST",
+      "path": "/feedback/ideas/{id}/comments",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "text",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FeedbackComment"
       }
     },
     {

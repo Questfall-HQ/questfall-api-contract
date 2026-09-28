@@ -16472,6 +16472,61 @@
         }
       },
       "additionalProperties": false
+    },
+    "FeedbackComment": {
+      "type": "object",
+      "required": [
+        "id",
+        "text",
+        "created",
+        "author"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer"
+        },
+        "author": {
+          "$ref": "#/$defs/PublicUser"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackCommentList": {
+      "type": "object",
+      "required": [
+        "items",
+        "total",
+        "page",
+        "per_page",
+        "pages"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FeedbackComment"
+          }
+        },
+        "total": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "pages": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

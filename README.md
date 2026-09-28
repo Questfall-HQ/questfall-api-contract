@@ -1,5 +1,13 @@
 # questfall-api-contract
 
+### Feedback pages and comments — v13.1.0
+
+Ideas and bug reports have public detail routes. Both support paginated public
+comments; creating a comment requires a verified account and an idempotency key.
+The `all` list filter includes every visible status. Hidden feedback remains
+available only to its author or an admin. New comments appear in the feedback
+author's Tracking history.
+
 ### User roles — v12.2.0
 
 User profiles (`/auth/me` and custom auth responses), auth session records, public user identities,
