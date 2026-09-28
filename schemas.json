@@ -1394,7 +1394,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -2876,6 +2876,28 @@
         },
         "target": {
           "type": "integer",
+          "minimum": 0
+        },
+        "votes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_votes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trust": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "min_trust": {
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 0
         }
       },
@@ -4603,6 +4625,143 @@
       },
       "additionalProperties": false
     },
+    "ModerationHistoryVoter": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "avatar",
+        "avatar_icon",
+        "decision",
+        "level",
+        "trust",
+        "own"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": [
+            "object",
+            "string",
+            "null"
+          ]
+        },
+        "avatar_icon": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "decision": {
+          "$ref": "#/$defs/ModerationDecisionValue"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trust": {
+          "type": "number",
+          "minimum": 1
+        },
+        "own": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModerationHistoryConsensus": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "total_votes",
+        "total_trust",
+        "groups",
+        "late"
+      ],
+      "properties": {
+        "outcome": {
+          "$ref": "#/$defs/ModerationDecisionValue"
+        },
+        "total_votes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_trust": {
+          "type": "number",
+          "minimum": 0
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "decision",
+              "votes",
+              "trust",
+              "voters"
+            ],
+            "properties": {
+              "decision": {
+                "$ref": "#/$defs/ModerationDecisionValue"
+              },
+              "votes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "trust": {
+                "type": "number",
+                "minimum": 0
+              },
+              "voters": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/ModerationHistoryVoter"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "late": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ModerationHistoryVoter"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModerationHistoryReview": {
+      "type": "object",
+      "description": "The saved moderation materials for a focused case. Returned only to a user who cast a vote on this exact case. Instructions-only votes omit completion identity and proof fields.",
+      "required": [
+        "kind",
+        "phase"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "instructions",
+            "completion"
+          ]
+        },
+        "proof_media": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
     "ModerationHistory": {
       "type": "object",
       "required": [
@@ -4614,8 +4773,69 @@
           "type": "array",
           "items": {
             "type": "object",
+            "required": [
+              "case_id",
+              "closed",
+              "target",
+              "consensus"
+            ],
             "additionalProperties": true,
             "properties": {
+              "case_id": {
+                "type": "string"
+              },
+              "closed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "target": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "title",
+                  "image",
+                  "avatar",
+                  "avatar_icon"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": [
+                      "object",
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "avatar_icon": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "consensus": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ModerationHistoryConsensus"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "review": {
+                "$ref": "#/$defs/ModerationHistoryReview"
+              },
               "decision": {
                 "$ref": "#/$defs/ModerationDecisionValue"
               }
@@ -6331,7 +6551,11 @@
           "minimum": 1
         },
         "role": {
-          "enum": [null, "team", "owner"]
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
         },
         "admin": {
           "type": "boolean"
@@ -6514,7 +6738,11 @@
           "minimum": 1
         },
         "role": {
-          "enum": [null, "team", "owner"]
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
         },
         "admin": {
           "type": "boolean"
@@ -7295,7 +7523,7 @@
                 }
               },
               "additionalProperties": true,
-              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 \u00d7 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
             }
           }
         },
@@ -7575,7 +7803,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "verification": {
           "type": "string",
@@ -7765,7 +7993,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1\u20135), or 1\u20135 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1\u20134 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -15000,6 +15228,109 @@
       },
       "additionalProperties": false
     },
+    "ActivityStatus": {
+      "type": "object",
+      "required": [
+        "unread"
+      ],
+      "properties": {
+        "unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        }
+      },
+      "additionalProperties": false
+    },
+    "ActivityEvent": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "detail",
+        "href",
+        "cover",
+        "source_id",
+        "space",
+        "actor",
+        "amount",
+        "currency",
+        "created",
+        "read"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        },
+        "cover": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        },
+        "space": {
+          "type": "string"
+        },
+        "actor": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "read": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ActivityPage": {
+      "type": "object",
+      "required": [
+        "items",
+        "next",
+        "unread"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ActivityEvent"
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        }
+      },
+      "additionalProperties": false
+    },
     "ChatAuthor": {
       "type": "object",
       "required": [
@@ -15032,7 +15363,11 @@
           "minimum": 1
         },
         "role": {
-          "enum": [null, "team", "owner"]
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
         },
         "admin": {
           "type": "boolean"
@@ -15807,7 +16142,11 @@
           "type": "string"
         },
         "role": {
-          "enum": [null, "team", "owner"]
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
         },
         "admin": {
           "type": "boolean"
@@ -15828,6 +16167,28 @@
       },
       "additionalProperties": true
     },
+    "FeedbackDeleteResult": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "banned"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user": {
+          "type": "string",
+          "minLength": 1
+        },
+        "banned": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "ChatDeleteResult": {
       "type": "object",
       "required": [
@@ -15837,6 +16198,205 @@
         "id": {
           "type": "string",
           "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldOrderState": {
+      "type": "string",
+      "enum": [
+        "awaiting_payment",
+        "confirming",
+        "fulfilled",
+        "closed"
+      ]
+    },
+    "GoldPackage": {
+      "type": "object",
+      "required": [
+        "id",
+        "nominal",
+        "gold",
+        "available"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "5",
+            "10",
+            "25",
+            "50"
+          ]
+        },
+        "nominal": {
+          "type": "string"
+        },
+        "gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldOffers": {
+      "type": "object",
+      "required": [
+        "mode",
+        "available",
+        "chain_id",
+        "token",
+        "closed_at",
+        "packages"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "open",
+            "paused",
+            "closed"
+          ]
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "chain_id": {
+          "const": 137
+        },
+        "token": {
+          "type": "string"
+        },
+        "closed_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GoldPackage"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldOrder": {
+      "type": "object",
+      "required": [
+        "id",
+        "user",
+        "receiver",
+        "recipient",
+        "token",
+        "package_id",
+        "amount",
+        "transaction",
+        "issue",
+        "payment",
+        "ledger",
+        "chain_id",
+        "gold",
+        "created",
+        "updated",
+        "paid_at",
+        "fulfilled_at",
+        "amount_raw",
+        "state",
+        "payable"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "receiver": {
+          "type": "string"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "package_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "transaction": {
+          "type": "string"
+        },
+        "issue": {
+          "type": "string"
+        },
+        "payment": {
+          "type": "string"
+        },
+        "ledger": {
+          "type": "string"
+        },
+        "chain_id": {
+          "const": 137
+        },
+        "gold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "paid_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fulfilled_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "amount_raw": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "state": {
+          "$ref": "#/$defs/GoldOrderState"
+        },
+        "payable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldOrderList": {
+      "type": "object",
+      "required": [
+        "items",
+        "page",
+        "more"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GoldOrder"
+          }
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "more": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false

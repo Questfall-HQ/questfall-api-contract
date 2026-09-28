@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "12.3.0",
+  "version": "12.4.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -313,7 +313,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -1200,6 +1200,7 @@
         "required": [],
         "optional": [
           "cursor",
+          "case",
           "limit",
           "moderation_version",
           "scope"
@@ -1403,7 +1404,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8\u2013128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2486,7 +2487,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -2641,6 +2642,7 @@
         ],
         "optional": [
           "before",
+          "comment_id",
           "limit",
           "status"
         ]
@@ -2878,6 +2880,71 @@
       }
     },
     {
+      "operation": "activity.status",
+      "method": "GET",
+      "path": "/activity/status",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ActivityStatus"
+      }
+    },
+    {
+      "operation": "activity.list",
+      "method": "GET",
+      "path": "/activity/events",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "before",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "ActivityPage"
+      }
+    },
+    {
+      "operation": "activity.mark",
+      "method": "POST",
+      "path": "/activity/events/read",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ActivityStatus"
+      }
+    },
+    {
+      "operation": "activity.markAll",
+      "method": "POST",
+      "path": "/activity/read-all",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ActivityStatus"
+      }
+    },
+    {
       "operation": "chat.people",
       "method": "GET",
       "path": "/chat/people",
@@ -2934,6 +3001,23 @@
       },
       "response": {
         "schema": "ChatMessage"
+      }
+    },
+    {
+      "operation": "chat.remove",
+      "method": "POST",
+      "path": "/chat/messages/delete",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "id"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatDeleteResult"
       }
     },
     {
@@ -3073,6 +3157,7 @@
         "required": [],
         "optional": [
           "filter",
+          "id",
           "mine",
           "page",
           "per_page"
@@ -3080,7 +3165,8 @@
       },
       "response": {
         "schema": "BugReportList"
-      }
+      },
+      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, rejected, or hidden. Hidden is admin only."
     },
     {
       "operation": "admin.feedback.bugs.status",
@@ -3126,6 +3212,49 @@
       }
     },
     {
+      "operation": "admin.feedback.bugs.delete",
+      "method": "POST",
+      "path": "/admin/feedback/bugs/{id}/delete",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "expected_updated"
+        ],
+        "optional": [
+          "duration",
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "FeedbackDeleteResult"
+      }
+    },
+    {
+      "operation": "admin.feedback.bugs.reviewNote",
+      "method": "POST",
+      "path": "/admin/feedback/bugs/{id}/review-note",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "index",
+          "note",
+          "expected_note"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "BugReport"
+      }
+    },
+    {
       "operation": "admin.feedback.ideas.list",
       "method": "GET",
       "path": "/admin/feedback/ideas",
@@ -3136,6 +3265,7 @@
         "required": [],
         "optional": [
           "filter",
+          "id",
           "mine",
           "page",
           "per_page"
@@ -3143,7 +3273,8 @@
       },
       "response": {
         "schema": "IdeaList"
-      }
+      },
+      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, rejected, or hidden. Hidden is admin only."
     },
     {
       "operation": "admin.feedback.ideas.status",
@@ -3189,6 +3320,49 @@
       }
     },
     {
+      "operation": "admin.feedback.ideas.delete",
+      "method": "POST",
+      "path": "/admin/feedback/ideas/{id}/delete",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "expected_updated"
+        ],
+        "optional": [
+          "duration",
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "FeedbackDeleteResult"
+      }
+    },
+    {
+      "operation": "admin.feedback.ideas.reviewNote",
+      "method": "POST",
+      "path": "/admin/feedback/ideas/{id}/review-note",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "index",
+          "note",
+          "expected_note"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Idea"
+      }
+    },
+    {
       "operation": "feedback.bugs.list",
       "method": "GET",
       "path": "/feedback/bugs",
@@ -3199,6 +3373,7 @@
         "required": [],
         "optional": [
           "filter",
+          "id",
           "mine",
           "page",
           "per_page"
@@ -3206,7 +3381,8 @@
       },
       "response": {
         "schema": "BugReportList"
-      }
+      },
+      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route."
     },
     {
       "operation": "feedback.bugs.create",
@@ -3267,6 +3443,7 @@
         "required": [],
         "optional": [
           "filter",
+          "id",
           "mine",
           "page",
           "per_page"
@@ -3274,7 +3451,8 @@
       },
       "response": {
         "schema": "IdeaList"
-      }
+      },
+      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route."
     },
     {
       "operation": "feedback.ideas.create",
@@ -3334,6 +3512,113 @@
       "response": {
         "schema": "Idea"
       }
+    },
+    {
+      "operation": "gold.offers",
+      "method": "GET",
+      "path": "/gold/offers",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldOffers"
+      }
+    },
+    {
+      "operation": "gold.orders.create",
+      "method": "POST",
+      "path": "/gold/orders",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "package_id",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldOrder"
+      }
+    },
+    {
+      "operation": "gold.orders.list",
+      "method": "GET",
+      "path": "/gold/orders",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "GoldOrderList"
+      }
+    },
+    {
+      "operation": "gold.orders.load",
+      "method": "GET",
+      "path": "/gold/orders/{id}",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldOrder"
+      }
+    },
+    {
+      "operation": "gold.orders.transaction",
+      "method": "POST",
+      "path": "/gold/orders/{id}/transaction",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "transaction"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldOrder"
+      }
+    },
+    {
+      "operation": "gold.orders.issue",
+      "method": "POST",
+      "path": "/gold/orders/{id}/issue",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "message"
+        ],
+        "optional": [
+          "transaction"
+        ]
+      },
+      "response": {
+        "schema": "GoldOrder"
+      }
     }
   ],
   "pocketbase": {
@@ -3345,6 +3630,9 @@
         "auth": false
       },
       "chat_reactions": {
+        "auth": false
+      },
+      "activity_deliveries": {
         "auth": false
       }
     }

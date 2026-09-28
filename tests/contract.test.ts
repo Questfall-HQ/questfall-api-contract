@@ -85,7 +85,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-		expect(contract.routes.length).toBe(170)
+			expect(contract.routes.length).toBe(185)
   })
 
   test('builds parameterized paths safely', () => {
@@ -268,6 +268,13 @@ describe('contract manifest', () => {
     expect(validate('QuestRatingHistoryUser', {...user, moderation_status: null})).not.toEqual([])
     expect(validate('QuestRatingHistoryUser', {...user, email: 'private@example.test'})).not.toEqual([])
     expect(schema('QuestRatingHistoryUser').additionalProperties).toBe(false)
+  })
+
+  test('accepts counted trust and votes in rating history progress without breaking older responses', () => {
+    const previous = {current: 1, target: 3}
+    expect(validate('QuestRatingRoundProgress', previous)).toEqual([])
+    expect(validate('QuestRatingRoundProgress', {...previous, votes: 1, min_votes: 2, trust: 2.236, min_trust: 6})).toEqual([])
+    expect(validate('QuestRatingRoundProgress', {...previous, votes: -1, min_votes: 2, trust: 2.236, min_trust: 6})).not.toEqual([])
   })
 
   test('declares the Author Space accent and hue on create and update', () => {
