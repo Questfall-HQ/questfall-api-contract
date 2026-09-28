@@ -85,7 +85,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-			expect(contract.routes.length).toBe(185)
+			expect(contract.routes.length).toBe(187)
   })
 
   test('builds parameterized paths safely', () => {

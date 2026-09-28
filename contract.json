@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "12.4.0",
+  "version": "13.0.0",
   "routes": [
     {
       "operation": "auth.me",
@@ -313,7 +313,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -1404,7 +1404,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8\u2013128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2487,7 +2487,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -2880,9 +2880,9 @@
       }
     },
     {
-      "operation": "activity.status",
+      "operation": "tracking.status",
       "method": "GET",
-      "path": "/activity/status",
+      "path": "/tracking/status",
       "access": "verified",
       "request": {
         "transport": "query",
@@ -2891,13 +2891,13 @@
         "optional": []
       },
       "response": {
-        "schema": "ActivityStatus"
+        "schema": "TrackingStatus"
       }
     },
     {
-      "operation": "activity.list",
+      "operation": "tracking.list",
       "method": "GET",
-      "path": "/activity/events",
+      "path": "/tracking/objects",
       "access": "verified",
       "request": {
         "transport": "query",
@@ -2909,30 +2909,50 @@
         ]
       },
       "response": {
-        "schema": "ActivityPage"
+        "schema": "TrackingObjectPage"
       }
     },
     {
-      "operation": "activity.mark",
+      "operation": "tracking.updates",
+      "method": "GET",
+      "path": "/tracking/objects/{id}/updates",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "before",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "TrackingUpdatePage"
+      }
+    },
+    {
+      "operation": "tracking.mark",
       "method": "POST",
-      "path": "/activity/events/read",
+      "path": "/tracking/objects/{id}/read",
       "access": "verified",
       "request": {
         "transport": "body",
-        "params": [],
-        "required": [
+        "params": [
           "id"
         ],
+        "required": [],
         "optional": []
       },
       "response": {
-        "schema": "ActivityStatus"
+        "schema": "TrackingStatus"
       }
     },
     {
-      "operation": "activity.markAll",
+      "operation": "tracking.markAll",
       "method": "POST",
-      "path": "/activity/read-all",
+      "path": "/tracking/read-all",
       "access": "verified",
       "request": {
         "transport": "body",
@@ -2941,7 +2961,24 @@
         "optional": []
       },
       "response": {
-        "schema": "ActivityStatus"
+        "schema": "TrackingStatus"
+      }
+    },
+    {
+      "operation": "tracking.stop",
+      "method": "POST",
+      "path": "/tracking/objects/{id}/stop",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "TrackingStatus"
       }
     },
     {
@@ -3632,7 +3669,7 @@
       "chat_reactions": {
         "auth": false
       },
-      "activity_deliveries": {
+      "tracking_objects": {
         "auth": false
       }
     }
