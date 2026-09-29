@@ -916,3 +916,12 @@ rejected and cancelled reviews in both initial Feed and incremental responses.
 An empty value means no public cover is available; older servers may omit it.
 `QuestUpdate.cover?: string` also carries Welcome quest artwork for completion
 and reward notifications. Delivery receipts and acknowledgement semantics are unchanged.
+
+### Weekly purchase Gems — next release
+
+The Gold program adds weekly standings, non-expiring Claim, immutable purchase
+contributions, Gem items and clothing evolution/maximization. Registration alone
+is sufficient for Gold purchases and rewards. Point amounts are decimal strings
+of integer micropoints. Existing orders may omit the additive `gem_contribution`
+field. Gem crafting quotes carry an item revision; mutations require the same
+revision and an idempotency key. Existing item actions reject the new Gem kind.

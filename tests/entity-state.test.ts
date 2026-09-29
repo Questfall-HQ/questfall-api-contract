@@ -6,9 +6,9 @@ test('legacy author mutations do not require entity revisions',()=>{
  expect(validate('AuthorQuestMutation',{...quest,revision:1})).toEqual([]);
  expect(validate('AuthorQuestMutation',{...quest,revision:-1}).length).toBeGreaterThan(0);
 });
-test('state parts are verified and bootstrap uses the current response format',()=>{
+test('state parts require authentication and bootstrap uses the current response format',()=>{
  expect(operations['auth.me'].request.optional).toContain('response_version');
- expect(operations['player.state'].access).toBe('verified');
+ expect(operations['player.state'].access).toBe('authenticated');
  expect(operations['player.state'].request.required).toEqual(['parts']);
 });
 test('effects are concrete snapshots, not arbitrary objects',()=>{

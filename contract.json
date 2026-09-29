@@ -24,7 +24,7 @@
       "operation": "player.state",
       "method": "GET",
       "path": "/player/state",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -48,7 +48,9 @@
         "required": [
           "email"
         ],
-        "optional": []
+        "optional": [
+          "referral_code"
+        ]
       },
       "response": {
         "schema": "OtpRequest"
@@ -86,7 +88,8 @@
         "optional": [
           "chainId",
           "domain",
-          "uri"
+          "uri",
+          "referral_code"
         ]
       },
       "response": {
@@ -471,7 +474,7 @@
       "operation": "inventory.load",
       "method": "GET",
       "path": "/inventory/load",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -2883,7 +2886,7 @@
       "operation": "tracking.status",
       "method": "GET",
       "path": "/tracking/status",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -2898,7 +2901,7 @@
       "operation": "tracking.list",
       "method": "GET",
       "path": "/tracking/objects",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -2916,7 +2919,7 @@
       "operation": "tracking.updates",
       "method": "GET",
       "path": "/tracking/objects/{id}/updates",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [
@@ -2936,7 +2939,7 @@
       "operation": "tracking.mark",
       "method": "POST",
       "path": "/tracking/objects/{id}/read",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [
@@ -2953,7 +2956,7 @@
       "operation": "tracking.markAll",
       "method": "POST",
       "path": "/tracking/read-all",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [],
@@ -2968,7 +2971,7 @@
       "operation": "tracking.stop",
       "method": "POST",
       "path": "/tracking/objects/{id}/stop",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [
@@ -3668,7 +3671,7 @@
       "operation": "gold.offers",
       "method": "GET",
       "path": "/gold/offers",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -3683,7 +3686,7 @@
       "operation": "gold.orders.create",
       "method": "POST",
       "path": "/gold/orders",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [],
@@ -3701,7 +3704,7 @@
       "operation": "gold.orders.list",
       "method": "GET",
       "path": "/gold/orders",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [],
@@ -3718,7 +3721,7 @@
       "operation": "gold.orders.load",
       "method": "GET",
       "path": "/gold/orders/{id}",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "query",
         "params": [
@@ -3735,7 +3738,7 @@
       "operation": "gold.orders.transaction",
       "method": "POST",
       "path": "/gold/orders/{id}/transaction",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [
@@ -3754,7 +3757,7 @@
       "operation": "gold.orders.issue",
       "method": "POST",
       "path": "/gold/orders/{id}/issue",
-      "access": "verified",
+      "access": "authenticated",
       "request": {
         "transport": "body",
         "params": [
@@ -3769,6 +3772,214 @@
       },
       "response": {
         "schema": "GoldOrder"
+      }
+    },
+    {
+      "operation": "referrals.invitation",
+      "method": "GET",
+      "path": "/referrals/invitations/{code}",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [
+          "code"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ReferralInvitation"
+      }
+    },
+    {
+      "operation": "referrals.summary",
+      "method": "GET",
+      "path": "/referrals/summary",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "period"
+        ]
+      },
+      "response": {
+        "schema": "ReferralSummary"
+      }
+    },
+    {
+      "operation": "referrals.details",
+      "method": "GET",
+      "path": "/referrals/details",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "period"
+        ]
+      },
+      "response": {
+        "schema": "ReferralCharts"
+      }
+    },
+    {
+      "operation": "referrals.people",
+      "method": "GET",
+      "path": "/referrals/people",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "period",
+          "q",
+          "filter",
+          "sort",
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "ReferralPeople"
+      }
+    },
+    {
+      "operation": "referrals.person",
+      "method": "GET",
+      "path": "/referrals/people/{id}",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": [
+          "period"
+        ]
+      },
+      "response": {
+        "schema": "ReferralPerson"
+      }
+    },
+    {
+      "operation": "rewards.summary",
+      "method": "GET",
+      "path": "/rewards/summary",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "PersonalRewards"
+      }
+    },
+    {
+      "operation": "rewards.claim",
+      "method": "POST",
+      "path": "/rewards/claim",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PersonalRewardClaimResult"
+      }
+    },
+    {
+      "operation": "gold.gems",
+      "method": "GET",
+      "path": "/gold/gems",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "period",
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "GemProgram"
+      }
+    },
+    {
+      "operation": "gold.gems.claim",
+      "method": "POST",
+      "path": "/gold/gems/claim",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "reward_id",
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PlayerResult"
+      }
+    },
+    {
+      "operation": "items.evolve",
+      "method": "POST",
+      "path": "/items/evolve",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "gemId",
+          "expected_updated",
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PlayerResult"
+      }
+    },
+    {
+      "operation": "items.maximize",
+      "method": "POST",
+      "path": "/items/maximize",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "gemId",
+          "expected_updated",
+          "idempotency_key",
+          "perk_index"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PlayerResult"
       }
     }
   ],

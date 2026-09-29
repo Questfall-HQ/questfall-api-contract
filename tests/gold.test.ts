@@ -8,9 +8,9 @@ test('Gold orders retain exact amounts and immutable payment fields',()=>{
  expect(validate('GoldOrder',{...order,amount_raw:'24.999999'})).not.toEqual([])
  expect(validate('GoldOrder',{...order,chain_id:1})).not.toEqual([])
 })
-test('Gold routes require verified ownership and creation accepts no receiver or amount overrides',()=>{
+test('Gold routes require authenticated ownership and creation accepts no receiver or amount overrides',()=>{
  const routes=Object.values(operations).filter(x=>x.path.startsWith('/gold/'))
- expect(routes).toHaveLength(6)
- expect(routes.every(x=>x.access==='verified')).toBe(true)
+ expect(routes).toHaveLength(8)
+ expect(routes.every(x=>x.access==='authenticated')).toBe(true)
  expect(operations['gold.orders.create'].request.required).toEqual(['package_id','idempotency_key'])
 })
