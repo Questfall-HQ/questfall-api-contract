@@ -9,8 +9,16 @@ test('Gold orders retain exact amounts and immutable payment fields',()=>{
  expect(validate('GoldOrder',{...order,chain_id:1})).not.toEqual([])
 })
 test('Gold routes require authenticated ownership and creation accepts no receiver or amount overrides',()=>{
- const routes=Object.values(operations).filter(x=>x.path.startsWith('/gold/'))
- expect(routes).toHaveLength(8)
+ const routes=Object.values(operations).filter(x=>x.path.startsWith('/gold/')&&x.operation!=='gold.freezing.view')
+ expect(routes).toHaveLength(13)
  expect(routes.every(x=>x.access==='authenticated')).toBe(true)
  expect(operations['gold.orders.create'].request.required).toEqual(['package_id','idempotency_key'])
+})
+test('Gold Freezing exposes immediate views and idempotent whole-Gold actions',()=>{
+ const routes=Object.values(operations).filter(x=>x.path.startsWith('/gold/freezing'))
+ expect(routes).toHaveLength(6)
+ expect(operations['gold.freezing.view'].access).toBe('optional')
+ expect(routes.filter(x=>x.method==='POST').every(x=>x.access==='authenticated')).toBe(true)
+ for(const name of ['freeze','add']) expect(operations[`gold.freezing.${name}`].request.required).toEqual(['amount','idempotency_key'])
+ for(const name of ['renew','cancel','withdraw']) expect(operations[`gold.freezing.${name}`].request.required).toEqual(['idempotency_key'])
 })

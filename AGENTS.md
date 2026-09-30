@@ -29,15 +29,19 @@ response shape, canonical enum или используемую frontend PocketBa
 - Frontend source для сверки — `questfall-application/src/api.imba`.
 - Backend source для сверки — клиентские `routerAdd` routes в
   `questfall-pocketbase/src/**/*.pb.imba`.
-- Изменение не завершено, пока локальная версия contract не проходит проверки
-  обоих consumers.
-- После успешной совместной проверки поднять SemVer, создать новый Git tag и
-  зафиксировать этот exact tag в обоих consumers.
+- В ходе локальной работы синхронизировать contract и обоих consumers; HMR/Preview
+  и адресные проверки использовать для конкретных рисков.
+- При подготовке выкладки проверить contract и обоих consumers полным gate
+  с `--release --force`, затем поднять SemVer, создать новый Git tag и
+  зафиксировать этот exact tag в обоих consumers. После установки tag повторить
+  полные consumer gate по [workspace flow](../AGENTS.md#обязательная-синхронизация-публичного-api).
 - Не перемещать опубликованные tags, не ослаблять checker и не добавлять
   исключения, скрывающие рассинхронизацию.
 - Для breaking change применять expand → migrate → contract.
 
 ## Проверка
+
+Полный прогон выполнять при подготовке выкладки или по явному запросу:
 
 ```bash
 bun run verify

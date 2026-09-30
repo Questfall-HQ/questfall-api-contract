@@ -1,7 +1,77 @@
 {
   "name": "Questfall application API contract",
-  "version": "13.1.0",
+  "version": "14.0.0",
   "routes": [
+    {
+      "operation": "founders.invitation",
+      "method": "GET",
+      "path": "/founders/invitation",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "code"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FoundersInvitation"
+      }
+    },
+    {
+      "operation": "founders.attribution",
+      "method": "GET",
+      "path": "/founders/attribution",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "FoundersAttribution"
+      }
+    },
+    {
+      "operation": "founders.bind",
+      "method": "POST",
+      "path": "/founders/attribution",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "code",
+          "source"
+        ],
+        "optional": [
+          "expected_wallet"
+        ]
+      },
+      "response": {
+        "schema": "FoundersAttribution"
+      }
+    },
+    {
+      "operation": "introductions.load",
+      "method": "GET",
+      "path": "/section-intros/{section}",
+      "access": "authenticated",
+      "request": {"transport": "query", "params": ["section"], "required": [], "optional": []},
+      "response": {"schema": "SectionIntroductionState"},
+      "description": "Published image-led section introduction and the current account's acknowledgment. Unpublished sections return intro:null. Private, no-store."
+    },
+    {
+      "operation": "introductions.acknowledge",
+      "method": "POST",
+      "path": "/section-intros/{section}/acknowledge",
+      "access": "authenticated",
+      "request": {"transport": "body", "params": ["section"], "required": ["version"], "optional": []},
+      "response": {"schema": "SectionIntroductionAcknowledgment"},
+      "description": "Idempotently acknowledges the current audience marker for this account. Stale markers return 409. Saving changed visible content, showing a hidden introduction, or explicitly repeating it advances the marker and shows it on the next section visit. Unchanged saves and saves while hidden preserve acknowledgments. Hiding retains the saved content and returns no introduction."
+    },
     {
       "operation": "auth.me",
       "method": "GET",
@@ -316,7 +386,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each file contains name, mime=image/webp and bytes. Duplicate or unknown variants are rejected. Legacy two-variant clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480×480, <=512 KiB) and display (<=2000×2000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -2724,13 +2794,17 @@
           "ingredientId"
         ],
         "optional": [
-          "response_version"
+          "response_version",
+          "ingredient_ids",
+          "expected_updated",
+          "expected_cost",
+          "idempotency_key"
         ]
       },
       "response": {
         "schema": "PotionMergeResult"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "Modern requests provide ingredient_ids, expected_updated, expected_cost and idempotency_key from the quote. Legacy ingredientId-only requests remain valid only for a two-potion recipe. Changed quantities require a fresh confirmation; no extra items are selected silently."
     },
     {
       "operation": "stamina.config",
@@ -3470,6 +3544,28 @@
       }
     },
     {
+      "operation": "feedback.bugs.edit",
+      "method": "POST",
+      "path": "/feedback/bugs/{id}/edit",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "field",
+          "value",
+          "expected_value"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "BugReport"
+      },
+      "description": "Only the report author can edit title, description, steps, expected, actual, area, os, browser, or version. The expected_value must match the current field; steps and their expected_value are arrays."
+    },
+    {
       "operation": "feedback.bugs.comments.list",
       "method": "GET",
       "path": "/feedback/bugs/{id}/comments",
@@ -3587,6 +3683,28 @@
       "response": {
         "schema": "Idea"
       }
+    },
+    {
+      "operation": "feedback.ideas.edit",
+      "method": "POST",
+      "path": "/feedback/ideas/{id}/edit",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "field",
+          "value",
+          "expected_value"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Idea"
+      },
+      "description": "Only the idea author can edit title or description. The expected_value must match the current field."
     },
     {
       "operation": "feedback.ideas.comments.list",
@@ -3971,8 +4089,7 @@
           "itemId",
           "gemId",
           "expected_updated",
-          "idempotency_key",
-          "perk_index"
+          "idempotency_key"
         ],
         "optional": [
           "response_version"
@@ -3981,6 +4098,235 @@
       "response": {
         "schema": "PlayerResult"
       }
+    },
+    {
+      "operation": "items.reroll",
+      "method": "POST",
+      "path": "/items/reroll",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "diceId",
+          "perk_index",
+          "expected_updated",
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "PlayerResult"
+      }
+    },
+    {
+      "operation": "items.gemmerge",
+      "method": "POST",
+      "path": "/items/gems/merge",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "ingredient_ids",
+          "expected_updated",
+          "expected_cost",
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "GemMergeResult"
+      },
+      "description": "Merge the server-quoted number of distinct owned Gems into one next-rarity Gem. ingredient_ids contains every additional ID. The current recipe, item revision and exact cost are rechecked before atomic spending."
+    },
+    {
+      "operation": "gold.freezing.view",
+      "method": "GET",
+      "path": "/gold/freezing",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "page"
+        ]
+      },
+      "response": {
+        "schema": "GoldFreezingView"
+      },
+      "description": "Public weekly pool, points chart and leaderboard. With an authenticated session, includes the viewer's position, wallet and points. Guests receive a null position, zero wallet and own metrics, and no rows marked own. Gold mutations still require authentication."
+    },
+    {
+      "operation": "gold.freezing.freeze",
+      "method": "POST",
+      "path": "/gold/freezing/freeze",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "amount",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldFreezingReceipt"
+      }
+    },
+    {
+      "operation": "gold.freezing.add",
+      "method": "POST",
+      "path": "/gold/freezing/add",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "amount",
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldFreezingReceipt"
+      }
+    },
+    {
+      "operation": "gold.freezing.renew",
+      "method": "POST",
+      "path": "/gold/freezing/renew",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldFreezingReceipt"
+      }
+    },
+    {
+      "operation": "gold.freezing.cancel",
+      "method": "POST",
+      "path": "/gold/freezing/cancel",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldFreezingReceipt"
+      }
+    },
+    {
+      "operation": "gold.freezing.withdraw",
+      "method": "POST",
+      "path": "/gold/freezing/withdraw",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "idempotency_key"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "GoldFreezingReceipt"
+      }
+    },
+    {
+      "operation": "daily.status",
+      "method": "GET",
+      "path": "/daily/status",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "DailyStatus"
+      },
+      "description": "Current live Daily configuration and personal UTC-day progress. Admin saves apply immediately. Disabled tasks are hidden; their earned rewards still settle after the day ends."
+    },
+    {
+      "operation": "daily.tasks",
+      "method": "GET",
+      "path": "/daily/tasks",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "DailyBoard"
+      },
+      "description": "Current live Daily configuration and personal UTC-day progress. Admin saves apply immediately. Disabled tasks are hidden; their earned rewards still settle after the day ends."
+    },
+    {
+      "operation": "daily.claim",
+      "method": "POST",
+      "path": "/daily/claim",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "day",
+          "key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "DailyClaim"
+      },
+      "description": "UTC daily tasks. Claim identifies a day and opaque stable reward key. Earned rewards retain their original bundle across edits or disabling; replay returns the same award without another payment."
+    },
+    {
+      "operation": "items.dicemerge",
+      "method": "POST",
+      "path": "/items/dice/merge",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "itemId",
+          "ingredient_ids",
+          "expected_updated",
+          "expected_cost",
+          "idempotency_key"
+        ],
+        "optional": [
+          "response_version"
+        ]
+      },
+      "response": {
+        "schema": "DiceMergeResult"
+      },
+      "description": "Merge the server-quoted number of distinct owned Dice into one next-rarity Dice. ingredient_ids contains every additional ID. The current recipe, item revision and exact cost are rechecked before atomic spending."
     }
   ],
   "pocketbase": {

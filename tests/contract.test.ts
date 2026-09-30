@@ -85,7 +85,7 @@ describe('contract manifest', () => {
   test('is internally valid and indexable', () => {
     expect(validateContract(contract, schemas)).toEqual([])
     expect(Object.keys(operations)).toHaveLength(contract.routes.length)
-			expect(contract.routes.length).toBe(204)
+    expect(contract.routes.length).toBe(223)
   })
 
   test('builds parameterized paths safely', () => {
@@ -258,9 +258,11 @@ describe('contract manifest', () => {
 		expect(schema('QuestRatingHistory').properties.summary.required).toContain('closest')
 	})
 
-  test('validates rating voter moderation status while retaining legacy profiles', () => {
+  test('validates historical rating voter trust while retaining legacy profiles', () => {
     const user = {id: 'voter', name: 'Questfall user', avatar: {}, avatar_icon: null, level: 1}
     expect(validate('QuestRatingHistoryUser', user)).toEqual([])
+    expect(validate('QuestRatingHistoryUser', {...user, trust: 2.236})).toEqual([])
+    expect(validate('QuestRatingHistoryUser', {...user, trust: -1})).not.toEqual([])
     for (const moderation_status of ['active', 'restricted']) {
       expect(validate('QuestRatingHistoryUser', {...user, moderation_status})).toEqual([])
     }

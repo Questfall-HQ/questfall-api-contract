@@ -1,5 +1,72 @@
 # questfall-api-contract
 
+## v14.0.0 — combined release preparation
+
+The local release candidate adds Daily tasks, section introductions, Gold
+Freezing, Founders invitations and attribution, feedback editing, Dice rerolls,
+and Gem/Dice merging. It also supports AVIF instruction media, live Daily
+images, exact Gem distribution shares, and referral milestone rewards.
+
+This is a major contract release: `items.maximize` now makes the whole clothing
+item permanently Perfect, `GemMaximization` replaces `perks` with `cost` and
+`after`, and `PersonalRewards` requires the separate `freezing_gold` total.
+Legacy Max Out requests receive a refresh-required 409 unless replaying an
+already committed command. Historical receipts and rewards remain readable.
+
+Both package and manifest use `14.0.0`. The immutable Git tag remains pending
+the coordinated local contract/App/Backend gates; App and Backend must then pin
+that same exact tag from GitHub and pass the second consumer gate stage.
+
+Daily task pictures — local preparation: `DailyChain.image` is an optional
+public URL, independent of the action. Omitted or empty means no uploaded
+picture. Replacing or clearing the task image applies immediately. Admin uploads
+use the admin-only `daily_task` media kind (192px AVIF, at most 96 KiB).
+This additive change awaits the coordinated contract tag and consumer release.
+
+Daily live editing — local preparation: saves apply immediately. Progress is
+preserved when action and filters match, and starts at zero when either changes.
+`DailyTier.key` is opaque and stable across target edits. Reached rewards freeze
+their original bundle; disabling tasks or removing targets cannot cancel them.
+Hidden unclaimed rewards settle automatically after their original UTC day.
+No response fields or HTTP paths change. Contract tagging and full consumer gates
+remain part of coordinated release preparation.
+
+### Gold Freezing term completion — local preparation
+
+`GET /gold/freezing` supports anonymous reads of the weekly pool, points chart
+and leaderboard. Guests receive `position:null`, `wallet:0`, zero `own` metrics,
+and no personal markers in rows, history or timeline. Authenticated responses
+retain the existing shape and personal data; all Gold mutations require sign-in.
+
+Gold Freezing principal returns to the spendable Gold balance automatically at
+the end of its 15-week term. A due return makes `GoldFreezingView.position` null
+and updates `wallet`; historical weekly points, shares and earned rewards remain
+in the existing `own` / leaderboard fields. No principal claim is required.
+The personal Tracker receives a `TrackingObject` with open-string kind
+`gold_freezing`, positive tone, terminal state, Gold amount and the return reason.
+Its `cover` shows frozen Gold; `href` is empty because a personal position has no
+detail page.
+No response fields or endpoints are added by this lifecycle change. Weekly Gold
+rewards keep their separate Claim flow.
+
+### Gem distribution — local preparation
+
+`GemRules` accepts the optional `distribution: weighted | halves | shares` field.
+`shares` adds six exact `{numerator, denominator}` fractions in F–A order;
+each share applies to the remaining buyers, rounding up, and A receives the
+final remainder. Server-derived thresholds may be null for disabled/unreachable
+rarities or thresholds above one million buyers. The new default has 2/3 at
+F–B, 1/1 at A and thresholds 1/3/9/27/81/243. Omitted distribution retains the
+historical weighted policy. `halves` retains thresholds 1/2/4/8/16/32.
+Existing stored weeks retain their rule snapshots. This additive schema
+change awaits the coordinated contract tag and consumer release.
+
+Optional `GemRules.excluded` is an exact `{numerator, denominator}` ratio for
+the bottom-ranked buyers receiving no reward. Apply it first, rounding up,
+then allocate F–A among the remaining buyers. Omission in saved `shares` rules
+means zero exclusion. Fund count excludes those buyers, while buyer totals,
+points and ranks retain them. Thresholds include this first cutoff step.
+
 ### Feedback pages and comments — v13.1.0
 
 Ideas and bug reports have public detail routes. Both support paginated public
@@ -184,8 +251,10 @@ RPG-формулы или реализацию actions. `additionalProperties: t
 После закрытия rating round `quests.ratings` возвращает итоговый `round.rating`,
 который включает все canonical votes, а каждый distribution bin содержит
 `users` — безопасные публичные профили ровно тех canonical voters, которые
-входят в его `count`. До публикации финального рейтинга `rating`, distribution
-и личности остаются `null`.
+входят в его `count`. У каждого профиля `level` и `trust` отражают уровень и
+вес голоса на момент голосования; `trust` берётся из сохранённого snapshot
+веса, а не из текущего уровня игрока. До публикации финального рейтинга
+`rating`, distribution и личности остаются `null`.
 
 ### Идентификация результата — v6.37.0
 
@@ -917,6 +986,25 @@ An empty value means no public cover is available; older servers may omit it.
 `QuestUpdate.cover?: string` also carries Welcome quest artwork for completion
 and reward notifications. Delivery receipts and acknowledgement semantics are unchanged.
 
+### Consumable merging — local preparation
+
+Verified `POST /items/gems/merge` and `POST /items/dice/merge` accept `itemId`,
+1–99 distinct `ingredient_ids`, `expected_updated`, integer `expected_cost`,
+and `idempotency_key`. The total count must match the current server quote.
+Both use response-version-2 entity effects. `GemMergeResult` / `DiceMergeResult`
+return the resulting Item, ledger, recipe and replay flag. Craft quotes expose
+`merge.inputs` (2–100), ingredient IDs, cost, availability and resulting Item.
+
+`/items/merge` retains the Potion `itemId`/`ingredientId` shape and additionally
+accepts `ingredient_ids`, `expected_updated`, `expected_cost`, `idempotency_key`.
+Current clients send all quoted ingredients and concurrency fields. Legacy
+requests work only for a two-input recipe; otherwise the server requests a new
+confirmation without spending. Idempotent replay precedes current recipe checks.
+
+Defaults are 2 Potions, 5 Gems, 5 Dice. Administrative recipe revisions are private
+API; public clients always derive counts from quotes. This addition stays local
+with the pending combined contract release.
+
 ### Weekly purchase Gems — next release
 
 The Gold program adds weekly standings, non-expiring Claim, immutable purchase
@@ -925,3 +1013,36 @@ is sufficient for Gold purchases and rewards. Point amounts are decimal strings
 of integer micropoints. Existing orders may omit the additive `gem_contribution`
 field. Gem crafting quotes carry an item revision; mutations require the same
 revision and an idempotency key. Existing item actions reject the new Gem kind.
+
+### Referral milestone boxes — next release
+
+`ReferralSummary.milestones` carries the four Common/Uncommon/Rare/Epic rules;
+nullable `incoming` carries the viewer's incoming referral, inviter, level and
+deadline. `ReferralPerson.milestones` exposes the same progress for owned referrals,
+including list rows. These fields are optional during rollout. Awarded stages retain
+their timestamp; other states are `pending`, `expired`, or `unavailable` for bindings
+that predate the program. The six-month deadline is exclusive. Both participants
+receive boxes automatically, with no public grant or Claim operation.
+
+Tracker uses its existing generic `kind = referral_reward` and `currency = lootbox_*`
+fields. `cover = resource:lootbox_*` selects the shared resource-art image; `rarity`
+is the box rarity. Both personal cards group one referral's stage history and link
+to `/referrals/`. Administrative import operations remain outside the public contract.
+
+### Permanent ★ Perfect — next major, local preparation
+
+`items.maximize` changes from a selected perk to the entire clothing item. Its
+request is `itemId`, `gemId`, `expected_updated`, `idempotency_key` (plus the usual
+response version); `perk_index` is no longer part of the new command. Legacy
+requests with that field get 409 and must refresh confirmation, unless replaying
+an already committed legacy command. Such replays keep their original receipt.
+
+`GemMaximization.after` replaces the old selectable `perks` list with a complete
+Item snapshot (or null when unsupported). Cost is 500 Essence and one A Gem, independent of rarity, level, Crafting and Luck.
+`Item`, `EquippedItem` and `TrackingObject` carry optional boolean `perfect`;
+absence on historical snapshots means false. Existing snapshots/ledger records
+are not rewritten. Backend owns the permanent status and all numeric maxima.
+
+Keep this breaking change local until the combined release: publish a new major
+immutable SemVer tag and pin it identically in App and Backend only then, followed
+by the second forced-gate stage. Current local file dependencies are deliberate.

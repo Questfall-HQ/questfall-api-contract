@@ -2,6 +2,198 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://api.questfall.xyz/contracts/12.2.0/schemas.json",
   "$defs": {
+    "FoundersAmbassador": {
+      "type": "object",
+      "required": [
+        "wallet",
+        "code",
+        "discount",
+        "manager",
+        "minted",
+        "earned_raw",
+        "raised_raw",
+        "block"
+      ],
+      "properties": {
+        "wallet": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{40}$"
+        },
+        "code": {
+          "type": "string"
+        },
+        "discount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "manager": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{40}$"
+        },
+        "minted": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          }
+        },
+        "earned_raw": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "raised_raw": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "block": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "FoundersInvitation": {
+      "type": "object",
+      "required": [
+        "valid",
+        "ambassador"
+      ],
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "ambassador": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FoundersAmbassador"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "FoundersAttribution": {
+      "type": "object",
+      "required": [
+        "attribution"
+      ],
+      "properties": {
+        "attribution": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "wallet",
+                "code",
+                "source",
+                "bound",
+                "state",
+                "ambassador"
+              ],
+              "properties": {
+                "wallet": {
+                  "type": "string",
+                  "pattern": "^0x[0-9a-f]{40}$"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "bound": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "state": {
+                  "enum": [
+                    "active",
+                    "unavailable"
+                  ]
+                },
+                "ambassador": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/FoundersAmbassador"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "SectionIntroductionSection": {
+      "type": "string",
+      "enum": ["feed", "welcome", "leagues", "season", "character", "marketplace", "lootboxes", "shards", "moderation", "author-spaces", "referrals", "buy-gold", "freeze-gold", "news", "feedback-ideas", "feedback-bugs"]
+    },
+    "SectionIntroductionPosition": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {"type": "number", "minimum": 0, "maximum": 100},
+        "y": {"type": "number", "minimum": 0, "maximum": 100},
+        "width": {"type": "number", "minimum": 10, "maximum": 100}
+      },
+      "additionalProperties": false,
+      "description": "Control center and optional width, in percentages of the uncropped image. Interactive controls remain native HTML elements."
+    },
+    "SectionIntroductionLayout": {
+      "type": "object",
+      "required": ["button", "link", "close"],
+      "properties": {
+        "button": {"$ref": "#/$defs/SectionIntroductionPosition"},
+        "link": {"$ref": "#/$defs/SectionIntroductionPosition"},
+        "close": {"$ref": "#/$defs/SectionIntroductionPosition"}
+      },
+      "additionalProperties": false
+    },
+    "SectionIntroduction": {
+      "type": "object",
+      "required": ["section", "version", "updated", "title", "description", "image", "mobile_image", "button_label", "link", "layouts"],
+      "properties": {
+        "section": {"$ref": "#/$defs/SectionIntroductionSection"},
+        "version": {"type": "integer", "minimum": 1},
+        "updated": {"type": "integer", "minimum": 1},
+        "title": {"type": "string", "minLength": 1, "maxLength": 160},
+        "description": {"type": "string", "minLength": 1, "maxLength": 6000, "description": "Accessible text equivalent of the explanatory image."},
+        "image_id": {"type": "string"},
+        "mobile_image_id": {"type": "string"},
+        "image": {"$ref": "#/$defs/MediaAsset"},
+        "mobile_image": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/MediaAsset"}]},
+        "button_label": {"type": "string", "minLength": 1, "maxLength": 80},
+        "button_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "link_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Native documentation link text and icon color. Older introductions without this field use #E9D5FF."},
+        "link": {"anyOf": [{"type": "null"}, {"type": "object", "required": ["label", "url"], "properties": {"label": {"type": "string", "minLength": 1, "maxLength": 100}, "url": {"type": "string", "pattern": "^https://", "maxLength": 2048}}, "additionalProperties": false}]},
+        "layouts": {"type": "object", "required": ["desktop", "mobile"], "properties": {"desktop": {"$ref": "#/$defs/SectionIntroductionLayout"}, "mobile": {"$ref": "#/$defs/SectionIntroductionLayout"}}, "additionalProperties": false}
+      },
+      "additionalProperties": false
+    },
+    "SectionIntroductionState": {
+      "type": "object", "required": ["intro", "seen"],
+      "properties": {"intro": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/SectionIntroduction"}]}, "seen": {"type": "boolean"}},
+      "additionalProperties": false
+    },
+    "SectionIntroductionAcknowledgment": {
+      "type": "object", "required": ["seen", "version"],
+      "properties": {"seen": {"const": true}, "version": {"type": "integer", "minimum": 1}},
+      "additionalProperties": false
+    },
     "Object": {
       "type": "object",
       "additionalProperties": true
@@ -1394,7 +1586,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -2826,6 +3018,11 @@
         "level": {
           "type": "integer",
           "minimum": 1
+        },
+        "trust": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Optional historical weight of this counted vote, captured when the vote was recorded. Available only after the rating round closes."
         },
         "moderation_status": {
           "enum": [
@@ -6885,7 +7082,8 @@
           "enum": [
             "clothing",
             "potion",
-            "gem"
+            "gem",
+            "dice"
           ]
         },
         "slot": {
@@ -6969,6 +7167,10 @@
         },
         "potion": {
           "$ref": "#/$defs/PotionEffect"
+        },
+        "perfect": {
+          "type": "boolean",
+          "description": "Permanent maximum perk and aspect values, retained through crafting and ownership changes. Missing on historical snapshots means false."
         }
       },
       "additionalProperties": true,
@@ -7027,6 +7229,40 @@
               "properties": {
                 "kind": {
                   "const": "gem"
+                },
+                "level": {
+                  "const": 0
+                },
+                "slot": {
+                  "const": ""
+                },
+                "wear": {
+                  "const": ""
+                },
+                "perks": {
+                  "maxItems": 0
+                },
+                "location": {
+                  "enum": [
+                    "inventory",
+                    "marketplace"
+                  ]
+                }
+              }
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "dice"
+                },
+                "rarity": {
+                  "enum": [
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e"
+                  ]
                 },
                 "level": {
                   "const": 0
@@ -7290,7 +7526,14 @@
               "$ref": "#/$defs/PotionConsume"
             },
             "merge": {
-              "$ref": "#/$defs/PotionMerge"
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/PotionMerge"
+                },
+                {
+                  "$ref": "#/$defs/GemMerge"
+                }
+              ]
             },
             "revision": {
               "type": "string"
@@ -7320,6 +7563,39 @@
             },
             "maximize": {
               "$ref": "#/$defs/GemMaximization"
+            },
+            "reroll": {
+              "type": "object",
+              "required": [
+                "enabled",
+                "reason",
+                "cost"
+              ],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "cost": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "dice_id": {
+                  "type": "string"
+                },
+                "quality_bias": {
+                  "type": "number"
+                },
+                "perks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              },
+              "additionalProperties": true
             }
           }
         }
@@ -7578,7 +7854,7 @@
                 }
               },
               "additionalProperties": true,
-              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 \u00d7 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
             }
           }
         },
@@ -7858,7 +8134,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "verification": {
           "type": "string",
@@ -8048,7 +8324,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1\u20135), or 1\u20135 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1\u20134 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -9076,6 +9352,49 @@
         },
         "maximize": {
           "$ref": "#/$defs/GemCraftReceipt"
+        },
+        "scrap": {
+          "type": "object",
+          "properties": {
+            "dice_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "dice": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Item"
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "reroll": {
+          "type": "object",
+          "required": [
+            "cost"
+          ],
+          "properties": {
+            "cost": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "dice_id": {
+              "type": "string"
+            },
+            "perk_index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "before": {
+              "type": "object"
+            },
+            "after": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": true
         }
       },
       "additionalProperties": true
@@ -12153,6 +12472,19 @@
         "restore_percent": {
           "type": "number",
           "minimum": 0
+        },
+        "inputs": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        },
+        "ingredient_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "maxItems": 99
         }
       },
       "additionalProperties": true
@@ -14430,6 +14762,10 @@
         "essence_invested": {
           "type": "number",
           "minimum": 0
+        },
+        "perfect": {
+          "type": "boolean",
+          "description": "Permanent maximum perk and aspect values, retained through crafting and ownership changes. Missing on historical snapshots means false."
         }
       },
       "additionalProperties": true,
@@ -16445,6 +16781,9 @@
         },
         "level": {
           "type": "number"
+        },
+        "perfect": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false
@@ -16837,6 +17176,19 @@
         "updated": {
           "type": "integer",
           "minimum": 0
+        },
+        "milestones": {
+          "$ref": "#/$defs/ReferralMilestoneRules"
+        },
+        "incoming": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferralIncoming"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -16980,6 +17332,16 @@
         },
         "period": {
           "type": "string"
+        },
+        "milestones": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferralMilestoneProgress"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -17024,6 +17386,7 @@
         "weekly_gold",
         "seasonal_gold",
         "referral_gold",
+        "freezing_gold",
         "total_gold",
         "count"
       ],
@@ -17048,6 +17411,10 @@
           "minimum": 0
         },
         "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "freezing_gold": {
           "type": "integer",
           "minimum": 0
         }
@@ -17103,7 +17470,8 @@
               "source": {
                 "enum": [
                   "mining",
-                  "referrals"
+                  "referrals",
+                  "freezing"
                 ]
               },
               "scope": {
@@ -17164,6 +17532,36 @@
         "thresholds"
       ],
       "properties": {
+        "distribution": {
+          "type": "string",
+          "enum": ["weighted", "halves", "shares"],
+          "description": "Missing means historical weighted allocation. shares uses per-rarity ratios of remaining buyers, rounded up; Mythical receives the remainder. halves preserves saved half-allocation rules."
+        },
+        "shares": {
+          "type": "array",
+          "description": "Exact allocation ratios in F/E/D/C/B/A order. Used by the shares distribution.",
+          "items": {
+            "type": "object",
+            "required": ["numerator", "denominator"],
+            "properties": {
+              "numerator": {"type": "integer", "minimum": 0, "maximum": 100000000},
+              "denominator": {"type": "integer", "minimum": 1, "maximum": 100000000}
+            },
+            "additionalProperties": false
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "excluded": {
+          "type": "object",
+          "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F–A. Missing means zero exclusion in saved shares rules.",
+          "required": ["numerator", "denominator"],
+          "properties": {
+            "numerator": {"type": "integer", "minimum": 0, "maximum": 100000000},
+            "denominator": {"type": "integer", "minimum": 1, "maximum": 100000000}
+          },
+          "additionalProperties": false
+        },
         "version": {
           "type": "integer",
           "minimum": 1
@@ -17186,8 +17584,8 @@
         "thresholds": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "minimum": 2,
+            "type": ["integer", "null"],
+            "minimum": 1,
             "maximum": 1000000
           },
           "minItems": 6,
@@ -17563,7 +17961,8 @@
         "enabled",
         "reason",
         "gem_id",
-        "perks"
+        "cost",
+        "after"
       ],
       "properties": {
         "enabled": {
@@ -17575,29 +17974,18 @@
         "gem_id": {
           "type": "string"
         },
-        "perks": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "index",
-              "before",
-              "after"
-            ],
-            "properties": {
-              "index": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "before": {
-                "type": "object"
-              },
-              "after": {
-                "type": "object"
-              }
+        "cost": {
+          "const": 500
+        },
+        "after": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Item"
             },
-            "additionalProperties": false
-          }
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -17629,6 +18017,1102 @@
         }
       },
       "additionalProperties": false
+    },
+    "ReferralMilestoneRule": {
+      "type": "object",
+      "required": [
+        "id",
+        "level",
+        "box",
+        "rarity",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "registration",
+            "level_5",
+            "level_8",
+            "level_15"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "box": {
+          "enum": [
+            "lootbox_f",
+            "lootbox_e",
+            "lootbox_d",
+            "lootbox_c"
+          ]
+        },
+        "rarity": {
+          "enum": [
+            "f",
+            "e",
+            "d",
+            "c"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralMilestoneStage": {
+      "type": "object",
+      "required": [
+        "id",
+        "level",
+        "box",
+        "rarity",
+        "name",
+        "state",
+        "awarded"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "registration",
+            "level_5",
+            "level_8",
+            "level_15"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "box": {
+          "enum": [
+            "lootbox_f",
+            "lootbox_e",
+            "lootbox_d",
+            "lootbox_c"
+          ]
+        },
+        "rarity": {
+          "enum": [
+            "f",
+            "e",
+            "d",
+            "c"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "awarded",
+            "pending",
+            "expired",
+            "unavailable"
+          ]
+        },
+        "awarded": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralMilestoneProgress": {
+      "type": "object",
+      "required": [
+        "version",
+        "joined",
+        "expires",
+        "level",
+        "stages"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "joined": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ReferralMilestoneStage"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralIncoming": {
+      "type": "object",
+      "required": [
+        "version",
+        "joined",
+        "expires",
+        "level",
+        "stages",
+        "inviter"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "joined": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ReferralMilestoneStage"
+          }
+        },
+        "inviter": {
+          "$ref": "#/$defs/ReferralProfile"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralMilestoneRules": {
+      "type": "object",
+      "required": [
+        "version",
+        "months",
+        "stages"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "months": {
+          "const": 6
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ReferralMilestoneRule"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "GemMerge": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "reason",
+        "cost",
+        "base_cost",
+        "inputs",
+        "ingredient_ids",
+        "available",
+        "next_rarity",
+        "after"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "base_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inputs": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        },
+        "ingredient_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 99,
+          "uniqueItems": true
+        },
+        "available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "next_rarity": {
+          "enum": [
+            "",
+            "e",
+            "d",
+            "c",
+            "b",
+            "a"
+          ]
+        },
+        "after": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Item"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "GemMergeResult": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/PlayerResult"
+        },
+        {
+          "type": "object",
+          "required": [
+            "merge",
+            "ledger",
+            "item",
+            "idempotent"
+          ],
+          "properties": {
+            "merge": {
+              "$ref": "#/$defs/GemMerge"
+            },
+            "idempotent": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "GoldFreezingPosition": {
+      "type": "object",
+      "required": [
+        "principal",
+        "pending",
+        "remaining",
+        "renew",
+        "activation",
+        "unlock",
+        "started"
+      ],
+      "properties": {
+        "principal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pending": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "renew": {
+          "type": "boolean"
+        },
+        "activation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unlock": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "started": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldFreezingRow": {
+      "type": "object",
+      "required": [
+        "user",
+        "profile",
+        "rank",
+        "principal",
+        "weeks",
+        "power",
+        "share",
+        "reward",
+        "own"
+      ],
+      "properties": {
+        "user": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/$defs/ReferralProfile"
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "principal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "weeks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reward": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "own": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldFreezingHistory": {
+      "type": "object",
+      "required": [
+        "period",
+        "start",
+        "total_power",
+        "own_power",
+        "share",
+        "pool"
+      ],
+      "properties": {
+        "period": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "own_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pool": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldFreezingView": {
+      "type": "object",
+      "required": [
+        "week",
+        "starts",
+        "accepting",
+        "final_week",
+        "cutover_at",
+        "pool",
+        "total_power",
+        "participants",
+        "own",
+        "position",
+        "wallet",
+        "page",
+        "rows",
+        "history",
+        "asof",
+        "timeline"
+      ],
+      "properties": {
+        "week": {
+          "type": "object",
+          "required": [
+            "period",
+            "start",
+            "end"
+          ],
+          "properties": {
+            "scope": {
+              "const": "week"
+            },
+            "period": {
+              "type": "string"
+            },
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "starts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accepting": {
+          "type": "boolean"
+        },
+        "final_week": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cutover_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pool": {
+          "type": "object",
+          "required": [
+            "total",
+            "addition",
+            "carry",
+            "settled",
+            "next"
+          ],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "addition": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "carry": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "settled": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "next": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "total_power": {
+          "type": "number",
+          "minimum": 0
+        },
+        "participants": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "own": {
+          "type": "object",
+          "required": [
+            "rank",
+            "principal",
+            "weeks",
+            "power",
+            "share",
+            "reward",
+            "accrued"
+          ],
+          "properties": {
+            "rank": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "principal": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "weeks": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "power": {
+              "type": "number",
+              "minimum": 0
+            },
+            "share": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "reward": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accrued": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "position": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/GoldFreezingPosition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "wallet": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "page": {
+          "type": "object",
+          "required": [
+            "number",
+            "pages",
+            "per_page",
+            "total"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pages": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "per_page": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GoldFreezingRow"
+          }
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GoldFreezingHistory"
+          }
+        },
+        "asof": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "time",
+              "total",
+              "mine"
+            ],
+            "properties": {
+              "time": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "total": {
+                "type": "number",
+                "minimum": 0
+              },
+              "mine": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "GoldFreezingReceipt": {
+      "type": "object",
+      "required": [
+        "action",
+        "principal",
+        "pending",
+        "remaining",
+        "unlock",
+        "wallet",
+        "created"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "freeze",
+            "add",
+            "renew",
+            "cancel",
+            "withdraw"
+          ]
+        },
+        "principal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pending": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remaining": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unlock": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "wallet": {
+          "$ref": "#/$defs/BalanceState"
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyReward": {
+      "type": "object",
+      "required": [
+        "resource",
+        "amount"
+      ],
+      "properties": {
+        "resource": {
+          "type": "string",
+          "enum": [
+            "silver",
+            "gold",
+            "essence",
+            "lootbox_f",
+            "lootbox_e",
+            "lootbox_d",
+            "lootbox_c",
+            "lootbox_b",
+            "lootbox_a"
+          ]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyTier": {
+      "type": "object",
+      "required": [
+        "threshold",
+        "rewards",
+        "key",
+        "claimed"
+      ],
+      "properties": {
+        "threshold": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rewards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyReward"
+          }
+        },
+        "key": {
+          "description": "Opaque stable target identity. Use this key for Claim; never derive it from the target index. Earned reward bundles are immutable even when current conditions change.",
+          "type": "string"
+        },
+        "claimed": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyMilestone": {
+      "type": "object",
+      "required": [
+        "day",
+        "rewards"
+      ],
+      "properties": {
+        "day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 366
+        },
+        "rewards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyReward"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyFilters": {
+      "type": "object",
+      "properties": {
+        "rarity": {
+          "type": "string",
+          "enum": [
+            "f",
+            "e",
+            "d",
+            "c",
+            "b",
+            "a"
+          ]
+        },
+        "box": {
+          "type": "string",
+          "enum": [
+            "f",
+            "e",
+            "d",
+            "c",
+            "b",
+            "a"
+          ]
+        },
+        "obtained_today": {
+          "type": "boolean"
+        },
+        "higher_level": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyChain": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "action",
+        "enabled",
+        "filters",
+        "tiers",
+        "unit",
+        "icon",
+        "href",
+        "note",
+        "progress",
+        "current",
+        "completed",
+        "claimable"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "description": "Optional public URL of the image uploaded for this task. Empty means no image. Changes apply immediately with the live configuration."
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "quest.completed",
+            "lootbox.opened",
+            "lootbox.purchased",
+            "item.bought",
+            "item.sold",
+            "item.listed",
+            "item.scrapped",
+            "item.upgraded",
+            "item.equipped",
+            "gold.converted",
+            "character.leveled_up",
+            "character.attribute_spent",
+            "moderation.correct"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "filters": {
+          "$ref": "#/$defs/DailyFilters"
+        },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyTier"
+          }
+        },
+        "unit": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "current": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed": {
+          "type": "boolean"
+        },
+        "claimable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyStreak": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "total",
+        "position",
+        "length",
+        "qualified",
+        "next_day",
+        "claimable",
+        "claimed",
+        "rewards",
+        "milestones"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "qualified": {
+          "type": "boolean"
+        },
+        "next_day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claimable": {
+          "type": "boolean"
+        },
+        "claimed": {
+          "type": "boolean"
+        },
+        "rewards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyReward"
+          }
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyMilestone"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyStatus": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "day",
+        "resets_at",
+        "server_time",
+        "available",
+        "award_cursor",
+        "revision"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resets_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_time": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "award_cursor": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyBoard": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "day",
+        "resets_at",
+        "server_time",
+        "available",
+        "award_cursor",
+        "revision",
+        "chains",
+        "streak"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resets_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "server_time": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "award_cursor": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "chains": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DailyChain"
+          }
+        },
+        "streak": {
+          "$ref": "#/$defs/DailyStreak"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyClaim": {
+      "type": "object",
+      "required": [
+        "award_id",
+        "idempotent",
+        "daily",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "award_id": {
+          "type": "string"
+        },
+        "idempotent": {
+          "type": "boolean"
+        },
+        "daily": {
+          "$ref": "#/$defs/DailyBoard"
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DiceMergeResult": {
+      "$ref": "#/$defs/GemMergeResult"
     }
   }
 }
