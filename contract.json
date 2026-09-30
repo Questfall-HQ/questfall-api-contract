@@ -59,8 +59,17 @@
       "method": "GET",
       "path": "/section-intros/{section}",
       "access": "authenticated",
-      "request": {"transport": "query", "params": ["section"], "required": [], "optional": []},
-      "response": {"schema": "SectionIntroductionState"},
+      "request": {
+        "transport": "query",
+        "params": [
+          "section"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "SectionIntroductionState"
+      },
       "description": "Published image-led section introduction and the current account's acknowledgment. Unpublished sections return intro:null. Private, no-store."
     },
     {
@@ -68,8 +77,19 @@
       "method": "POST",
       "path": "/section-intros/{section}/acknowledge",
       "access": "authenticated",
-      "request": {"transport": "body", "params": ["section"], "required": ["version"], "optional": []},
-      "response": {"schema": "SectionIntroductionAcknowledgment"},
+      "request": {
+        "transport": "body",
+        "params": [
+          "section"
+        ],
+        "required": [
+          "version"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "SectionIntroductionAcknowledgment"
+      },
       "description": "Idempotently acknowledges the current audience marker for this account. Stale markers return 409. Saving changed visible content, showing a hidden introduction, or explicitly repeating it advances the marker and shows it on the next section visit. Unchanged saves and saves while hidden preserve acknowledgments. Hiding retains the saved content and returns no introduction."
     },
     {
@@ -3200,6 +3220,26 @@
       "response": {
         "schema": "ChatReactionResult"
       }
+    },
+    {
+      "operation": "chat.report",
+      "method": "POST",
+      "path": "/chat/reports",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "message"
+        ],
+        "optional": [
+          "reason"
+        ]
+      },
+      "response": {
+        "schema": "ChatReportReceipt"
+      },
+      "description": "Compatibility surface for already deployed App clients and open tabs. Reporting keeps its verified-account, idempotent receipt and saved-evidence behavior while new clients use team moderation. Retire only after producer migration and a separate compatibility review."
     },
     {
       "operation": "admin.chat.deleteMessage",

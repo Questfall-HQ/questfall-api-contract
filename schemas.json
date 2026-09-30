@@ -140,58 +140,225 @@
     },
     "SectionIntroductionSection": {
       "type": "string",
-      "enum": ["feed", "welcome", "leagues", "season", "character", "marketplace", "lootboxes", "shards", "moderation", "author-spaces", "referrals", "buy-gold", "freeze-gold", "news", "feedback-ideas", "feedback-bugs"]
+      "enum": [
+        "feed",
+        "welcome",
+        "leagues",
+        "season",
+        "character",
+        "marketplace",
+        "lootboxes",
+        "shards",
+        "moderation",
+        "author-spaces",
+        "referrals",
+        "buy-gold",
+        "freeze-gold",
+        "news",
+        "feedback-ideas",
+        "feedback-bugs"
+      ]
     },
     "SectionIntroductionPosition": {
       "type": "object",
-      "required": ["x", "y"],
+      "required": [
+        "x",
+        "y"
+      ],
       "properties": {
-        "x": {"type": "number", "minimum": 0, "maximum": 100},
-        "y": {"type": "number", "minimum": 0, "maximum": 100},
-        "width": {"type": "number", "minimum": 10, "maximum": 100}
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "width": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 100
+        }
       },
       "additionalProperties": false,
       "description": "Control center and optional width, in percentages of the uncropped image. Interactive controls remain native HTML elements."
     },
     "SectionIntroductionLayout": {
       "type": "object",
-      "required": ["button", "link", "close"],
+      "required": [
+        "button",
+        "link",
+        "close"
+      ],
       "properties": {
-        "button": {"$ref": "#/$defs/SectionIntroductionPosition"},
-        "link": {"$ref": "#/$defs/SectionIntroductionPosition"},
-        "close": {"$ref": "#/$defs/SectionIntroductionPosition"}
+        "button": {
+          "$ref": "#/$defs/SectionIntroductionPosition"
+        },
+        "link": {
+          "$ref": "#/$defs/SectionIntroductionPosition"
+        },
+        "close": {
+          "$ref": "#/$defs/SectionIntroductionPosition"
+        }
       },
       "additionalProperties": false
     },
     "SectionIntroduction": {
       "type": "object",
-      "required": ["section", "version", "updated", "title", "description", "image", "mobile_image", "button_label", "link", "layouts"],
+      "required": [
+        "section",
+        "version",
+        "updated",
+        "title",
+        "description",
+        "image",
+        "mobile_image",
+        "button_label",
+        "link",
+        "layouts"
+      ],
       "properties": {
-        "section": {"$ref": "#/$defs/SectionIntroductionSection"},
-        "version": {"type": "integer", "minimum": 1},
-        "updated": {"type": "integer", "minimum": 1},
-        "title": {"type": "string", "minLength": 1, "maxLength": 160},
-        "description": {"type": "string", "minLength": 1, "maxLength": 6000, "description": "Accessible text equivalent of the explanatory image."},
-        "image_id": {"type": "string"},
-        "mobile_image_id": {"type": "string"},
-        "image": {"$ref": "#/$defs/MediaAsset"},
-        "mobile_image": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/MediaAsset"}]},
-        "button_label": {"type": "string", "minLength": 1, "maxLength": 80},
-        "button_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
-        "link_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "description": "Native documentation link text and icon color. Older introductions without this field use #E9D5FF."},
-        "link": {"anyOf": [{"type": "null"}, {"type": "object", "required": ["label", "url"], "properties": {"label": {"type": "string", "minLength": 1, "maxLength": 100}, "url": {"type": "string", "pattern": "^https://", "maxLength": 2048}}, "additionalProperties": false}]},
-        "layouts": {"type": "object", "required": ["desktop", "mobile"], "properties": {"desktop": {"$ref": "#/$defs/SectionIntroductionLayout"}, "mobile": {"$ref": "#/$defs/SectionIntroductionLayout"}}, "additionalProperties": false}
+        "section": {
+          "$ref": "#/$defs/SectionIntroductionSection"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 6000,
+          "description": "Accessible text equivalent of the explanatory image."
+        },
+        "image_id": {
+          "type": "string"
+        },
+        "mobile_image_id": {
+          "type": "string"
+        },
+        "image": {
+          "$ref": "#/$defs/MediaAsset"
+        },
+        "mobile_image": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/MediaAsset"
+            }
+          ]
+        },
+        "button_label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "button_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "link_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Native documentation link text and icon color. Older introductions without this field use #E9D5FF."
+        },
+        "link": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "label",
+                "url"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https://",
+                  "maxLength": 2048
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "layouts": {
+          "type": "object",
+          "required": [
+            "desktop",
+            "mobile"
+          ],
+          "properties": {
+            "desktop": {
+              "$ref": "#/$defs/SectionIntroductionLayout"
+            },
+            "mobile": {
+              "$ref": "#/$defs/SectionIntroductionLayout"
+            }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },
     "SectionIntroductionState": {
-      "type": "object", "required": ["intro", "seen"],
-      "properties": {"intro": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/SectionIntroduction"}]}, "seen": {"type": "boolean"}},
+      "type": "object",
+      "required": [
+        "intro",
+        "seen"
+      ],
+      "properties": {
+        "intro": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/SectionIntroduction"
+            }
+          ]
+        },
+        "seen": {
+          "type": "boolean"
+        }
+      },
       "additionalProperties": false
     },
     "SectionIntroductionAcknowledgment": {
-      "type": "object", "required": ["seen", "version"],
-      "properties": {"seen": {"const": true}, "version": {"type": "integer", "minimum": 1}},
+      "type": "object",
+      "required": [
+        "seen",
+        "version"
+      ],
+      "properties": {
+        "seen": {
+          "const": true
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
       "additionalProperties": false
     },
     "Object": {
@@ -1586,7 +1753,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -7854,7 +8021,7 @@
                 }
               },
               "additionalProperties": true,
-              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 \u00d7 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
             }
           }
         },
@@ -8134,7 +8301,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "verification": {
           "type": "string",
@@ -8324,7 +8491,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot Action requires exactly screenshot_count media IDs (1\u20135), or 1\u20135 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1\u20134 images for preserved receipts and historical readers."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -17534,7 +17701,11 @@
       "properties": {
         "distribution": {
           "type": "string",
-          "enum": ["weighted", "halves", "shares"],
+          "enum": [
+            "weighted",
+            "halves",
+            "shares"
+          ],
           "description": "Missing means historical weighted allocation. shares uses per-rarity ratios of remaining buyers, rounded up; Mythical receives the remainder. halves preserves saved half-allocation rules."
         },
         "shares": {
@@ -17542,10 +17713,21 @@
           "description": "Exact allocation ratios in F/E/D/C/B/A order. Used by the shares distribution.",
           "items": {
             "type": "object",
-            "required": ["numerator", "denominator"],
+            "required": [
+              "numerator",
+              "denominator"
+            ],
             "properties": {
-              "numerator": {"type": "integer", "minimum": 0, "maximum": 100000000},
-              "denominator": {"type": "integer", "minimum": 1, "maximum": 100000000}
+              "numerator": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "denominator": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100000000
+              }
             },
             "additionalProperties": false
           },
@@ -17555,10 +17737,21 @@
         "excluded": {
           "type": "object",
           "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F–A. Missing means zero exclusion in saved shares rules.",
-          "required": ["numerator", "denominator"],
+          "required": [
+            "numerator",
+            "denominator"
+          ],
           "properties": {
-            "numerator": {"type": "integer", "minimum": 0, "maximum": 100000000},
-            "denominator": {"type": "integer", "minimum": 1, "maximum": 100000000}
+            "numerator": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "denominator": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000000
+            }
           },
           "additionalProperties": false
         },
@@ -17584,7 +17777,10 @@
         "thresholds": {
           "type": "array",
           "items": {
-            "type": ["integer", "null"],
+            "type": [
+              "integer",
+              "null"
+            ],
             "minimum": 1,
             "maximum": 1000000
           },
@@ -19113,6 +19309,27 @@
     },
     "DiceMergeResult": {
       "$ref": "#/$defs/GemMergeResult"
+    },
+    "ChatReportReceipt": {
+      "type": "object",
+      "required": [
+        "id",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "open",
+            "dismissed",
+            "banned"
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

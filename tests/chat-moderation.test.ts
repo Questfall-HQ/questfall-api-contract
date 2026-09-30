@@ -1,5 +1,5 @@
 import {test, expect} from 'bun:test'
-import {contract, validate} from '../src/index.js'
+import {contract, operations, path, validate} from '../src/index.js'
 
 const author = {id:'user123',name:'Questfall user',avatar:{mode:'generated',seed:'user123'},avatar_icon:null,level:1,moderation_status:'active',role:'team',admin:false,team:true}
 
@@ -22,7 +22,22 @@ test('chat marks team members and exposes moderation only to admins', () => {
 	expect(deletion?.request.optional).toEqual(['duration','reason'])
 	expect(validate('ChatDeleteResult',{id:message.id})).toEqual([])
 	for (const route of contract.routes.filter(route=>route.path.startsWith('/admin/chat/'))) expect(route.access).toBe('admin')
-	expect(contract.routes.some(route=>route.path.includes('/chat/reports'))).toBe(false)
+	expect(contract.routes.some(route=>route.path.startsWith('/admin/chat/reports'))).toBe(false)
+})
+
+test('retains the deployed verified chat reporting protocol until clients migrate', () => {
+	const report = operations['chat.report']
+	expect(path('chat.report')).toBe('/chat/reports')
+	expect(report.method).toBe('POST')
+	expect(report.access).toBe('verified')
+	expect(report.request).toEqual({transport:'body',params:[],required:['message'],optional:['reason']})
+	expect(report.response.schema).toBe('ChatReportReceipt')
+	for (const status of ['open','dismissed','banned']) {
+		expect(validate('ChatReportReceipt',{id:'saved-report',status})).toEqual([])
+	}
+	for (const value of [{id:'',status:'open'},{id:'saved-report',status:'resolved'},{id:'saved-report'},{id:'saved-report',status:'open',snapshot:[]}]) {
+		expect(validate('ChatReportReceipt',value).length).toBeGreaterThan(0)
+	}
 })
 
 test('chat editing keeps its revision request', () => {

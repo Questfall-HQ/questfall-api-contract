@@ -86,6 +86,15 @@ an assigned role receive a badge. Admin routes and chat moderation require
 
 ### Chat moderation — v12.1.0
 
+`POST /chat/reports` remains a verified-account compatibility surface in the
+combined v14 release. Deployed App 0.6.03 and existing open tabs still send
+`{message, reason?}` and receive `{id, status: open | dismissed | banned}`;
+repeat submissions retain the same saved receipt. The new client keeps its
+API method while using team moderation in the UI. Report evidence and the
+internal administrative review remain stored and readable. Remove this route
+and storage only in a later, separately reviewed retirement after producers
+have migrated; backend rollout must keep the current public client working.
+
 `POST /admin/chat/messages/delete` accepts an optional `duration` and `reason`.
 With a duration, the server deletes the message and bans its author in one
 transaction, using the same durations as `POST /admin/chat/bans`. Without a
