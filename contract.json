@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "14.0.0",
+  "version": "14.1.0",
   "routes": [
     {
       "operation": "founders.invitation",
@@ -406,7 +406,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480×480, <=512 KiB) and display (<=2000×2000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480\u00d7480, <=512 KiB) and display (<=2000\u00d72000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -1497,7 +1497,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8\u2013128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2580,7 +2580,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -3040,7 +3040,9 @@
           "id"
         ],
         "required": [],
-        "optional": []
+        "optional": [
+          "updates"
+        ]
       },
       "response": {
         "schema": "TrackingStatus"
@@ -3320,7 +3322,7 @@
       "response": {
         "schema": "BugReportList"
       },
-      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, rejected, or hidden. Hidden is admin only."
+      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, rejected, or hidden. Hidden is admin only. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
     },
     {
       "operation": "admin.feedback.bugs.status",
@@ -3428,7 +3430,7 @@
       "response": {
         "schema": "IdeaList"
       },
-      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, rejected, or hidden. Hidden is admin only."
+      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, rejected, or hidden. Hidden is admin only. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
     },
     {
       "operation": "admin.feedback.ideas.status",
@@ -3536,7 +3538,7 @@
       "response": {
         "schema": "BugReportList"
       },
-      "description": "filter accepts all (every public status), active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route."
+      "description": "filter accepts all (every public status), active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
     },
     {
       "operation": "feedback.bugs.create",
@@ -3685,7 +3687,7 @@
       "response": {
         "schema": "IdeaList"
       },
-      "description": "filter accepts all (every public status), active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route."
+      "description": "filter accepts all (every public status), active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
     },
     {
       "operation": "feedback.ideas.create",

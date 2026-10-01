@@ -16393,6 +16393,9 @@
         },
         "pages": {
           "type": "integer"
+        },
+        "counts": {
+          "$ref": "#/$defs/BugReportCounts"
         }
       },
       "additionalProperties": true
@@ -16555,6 +16558,9 @@
         },
         "pages": {
           "type": "integer"
+        },
+        "counts": {
+          "$ref": "#/$defs/IdeaCounts"
         }
       },
       "additionalProperties": true
@@ -16604,6 +16610,10 @@
         },
         "name": {
           "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
         },
         "role": {
           "enum": [
@@ -17020,6 +17030,11 @@
         },
         "read": {
           "type": "boolean"
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "UTC activity-day start in milliseconds for a space_digest; omitted when its source day is unavailable. Independent of notification delivery time."
         }
       },
       "additionalProperties": false
@@ -18653,6 +18668,7 @@
         "cutover_at",
         "pool",
         "total_power",
+        "current_power",
         "participants",
         "own",
         "position",
@@ -18872,6 +18888,11 @@
             },
             "additionalProperties": false
           }
+        },
+        "current_power": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Sum of current principal × multiplier across all positions, sampled at asof (or program opening for pending positions). Independent of accrued and projected weekly points."
         }
       },
       "additionalProperties": false
@@ -19327,6 +19348,74 @@
             "dismissed",
             "banned"
           ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "BugReportCounts": {
+      "type": "object",
+      "description": "Totals across all pages of public records, independent of the selected filter; mine counts public records authored by the authenticated viewer and is zero for guests. Hidden records are excluded.",
+      "required": [
+        "open",
+        "confirmed",
+        "closed",
+        "rejected",
+        "mine"
+      ],
+      "properties": {
+        "open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confirmed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "closed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mine": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "IdeaCounts": {
+      "type": "object",
+      "description": "Totals across all pages of public records, independent of the selected filter; mine counts public records authored by the authenticated viewer and is zero for guests. Hidden records are excluded.",
+      "required": [
+        "open",
+        "planned",
+        "implemented",
+        "rejected",
+        "mine"
+      ],
+      "properties": {
+        "open": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "planned": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "implemented": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mine": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false

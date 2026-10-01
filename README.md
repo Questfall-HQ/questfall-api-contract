@@ -1,5 +1,19 @@
 # questfall-api-contract
 
+## v14.1.0 — Tracker, feedback and Gold Freezing refinements
+
+Compatible additions: delivery-specific Tracker acknowledgement, activity-day
+snapshots, public feedback counts and author level, and instantaneous Freezing
+power. Existing clients retain their request and response semantics.
+
+Tracker daily summaries — local preparation: `TrackingUpdate.day` optionally
+identifies the actual UTC activity day, independently of delivery time. The
+read action accepts optional `updates` (delivery IDs) to acknowledge only the
+displayed summary; omitted preserves the existing mark-all-for-object behavior.
+Daily summaries are recurring snapshots: only the latest report and delivery
+remain for each space, with no earlier-day cursor. Each replacement starts
+unread; acknowledging the previous delivery cannot mark its replacement read.
+
 ## v14.0.0 — combined release preparation
 
 The local release candidate adds Daily tasks, section introductions, Gold
@@ -32,6 +46,14 @@ No response fields or HTTP paths change. Contract tagging and full consumer gate
 remain part of coordinated release preparation.
 
 ### Gold Freezing term completion — local preparation
+
+The position summary adds `GoldFreezingView.current_power`: the sum of all
+current principals × multipliers at `asof` (or at opening before the program
+starts). APR uses this instantaneous denominator rather than accrued/projected
+weekly points. Additions and renewals replace the viewer's previous power.
+Annualization uses the regular weekly allocation (`pool.addition`, or
+`pool.next` for the initial launch), excludes carry-over and does not compound.
+This additive field awaits coordinated contract tagging and consumer release.
 
 `GET /gold/freezing` supports anonymous reads of the weekly pool, points chart
 and leaderboard. Guests receive `position:null`, `wallet:0`, zero `own` metrics,
@@ -211,6 +233,11 @@ JSON-ответы, маршруты и формулы не меняются. Э�
 `potion_reference`: клиент проецирует старый snapshot с его собственными
 параметрами до получения нового. `PotionEffect.restore_percent` — положительное
 число, а не фиксированный список значений баланса.
+
+`decay_per_hour` задаёт абсолютную скорость потери избытка, независимо от `max`.
+Клиент использует её из snapshot; смена экипировки не меняет эту скорость.
+Текущая серверная формула исключает экипировку и использует вложенные очки
+Stamina с их Reserve Mastery. Формула не является частью JSON schema.
 
 ### Public quest submissions — v6.47.0
 
