@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "14.1.0",
+  "version": "14.2.0",
   "routes": [
     {
       "operation": "founders.invitation",
@@ -102,7 +102,8 @@
         "params": [],
         "required": [],
         "optional": [
-          "response_version"
+          "response_version",
+          "visitor_id"
         ]
       },
       "response": {
@@ -139,7 +140,8 @@
           "email"
         ],
         "optional": [
-          "referral_code"
+          "referral_code",
+          "analytics"
         ]
       },
       "response": {
@@ -158,7 +160,9 @@
           "email",
           "otp"
         ],
-        "optional": []
+        "optional": [
+          "analytics"
+        ]
       },
       "response": {
         "schema": "AuthSession"
@@ -179,7 +183,8 @@
           "chainId",
           "domain",
           "uri",
-          "referral_code"
+          "referral_code",
+          "analytics"
         ]
       },
       "response": {
@@ -199,7 +204,8 @@
           "signature"
         ],
         "optional": [
-          "provider"
+          "provider",
+          "analytics"
         ]
       },
       "response": {
@@ -1186,6 +1192,28 @@
       "response": {
         "schema": "ModerationSummary"
       }
+    },
+    {
+      "operation": "moderation.rewards.claim",
+      "method": "POST",
+      "path": "/moderation/rewards/claim",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "checkpoint"
+        ],
+        "optional": [
+          "response_version",
+          "content_version",
+          "moderation_version"
+        ]
+      },
+      "response": {
+        "schema": "ModerationWorkRewardClaim"
+      },
+      "description": "Claim one Common Lootbox only with an empty eligible queue, >90% lifetime consensus match and at least 50 newly resolved regular cases since the last successful claim. Initial checkpoint is zero. Claim advances checkpoint to the current resolved count; replaying an old checkpoint returns its existing receipt."
     },
     {
       "operation": "moderation.assignments.claim",
@@ -2894,6 +2922,7 @@
     },
     {
       "operation": "news.detail",
+      "description": "Load a published article by its permanent title slug or legacy record ID.",
       "method": "GET",
       "path": "/news/{id}",
       "access": "public",
@@ -2960,6 +2989,7 @@
     },
     {
       "operation": "chat.list",
+      "description": "Read recent messages, a page before a cursor, or a bounded window around a message. before and around are mutually exclusive; has_newer is returned for around windows.",
       "method": "GET",
       "path": "/chat/messages",
       "access": "verified",
@@ -2969,6 +2999,7 @@
         "required": [],
         "optional": [
           "before",
+          "around",
           "limit"
         ]
       },
@@ -3002,12 +3033,14 @@
         "required": [],
         "optional": [
           "before",
-          "limit"
+          "limit",
+          "view"
         ]
       },
       "response": {
         "schema": "TrackingObjectPage"
-      }
+      },
+      "description": "view accepts attention (unread updates or personal unclaimed rewards), all (legacy default), or claimable. Counters count cards once across all pages."
     },
     {
       "operation": "tracking.updates",
@@ -3082,6 +3115,7 @@
     },
     {
       "operation": "chat.people",
+      "description": "Private verified-user mention search. A non-empty q searches a literal name prefix, up to 64 characters; returns at most four verified, unrestricted users ordered by name and id. Empty q returns no users.",
       "method": "GET",
       "path": "/chat/people",
       "access": "verified",
@@ -3186,6 +3220,22 @@
       },
       "response": {
         "schema": "ChatReadStatus"
+      }
+    },
+    {
+      "operation": "chat.mentions",
+      "description": "Find the oldest unread mention, reply or everyone announcement for the current user without marking it read.",
+      "method": "GET",
+      "path": "/chat/attention",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatAttentionTarget"
       }
     },
     {
@@ -3620,12 +3670,14 @@
         "required": [],
         "optional": [
           "page",
-          "per_page"
+          "per_page",
+          "include_updates"
         ]
       },
       "response": {
         "schema": "FeedbackCommentList"
-      }
+      },
+      "description": "include_updates=true merges team decision messages into chronological comment pagination. Omitted keeps the ordinary-comments-only response."
     },
     {
       "operation": "feedback.bugs.comments.create",
@@ -3761,12 +3813,14 @@
         "required": [],
         "optional": [
           "page",
-          "per_page"
+          "per_page",
+          "include_updates"
         ]
       },
       "response": {
         "schema": "FeedbackCommentList"
-      }
+      },
+      "description": "include_updates=true merges team decision messages into chronological comment pagination. Omitted keeps the ordinary-comments-only response."
     },
     {
       "operation": "feedback.ideas.comments.create",
@@ -4369,6 +4423,172 @@
         "schema": "DiceMergeResult"
       },
       "description": "Merge the server-quoted number of distinct owned Dice into one next-rarity Dice. ingredient_ids contains every additional ID. The current recipe, item revision and exact cost are rechecked before atomic spending."
+    },
+    {
+      "operation": "feedback.ideas.tracking",
+      "method": "POST",
+      "path": "/feedback/ideas/{id}/tracking",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "tracked"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FeedbackTracking"
+      }
+    },
+    {
+      "operation": "feedback.bugs.tracking",
+      "method": "POST",
+      "path": "/feedback/bugs/{id}/tracking",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "tracked"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FeedbackTracking"
+      }
+    },
+    {
+      "operation": "tracking.settings",
+      "method": "GET",
+      "path": "/tracking/settings",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "TrackingSettings"
+      }
+    },
+    {
+      "operation": "tracking.configure",
+      "method": "POST",
+      "path": "/tracking/settings",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "sources"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "TrackingSettings"
+      }
+    },
+    {
+      "operation": "tracking.subscriptions",
+      "method": "GET",
+      "path": "/tracking/subscriptions",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "TrackingSubscriptions"
+      },
+      "description": "Active page-control identities: period categories use their ISO period as id; referral uses the invited player id; other objects use their record id. Space subscriptions are limited to the user's Author Spaces and author teams; foreign space observations and moderation work bonuses are retired."
+    },
+    {
+      "operation": "tracking.observe",
+      "method": "POST",
+      "path": "/tracking/observe",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "type",
+          "id",
+          "tracked"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "TrackingObservation"
+      },
+      "description": "Track accessible objects individually, even when auto-add is disabled. Use object record IDs, invited player ID for referral, and ISO week or season keys for mining_week, mining_season, gem_week and referral_reward. Personal completions, orders and Freezing positions are owner-only. Space observation requires ownership or author-team membership; foreign spaces return 404. Legacy team quest requests follow their Author Space."
+    },
+    {
+      "operation": "tracking.claim",
+      "method": "POST",
+      "path": "/tracking/objects/{id}/claim",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "key"
+        ],
+        "optional": [
+          "response_version",
+          "payout_id",
+          "quest_id"
+        ]
+      },
+      "response": {
+        "schema": "TrackingClaimResult"
+      },
+      "description": "Claim only this card\u2019s reward. Optional payout_id binds a personal reward request to the displayed receipt; it must belong to the card and user. Welcome cards require quest_id for an initial request to bind the displayed Welcome reward. Retries remain bound to the same reward after the card advances to the next week or Welcome quest."
+    },
+    {
+      "operation": "analytics.visits",
+      "method": "POST",
+      "path": "/analytics/visits",
+      "access": "public",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "visitor_id",
+          "visit_id",
+          "write_key",
+          "revision",
+          "surface",
+          "started_at",
+          "last_action_at"
+        ],
+        "optional": [
+          "parent_visit_id",
+          "source",
+          "first_source",
+          "first_page",
+          "last_page",
+          "login_page",
+          "views",
+          "form_opens",
+          "pages",
+          "transitions",
+          "truncated"
+        ]
+      },
+      "response": {
+        "schema": "AnalyticsVisitAccepted"
+      },
+      "description": "Anonymous compact snapshots (32 KiB maximum); accepted_revision is idempotent. Visit writes require the per-visit write_key. Server assigns IP, country and account linkage; telemetry failures do not block auth."
     }
   ],
   "pocketbase": {

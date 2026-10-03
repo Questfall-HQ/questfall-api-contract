@@ -20,3 +20,19 @@ test('chat returns up to twenty-one recent reaction emoji',()=>{
  expect(validate('ChatReactionResult',reaction)).toEqual([])
  expect(validate('ChatStatus',{...status,frequent:[...frequent,'extra']}).length).toBeGreaterThan(0)
 })
+
+
+test('chat attention exposes a nullable message target and a bounded unread counter',()=>{
+ expect(validate('ChatAttentionTarget',{message:'message123',attention_unread:2})).toEqual([])
+ expect(validate('ChatAttentionTarget',{message:null,attention_unread:0})).toEqual([])
+ expect(validate('ChatAttentionTarget',{message:'',attention_unread:1}).length).toBeGreaterThan(0)
+ expect(validate('ChatAttentionTarget',{message:'message123',attention_unread:101}).length).toBeGreaterThan(0)
+})
+
+test('chat pages optionally identify a missing newer tail for around windows',()=>{
+ const page={items:[],next:null}
+ expect(validate('ChatMessagePage',page)).toEqual([])
+ expect(validate('ChatMessagePage',{...page,has_newer:true})).toEqual([])
+ expect(validate('ChatMessagePage',{...page,has_newer:false})).toEqual([])
+ expect(validate('ChatMessagePage',{...page,has_newer:1}).length).toBeGreaterThan(0)
+})

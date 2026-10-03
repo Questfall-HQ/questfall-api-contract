@@ -1753,7 +1753,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -4602,6 +4602,9 @@
         },
         "pricing": {
           "$ref": "#/$defs/ModerationPricingWindow"
+        },
+        "work_reward": {
+          "$ref": "#/$defs/ModerationWorkReward"
         }
       },
       "additionalProperties": true
@@ -8021,7 +8024,7 @@
                 }
               },
               "additionalProperties": true,
-              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 \u00d7 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
             }
           }
         },
@@ -8301,7 +8304,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
         },
         "verification": {
           "type": "string",
@@ -8491,7 +8494,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1\u20135), or 1\u20135 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1\u20134 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -15175,6 +15178,13 @@
         "id": {
           "type": "string"
         },
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Permanent title-based public URL key; optional for compatibility with older servers."
+        },
         "title": {
           "type": "string",
           "minLength": 1
@@ -16044,6 +16054,9 @@
             "$ref": "#/$defs/ChatMessage"
           }
         },
+        "has_newer": {
+          "type": "boolean"
+        },
         "next": {
           "type": [
             "string",
@@ -16061,7 +16074,7 @@
       "properties": {
         "items": {
           "type": "array",
-          "maxItems": 10,
+          "maxItems": 4,
           "items": {
             "$ref": "#/$defs/ChatAuthor"
           }
@@ -16168,6 +16181,29 @@
               "type": "null"
             }
           ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatAttentionTarget": {
+      "type": "object",
+      "required": [
+        "message",
+        "attention_unread"
+      ],
+      "properties": {
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "attention_unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
         }
       },
       "additionalProperties": false
@@ -16362,6 +16398,20 @@
         },
         "updated": {
           "type": "integer"
+        },
+        "latest_comment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FeedbackComment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Newest ordinary comment or non-empty team decision message, ordered by created timestamp. Null when no comment exists."
+        },
+        "tracked": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -16507,6 +16557,20 @@
         },
         "updated": {
           "type": "integer"
+        },
+        "latest_comment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FeedbackComment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Newest ordinary comment or non-empty team decision message, ordered by created timestamp. Null when no comment exists."
+        },
+        "tracked": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -16697,6 +16761,7 @@
         "id": {
           "type": "string",
           "enum": [
+            "1",
             "5",
             "10",
             "25",
@@ -16888,9 +16953,53 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 999
+        },
+        "attention": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "claimable": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
         }
       },
       "additionalProperties": false
+    },
+    "TrackingModerationTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "title",
+        "image",
+        "avatar",
+        "avatar_icon"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "case",
+            "quest",
+            "domain",
+            "profile",
+            "space"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "avatar": {
+          "$ref": "#/$defs/Avatar"
+        },
+        "avatar_icon": {
+          "$ref": "#/$defs/Avatar"
+        }
+      }
     },
     "TrackingObject": {
       "type": "object",
@@ -16940,7 +17049,8 @@
           "type": "string"
         },
         "amount": {
-          "type": "number"
+          "type": "number",
+          "description": "For Bug and Idea objects, the retained total Gold award. A Gold Freezing position with a claim exposes the selected oldest weekly payout amount; otherwise the latest event amount."
         },
         "currency": {
           "type": "string"
@@ -16961,6 +17071,50 @@
         },
         "perfect": {
           "type": "boolean"
+        },
+        "target": {
+          "$ref": "#/$defs/TrackingModerationTarget",
+          "description": "Optional tracked subject identity; moderation uses cached domain favicons or public profile/Author Space avatars, and referral milestones use the counterparty's public profile avatar. Older cards and other kinds may omit it."
+        },
+        "category": {
+          "enum": [
+            "bug",
+            "idea",
+            "marketplace",
+            "space",
+            "completion",
+            "moderation",
+            "gold_purchase",
+            "gold_freezing",
+            "mining_week",
+            "mining_season",
+            "gem_week",
+            "referral",
+            "inviter",
+            "referral_reward",
+            "freezing_reward",
+            "author_reward",
+            "space_report",
+            "moderation_reward",
+            "quest_reward",
+            "welcome"
+          ]
+        },
+        "subject": {
+          "$ref": "#/$defs/TrackingSubject"
+        },
+        "progress": {
+          "$ref": "#/$defs/TrackingProgress"
+        },
+        "claim": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TrackingClaim"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -16986,6 +17140,16 @@
           ]
         },
         "unread": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "attention": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "claimable": {
           "type": "integer",
           "minimum": 0,
           "maximum": 999
@@ -17016,10 +17180,12 @@
           "type": "string"
         },
         "detail": {
-          "type": "string"
+          "type": "string",
+          "description": "Event details; Bug and Idea entries project the full discussion text or current review comment from the original feedback history."
         },
         "amount": {
-          "type": "number"
+          "type": "number",
+          "description": "The amount granted by this event, independent of the cumulative Bug or Idea award shown on its TrackingObject."
         },
         "currency": {
           "type": "string"
@@ -17031,10 +17197,25 @@
         "read": {
           "type": "boolean"
         },
+        "comment": {
+          "enum": [
+            "review",
+            "discussion"
+          ],
+          "description": "Kind of feedback comment: a team status decision or a discussion message. Omitted for other updates."
+        },
+        "author": {
+          "$ref": "#/$defs/PublicUser",
+          "description": "Public identity of the feedback commenter or original decision reviewer. Present with comment."
+        },
         "day": {
           "type": "integer",
           "minimum": 0,
           "description": "UTC activity-day start in milliseconds for a space_digest; omitted when its source day is unavailable. Independent of notification delivery time."
+        },
+        "quest": {
+          "$ref": "#/$defs/TrackingQuestContext",
+          "description": "The concrete quest associated with Author Space feedback or an availability alert."
         }
       },
       "additionalProperties": false
@@ -17081,6 +17262,26 @@
         },
         "author": {
           "$ref": "#/$defs/PublicUser"
+        },
+        "review_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Index of an existing team decision in the parent updates history. Omitted for ordinary comments."
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "implemented",
+            "rejected",
+            "confirmed",
+            "closed"
+          ],
+          "description": "Status recorded with this team comment. Omitted for ordinary comments."
+        },
+        "award_gold": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Gold awarded by this decision; not a new payment."
         }
       },
       "additionalProperties": false
@@ -17751,7 +17952,7 @@
         },
         "excluded": {
           "type": "object",
-          "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F–A. Missing means zero exclusion in saved shares rules.",
+          "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F\u2013A. Missing means zero exclusion in saved shares rules.",
           "required": [
             "numerator",
             "denominator"
@@ -18531,6 +18732,7 @@
     "GoldFreezingPosition": {
       "type": "object",
       "required": [
+        "id",
         "principal",
         "pending",
         "remaining",
@@ -18540,6 +18742,10 @@
         "started"
       ],
       "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
         "principal": {
           "type": "integer",
           "minimum": 0
@@ -18892,7 +19098,7 @@
         "current_power": {
           "type": "number",
           "minimum": 0,
-          "description": "Sum of current principal × multiplier across all positions, sampled at asof (or program opening for pending positions). Independent of accrued and projected weekly points."
+          "description": "Sum of current principal \u00d7 multiplier across all positions, sampled at asof (or program opening for pending positions). Independent of accrued and projected weekly points."
         }
       },
       "additionalProperties": false
@@ -19102,6 +19308,7 @@
             "item.scrapped",
             "item.upgraded",
             "item.equipped",
+            "gold.purchased",
             "gold.converted",
             "character.leveled_up",
             "character.attribute_spent",
@@ -19416,6 +19623,713 @@
         "mine": {
           "type": "integer",
           "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModerationWorkReward": {
+      "type": "object",
+      "required": [
+        "resolved",
+        "matches",
+        "misses",
+        "rate",
+        "checkpoint",
+        "interval",
+        "available",
+        "reward"
+      ],
+      "properties": {
+        "resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "misses": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "checkpoint": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "interval": {
+          "const": 50
+        },
+        "available": {
+          "type": "boolean",
+          "description": "Meets work, lifetime accuracy and moderation eligibility thresholds. The UI shows the reward only with an empty assignment; claim rechecks the queue transactionally."
+        },
+        "reward": {
+          "type": "object",
+          "required": [
+            "kind",
+            "amount"
+          ],
+          "properties": {
+            "kind": {
+              "const": "lootbox_f"
+            },
+            "amount": {
+              "const": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModerationWorkRewardClaim": {
+      "type": "object",
+      "required": [
+        "claim",
+        "idempotent",
+        "state",
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "idempotent": {
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/$defs/ModeratorState"
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "claim": {
+          "type": "object",
+          "required": [
+            "id",
+            "reward"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reward": {
+              "type": "object",
+              "required": [
+                "kind",
+                "amount"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "lootbox_f"
+                },
+                "amount": {
+                  "const": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackTracking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "tracked"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tracked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TrackingSubject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "period"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingProgress": {
+      "type": "object",
+      "properties": {
+        "period": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "number"
+        },
+        "rank": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "period",
+        "start",
+        "end",
+        "value",
+        "rank",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingClaim": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "marketplace",
+            "reward",
+            "author_reward",
+            "gem",
+            "quest",
+            "moderation"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "personal": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "enabled",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingSettings": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "object",
+          "properties": {
+            "feedback": {
+              "type": "boolean"
+            },
+            "marketplace": {
+              "type": "boolean"
+            },
+            "spaces": {
+              "type": "boolean",
+              "description": "Activity in the user's own Author Spaces and author teams. Following a public space does not track it."
+            },
+            "authoring": {
+              "type": "boolean",
+              "description": "Compatibility alias for spaces; both controls set the same Author Space subscription preference."
+            },
+            "completions": {
+              "type": "boolean",
+              "default": false,
+              "description": "Automatically add personal Completion cards. Off by default; explicit settings and existing cards remain authoritative."
+            },
+            "moderation": {
+              "type": "boolean",
+              "default": false,
+              "description": "Automatically add personal moderation cases. Off by default; explicit settings and existing cards remain authoritative."
+            },
+            "gold": {
+              "type": "boolean"
+            },
+            "freezing": {
+              "type": "boolean"
+            },
+            "mining": {
+              "type": "boolean"
+            },
+            "gems": {
+              "type": "boolean"
+            },
+            "referrals": {
+              "type": "boolean"
+            },
+            "referral_rewards": {
+              "type": "boolean"
+            },
+            "freezing_rewards": {
+              "type": "boolean"
+            },
+            "author_rewards": {
+              "type": "boolean"
+            },
+            "space_reports": {
+              "type": "boolean"
+            },
+            "moderation_rewards": {
+              "type": "boolean",
+              "description": "Retired compatibility field. Always false; configuring it has no effect. Moderation work bonuses are never tracked."
+            },
+            "quest_rewards": {
+              "type": "boolean",
+              "description": "Retired compatibility field. Always false; configuring it has no effect. Welcome quests use one automatic card with a persistent per-card removal, without a settings switch."
+            }
+          },
+          "required": [
+            "feedback",
+            "marketplace",
+            "spaces",
+            "authoring",
+            "completions",
+            "moderation",
+            "gold",
+            "freezing",
+            "mining",
+            "gems",
+            "referrals",
+            "referral_rewards",
+            "freezing_rewards",
+            "author_rewards",
+            "space_reports",
+            "moderation_rewards",
+            "quest_rewards"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "sources"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingSubscription": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "bug",
+            "idea",
+            "marketplace",
+            "space",
+            "completion",
+            "moderation",
+            "gold_purchase",
+            "gold_freezing",
+            "mining_week",
+            "mining_season",
+            "gem_week",
+            "referral",
+            "inviter",
+            "referral_reward",
+            "freezing_reward",
+            "author_reward",
+            "space_report",
+            "moderation_reward",
+            "quest_reward",
+            "welcome"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingSubscriptions": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TrackingSubscription"
+          }
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingObservation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "bug",
+            "idea",
+            "marketplace",
+            "space",
+            "quest",
+            "moderation",
+            "completion",
+            "gold_purchase",
+            "gold_freezing",
+            "referral",
+            "mining_week",
+            "mining_season",
+            "gem_week",
+            "referral_reward"
+          ],
+          "description": "Manual tracking: record IDs for objects; invited player ID for referral; ISO week or season key for period types. Personal completions, Gold orders and Freezing positions are owner-only. Legacy author-team quest requests follow their Author Space."
+        },
+        "id": {
+          "type": "string"
+        },
+        "tracked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "tracked"
+      ],
+      "additionalProperties": false
+    },
+    "TrackingClaimResult": {
+      "type": "object",
+      "required": [
+        "response_version",
+        "effects"
+      ],
+      "properties": {
+        "item": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Item"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          }
+        },
+        "ledger": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "notices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "quest_updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuestUpdate"
+          }
+        },
+        "response_version": {
+          "const": 2
+        },
+        "effects": {
+          "$ref": "#/$defs/EntityEffects"
+        },
+        "gem_reward": {
+          "$ref": "#/$defs/GemReward"
+        },
+        "evolve": {
+          "$ref": "#/$defs/GemCraftReceipt"
+        },
+        "maximize": {
+          "$ref": "#/$defs/GemCraftReceipt"
+        },
+        "scrap": {
+          "type": "object",
+          "properties": {
+            "dice_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "dice": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Item"
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "reroll": {
+          "type": "object",
+          "required": [
+            "cost"
+          ],
+          "properties": {
+            "cost": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "dice_id": {
+              "type": "string"
+            },
+            "perk_index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "before": {
+              "type": "object"
+            },
+            "after": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "AnalyticsVisitAccepted": {
+      "type": "object",
+      "required": [
+        "accepted_revision",
+        "enabled"
+      ],
+      "properties": {
+        "accepted_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AnalyticsSource": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "utm_source": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "utm_medium": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "utm_campaign": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "utm_term": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "utm_content": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "ref": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "referrer": {
+          "type": "string",
+          "maxLength": 253
+        },
+        "at": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Browser timestamp in milliseconds. Confirmation time is assigned by the server."
+        }
+      },
+      "additionalProperties": true
+    },
+    "AnalyticsContext": {
+      "type": "object",
+      "description": "Optional browser context for auth. A valid full visit snapshot can supplement challenge context at verification. Invalid context is ignored; no client field may assign user, IP or registration.",
+      "required": [
+        "visitor_id"
+      ],
+      "properties": {
+        "visitor_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{20,64}$"
+        },
+        "visit_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{20,64}$"
+        },
+        "write_key": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{20,64}$"
+        },
+        "parent_visit_id": {
+          "type": "string",
+          "description": "Website visit transferred to App; linked only when browser and environment agree."
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "surface": {
+          "enum": [
+            "website",
+            "app"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/AnalyticsSource"
+        },
+        "first_source": {
+          "$ref": "#/$defs/AnalyticsSource"
+        },
+        "started_at": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "last_action_at": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "first_page": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "last_page": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "login_page": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "views": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "form_opens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages": {
+          "type": "object",
+          "maxProperties": 100,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "transitions": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "required": [
+              "page",
+              "at"
+            ],
+            "properties": {
+              "page": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "at": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "dependentRequired": {
+        "visit_id": [
+          "write_key",
+          "revision",
+          "surface",
+          "started_at",
+          "last_action_at"
+        ]
+      },
+      "additionalProperties": true
+    },
+    "TrackingQuestContext": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "href"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
         }
       },
       "additionalProperties": false

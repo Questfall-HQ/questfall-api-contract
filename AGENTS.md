@@ -1,51 +1,21 @@
 # AGENTS.md — questfall-api-contract
 
-Публичный версионируемый контракт между `questfall-application` и
-`questfall-pocketbase`.
+Следовать [workspace AGENTS.md](../AGENTS.md). При изменении публичной surface
+и подготовке её выпуска читать [общий API flow](../docs/workflows/api-contract.md).
 
 ## Границы
 
-- `contract.json` — единственный источник истины для клиентской custom REST
-  surface Questfall.
-- `schemas.json` — стабильные публичные JSON shapes и canonical enums.
-- `src/index.js` — импортируемое представление контракта без бизнес-логики.
-- `src/check.mjs` и `bin/check.mjs` — локальные адаптеры проверки потребителей.
-- Контракт не содержит PocketBase storage schema, RPG-формулы, admin/dev routes,
-  секреты или backend implementation.
+- `contract.json` — источник клиентской custom REST surface;
+  `schemas.json` — публичные JSON shapes и canonical enums.
+- `src/index.js` — импортируемое представление без бизнес-логики;
+  `src/check.mjs` и `bin/check.mjs` — адаптеры проверки consumers.
+- Не включать storage schema, RPG-формулы, секреты, backend implementation
+  и internal admin/dev routes, которые Application не вызывает.
 
-## Совместимость
+## Проверка и версия
 
-- Git tags неизменяемы.
-- Breaking changes требуют новой major-версии.
-- Совместимое расширение surface или schema требует minor-версии.
-- Исправление checker без изменения surface требует patch-версии.
-
-## Обязательная Синхронизация
-
-Контракт меняется в той же задаче, которая добавляет, изменяет или удаляет
-публичный HTTP method/path, access level, request fields, path/query params,
-response shape, canonical enum или используемую frontend PocketBase SDK surface.
-
-- Frontend source для сверки — `questfall-application/src/api.imba`.
-- Backend source для сверки — клиентские `routerAdd` routes в
-  `questfall-pocketbase/src/**/*.pb.imba`.
-- В ходе локальной работы синхронизировать contract и обоих consumers; HMR/Preview
-  и адресные проверки использовать для конкретных рисков.
-- При подготовке выкладки проверить contract и обоих consumers полным gate
-  с `--release --force`, затем поднять SemVer, создать новый Git tag и
-  зафиксировать этот exact tag в обоих consumers. После установки tag повторить
-  полные consumer gate по [workspace flow](../AGENTS.md#обязательная-синхронизация-публичного-api).
-- Не перемещать опубликованные tags, не ослаблять checker и не добавлять
-  исключения, скрывающие рассинхронизацию.
-- Для breaking change применять expand → migrate → contract.
-
-## Проверка
-
-Полный прогон выполнять при подготовке выкладки или по явному запросу:
-
-```bash
-bun run verify
-```
-
-После публикации tag каждый потребитель отдельно обновляет pinned dependency.
-Если consumer хранит lockfile в Git, он обновляется в том же коммите.
+Локально проверять конкретный риск; полный workspace gate при подготовке release
+или явном запросе: `python3 ../scripts/questfall-gate.py contract --release --force`.
+Git tags неизменяемы. Breaking change — major; совместимое расширение — minor;
+исправление checker без изменения surface — patch. Установка tag, lockfiles
+и повторные consumer gate выполняются по общему API flow.
