@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://api.questfall.xyz/contracts/12.2.0/schemas.json",
+  "$id": "https://api.questfall.xyz/contracts/14.3.0/schemas.json",
   "$defs": {
     "FoundersAmbassador": {
       "type": "object",
@@ -1753,7 +1753,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "player_document": {
           "$ref": "#/$defs/QuestContentDocument"
@@ -8024,7 +8024,7 @@
                 }
               },
               "additionalProperties": true,
-              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 \u00d7 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
+              "description": "Optional quest_cover_v2 variant preserving the complete image and aspect ratio, no upscaling, at most 3000 × 3000 pixels and 4 MiB. Metadata is stripped during WebP encoding. Older uploads can omit it."
             }
           }
         },
@@ -8304,7 +8304,7 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 5,
-          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1\u20135 image range."
+          "description": "Exact required screenshot count for Screenshot or Action verification=screenshot. Completion must contain exactly this many media IDs. Earlier Action publications without this field retain the 1–5 image range."
         },
         "verification": {
           "type": "string",
@@ -8494,7 +8494,7 @@
         }
       },
       "additionalProperties": false,
-      "description": "Screenshot Action requires exactly screenshot_count media IDs (1\u20135), or 1\u20135 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1\u20134 images for preserved receipts and historical readers."
+      "description": "Screenshot Action requires exactly screenshot_count media IDs (1–5), or 1–5 when an earlier publication omitted the count. URL Action requires one participant result URL and no images. Confirmation requires no images and ignores submitted URLs. A published platform_domain scopes the account and URL host; an unscoped URL never derives an identity claim from its host. For content_version >= 7, identities requiring a service account must provide a nonblank platform_account. Identity v2 (content_version >= 10) uses the authenticated participant for submitter and account + questfall.xyz; other account/wallet identities require platform_account. Screenshot evidence is watermarked by the client; stored historical proofs are unchanged. Each trimmed result URL is single-use per quest across users, statuses and publications; the same idempotency key replays its original receipt. Historical Screenshot retains its count; legacy Action without verification retains link, account and 1–4 images for preserved receipts and historical readers."
     },
     "ModerationDecisionValue": {
       "type": "string",
@@ -15908,6 +15908,9 @@
         },
         "image": {
           "type": "boolean"
+        },
+        "gif": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false
@@ -16037,6 +16040,16 @@
         "edited": {
           "type": "integer",
           "minimum": 0
+        },
+        "gif": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChatGif"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -16319,7 +16332,8 @@
         "award",
         "author",
         "created",
-        "updated"
+        "updated",
+        "audience"
       ],
       "properties": {
         "id": {
@@ -16412,6 +16426,9 @@
         },
         "tracked": {
           "type": "boolean"
+        },
+        "audience": {
+          "$ref": "#/$defs/FeedbackAudience"
         }
       },
       "additionalProperties": true
@@ -16446,6 +16463,9 @@
         },
         "counts": {
           "$ref": "#/$defs/BugReportCounts"
+        },
+        "audience_counts": {
+          "$ref": "#/$defs/FeedbackAudienceCounts"
         }
       },
       "additionalProperties": true
@@ -16499,7 +16519,8 @@
         "voted",
         "author",
         "created",
-        "updated"
+        "updated",
+        "audience"
       ],
       "properties": {
         "id": {
@@ -16571,6 +16592,9 @@
         },
         "tracked": {
           "type": "boolean"
+        },
+        "audience": {
+          "$ref": "#/$defs/FeedbackAudience"
         }
       },
       "additionalProperties": true
@@ -16625,6 +16649,9 @@
         },
         "counts": {
           "$ref": "#/$defs/IdeaCounts"
+        },
+        "audience_counts": {
+          "$ref": "#/$defs/FeedbackAudienceCounts"
         }
       },
       "additionalProperties": true
@@ -17952,7 +17979,7 @@
         },
         "excluded": {
           "type": "object",
-          "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F\u2013A. Missing means zero exclusion in saved shares rules.",
+          "description": "Optional exact share of the bottom-ranked buyers receiving no Gem, rounded up before allocating F–A. Missing means zero exclusion in saved shares rules.",
           "required": [
             "numerator",
             "denominator"
@@ -19098,7 +19125,7 @@
         "current_power": {
           "type": "number",
           "minimum": 0,
-          "description": "Sum of current principal \u00d7 multiplier across all positions, sampled at asof (or program opening for pending positions). Independent of accrued and projected weekly points."
+          "description": "Sum of current principal × multiplier across all positions, sampled at asof (or program opening for pending positions). Independent of accrued and projected weekly points."
         }
       },
       "additionalProperties": false
@@ -19561,7 +19588,7 @@
     },
     "BugReportCounts": {
       "type": "object",
-      "description": "Totals across all pages of public records, independent of the selected filter; mine counts public records authored by the authenticated viewer and is zero for guests. Hidden records are excluded.",
+      "description": "Status totals across all pages of visible records in the selected audience. Mine counts all non-hidden records authored by the authenticated viewer across every audience and status; zero for guests.",
       "required": [
         "open",
         "confirmed",
@@ -19595,7 +19622,7 @@
     },
     "IdeaCounts": {
       "type": "object",
-      "description": "Totals across all pages of public records, independent of the selected filter; mine counts public records authored by the authenticated viewer and is zero for guests. Hidden records are excluded.",
+      "description": "Status totals across all pages of visible records in the selected audience. Mine counts all non-hidden records authored by the authenticated viewer across every audience and status; zero for guests.",
       "required": [
         "open",
         "planned",
@@ -20330,6 +20357,186 @@
         },
         "href": {
           "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackAudience": {
+      "type": "string",
+      "enum": [
+        "public",
+        "admins",
+        "team",
+        "founders"
+      ]
+    },
+    "ChatTranslationSettings": {
+      "type": "object",
+      "description": "Server availability for new inference. Initially true with a configured credential, false after provider failure until recovery is confirmed. Locally cached translations remain usable independently.",
+      "required": [
+        "languages",
+        "available"
+      ],
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "name"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "available": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatTranslation": {
+      "type": "object",
+      "required": [
+        "text",
+        "mentions",
+        "language",
+        "message",
+        "edited"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "mentions": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/$defs/ChatMention"
+          }
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "edited": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatSearchPage": {
+      "type": "object",
+      "required": [
+        "items",
+        "next"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/ChatMessage"
+          }
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[1-9][0-9]{0,12}:[a-z0-9]{15}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackAudienceCounts": {
+      "type": "object",
+      "description": "Open feedback totals across all pages, independent of the selected audience, status or Mine filter. Only audience groups available to the viewer are included; being the author of a private report does not grant that audience group.",
+      "properties": {
+        "public": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "admins": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "team": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "founders": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatGif": {
+      "type": "object",
+      "description": "KLIPY animation selected by the browser. url is the main rendition (MP4 preferred, GIF/WebP supported); preview is its static JPG poster. Media URLs are preserved verbatim and served directly by KLIPY.",
+      "required": [
+        "provider",
+        "slug",
+        "title",
+        "url",
+        "preview",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": [
+            "klipy"
+          ]
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https://static[12]?\\.klipy\\.com/[^\\s]+$"
+        },
+        "preview": {
+          "type": "string",
+          "maxLength": 2048,
+          "pattern": "^https://static[12]?\\.klipy\\.com/[^\\s]+$"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
         }
       },
       "additionalProperties": false

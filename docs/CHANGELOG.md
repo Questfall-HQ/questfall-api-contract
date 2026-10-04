@@ -1,5 +1,60 @@
 # История изменений API contract
 
+## v14.3.0 — chat search, GIFs, translation and feedback readership
+
+Compatible additions for the coordinated App/Backend release. Publish the backend
+routes and migrations before the App; both consumers pin the immutable `v14.3.0`
+contract tag. Publishing this contract does not deploy either consumer.
+
+### Chat translation
+
+- Add verified `GET /chat/translation` and `POST /chat/translate` for manual
+  message and draft translation. Existing messages are never rewritten; mention
+  identity and links are preserved. Stale edits, writing permissions, input/output
+  bounds and per-account rate limits are checked by the backend.
+
+- `ChatTranslationSettings.available` now represents shared provider availability,
+  initially optimistic with a configured key. Provider failures disable new inference
+  until a scheduled probe succeeds. Healthy service and settings reads never trigger
+  probes. Cached client translations stay usable.
+
+### KLIPY chat GIFs
+
+- `chat.create` accepts optional `gif` matching `ChatGif`. GIF-only messages are valid.
+  Nullable `ChatMessage.gif` retains provider, slug, exact media/preview URLs, title and
+  dimensions. Existing messages and clients may omit the field.
+- Optional `ChatReply.gif` identifies GIF replies; deletion clears that flag along with
+  text/image. Caption edits preserve the attachment. Replay identity includes GIF metadata.
+- Browser requests and media loads go directly to KLIPY. Deploy the backend field/validation
+  before the App picker, and release both consumers with the same contract tag.
+
+### Chat search
+
+- Add verified `GET /chat/search` (`q`, optional `before` and `limit`) and
+  `ChatSearchPage`. Literal text/public-author substrings of 3–120 characters;
+  newest-first pages, 25 by default and at most 50 results. The opaque cursor
+  survives deletion of its boundary message. Existing chat history is unchanged.
+- Deliver the backend FTS5 migration and route before switching App search.
+  Both consumers use the same immutable contract tag.
+
+### Feedback readership
+
+- All verified authors can submit Public or Team-only bug reports and ideas without gaining reader access to other private reports. Founders can submit to Founders, Team can also submit to Founders, and Admins can use every audience.
+- Feedback list `counts.mine` spans all owned audiences and statuses; optional `audience_counts` provides Open totals only for permitted reader groups.
+
+- Canonical `FeedbackAudience` with Public, Admins, Team and Founders.
+  Reader groups are hierarchical: Admins read Team and Founders; Team reads Founders.
+  The former Team & founders audience migrates to Founders, retaining its readers.
+- Optional audience on creation (legacy requests default to Public) and exact
+  audience filters on public/admin lists. Responses include the effective audience.
+- Admin audience command uses `expected_updated`, returning 409 on conflict;
+  moderation `/visibility` continues to control `hidden` independently.
+- Audience changes revoke inaccessible Tracker subscriptions and deliveries.
+  SDK/realtime reads enforce parent access; authors retain access.
+- Release: deliver backend/migration before App; pin the same exact new contract
+  tag in both consumers and run the normal two-stage release checks.
+
+
 Записи перенесены из прежнего README без утверждения, что каждая подготовленная версия опубликована. Для активной surface использовать contract.json/schemas.json, для установленного tag — package.json обоих consumers. Читать только нужную версию или тему; local/prepared/next release — исторические пометки, не статус production.
 
 Читать по теме задачи. Команды и пути исходников приведены относительно корня `questfall-api-contract`.

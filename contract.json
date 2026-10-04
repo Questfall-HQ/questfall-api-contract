@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "14.2.0",
+  "version": "14.3.0",
   "routes": [
     {
       "operation": "founders.invitation",
@@ -412,7 +412,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480\u00d7480, <=512 KiB) and display (<=2000\u00d72000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480×480, <=512 KiB) and display (<=2000×2000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -1525,7 +1525,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8\u2013128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2608,7 +2608,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -3008,6 +3008,27 @@
       }
     },
     {
+      "operation": "chat.search",
+      "description": "Search literal substrings in message text or current public author names. q is trimmed and accepts 3–120 Unicode characters. Results are newest first (created, id descending), limit defaults to 25 and is capped at 50. before is the opaque next cursor and remains valid if its message is deleted.",
+      "method": "GET",
+      "path": "/chat/search",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [
+          "q"
+        ],
+        "optional": [
+          "before",
+          "limit"
+        ]
+      },
+      "response": {
+        "schema": "ChatSearchPage"
+      }
+    },
+    {
       "operation": "tracking.status",
       "method": "GET",
       "path": "/tracking/status",
@@ -3114,6 +3135,45 @@
       }
     },
     {
+      "operation": "chat.translation",
+      "method": "GET",
+      "path": "/chat/translation",
+      "access": "verified",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatTranslationSettings"
+      },
+      "description": "Manual chat translation languages and shared provider availability. With a configured key, availability starts optimistic; inference failures disable new translations until a scheduled recovery probe succeeds. Healthy service never triggers probes. Reading settings performs no inference and exposes no provider credentials or billing details."
+    },
+    {
+      "operation": "chat.translate",
+      "method": "POST",
+      "path": "/chat/translate",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "language"
+        ],
+        "optional": [
+          "message",
+          "edited",
+          "text",
+          "mentions"
+        ]
+      },
+      "response": {
+        "schema": "ChatTranslation"
+      },
+      "description": "Translate either an existing message (message and its edited revision) or an unsent draft (text, optional mentions), never both. Verified readers may translate messages; draft translation enforces chat writing permissions. Text limit 2000 UTF-16 code units; draft output also max 2000, reading output max 8000. No chat message or translation is persisted. Mentions and URLs are preserved; translated mention offsets refer to output text. Server translates the current message, rejects stale revisions and limits each user to 20 requests/minute."
+    },
+    {
       "operation": "chat.people",
       "description": "Private verified-user mention search. A non-empty q searches a literal name prefix, up to 64 characters; returns at most four verified, unrestricted users ordered by name and id. Empty q returns no users.",
       "method": "GET",
@@ -3146,8 +3206,10 @@
           "text",
           "images",
           "reply_to",
-          "mentions"
-        ]
+          "mentions",
+          "gif"
+        ],
+        "description": "Optional gif uses ChatGif. A message must contain text, images or a GIF; edits preserve its media."
       },
       "response": {
         "schema": "ChatMessage"
@@ -3366,13 +3428,14 @@
           "id",
           "mine",
           "page",
-          "per_page"
+          "per_page",
+          "audience"
         ]
       },
       "response": {
         "schema": "BugReportList"
       },
-      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, rejected, or hidden. Hidden is admin only. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
+      "description": "filter accepts active (open and confirmed, for older clients), open, confirmed, closed, rejected, or hidden. Hidden is admin only. Only accessible feedback is returned. Optional audience is an exact list filter applied before pagination. Status counts exclude hidden records and are scoped to that audience; counts.mine spans every audience and status owned by the viewer. Optional audience_counts contains Open totals for the viewer's permitted reader groups, independent of the selected audience, status, Mine filter and pagination."
     },
     {
       "operation": "admin.feedback.bugs.status",
@@ -3474,13 +3537,14 @@
           "id",
           "mine",
           "page",
-          "per_page"
+          "per_page",
+          "audience"
         ]
       },
       "response": {
         "schema": "IdeaList"
       },
-      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, rejected, or hidden. Hidden is admin only. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
+      "description": "filter accepts active (open and planned, for older clients), open, planned, implemented, rejected, or hidden. Hidden is admin only. Only accessible feedback is returned. Optional audience is an exact list filter applied before pagination. Status counts exclude hidden records and are scoped to that audience; counts.mine spans every audience and status owned by the viewer. Optional audience_counts contains Open totals for the viewer's permitted reader groups, independent of the selected audience, status, Mine filter and pagination."
     },
     {
       "operation": "admin.feedback.ideas.status",
@@ -3582,13 +3646,14 @@
           "id",
           "mine",
           "page",
-          "per_page"
+          "per_page",
+          "audience"
         ]
       },
       "response": {
         "schema": "BugReportList"
       },
-      "description": "filter accepts all (every public status), active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
+      "description": "filter accepts all (every public status), active (open and confirmed, for older clients), open, confirmed, closed, or rejected. Hidden requires the admin route. Only accessible feedback is returned. Optional audience is an exact list filter applied before pagination. Status counts exclude hidden records and are scoped to that audience; counts.mine spans every audience and status owned by the viewer. Optional audience_counts contains Open totals for the viewer's permitted reader groups, independent of the selected audience, status, Mine filter and pagination."
     },
     {
       "operation": "feedback.bugs.create",
@@ -3611,12 +3676,14 @@
           "os",
           "browser",
           "screenshots",
-          "screenshots_public"
+          "screenshots_public",
+          "audience"
         ]
       },
       "response": {
         "schema": "BugReport"
-      }
+      },
+      "description": "Audience defaults to public. Every verified author may submit a public or team-only bug report; the author retains access to their own private report. Admins and users with the matching internal role may also create reports for the corresponding internal audiences. Reader access is independent of creation permission."
     },
     {
       "operation": "feedback.bugs.detail",
@@ -3733,13 +3800,14 @@
           "id",
           "mine",
           "page",
-          "per_page"
+          "per_page",
+          "audience"
         ]
       },
       "response": {
         "schema": "IdeaList"
       },
-      "description": "filter accepts all (every public status), active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route. Paginated results include optional counts for every public status and mine, independent of pagination and the selected filter; hidden records are excluded from these counts."
+      "description": "filter accepts all (every public status), active (open and planned, for older clients), open, planned, implemented, or rejected. Hidden requires the admin route. Only accessible feedback is returned. Optional audience is an exact list filter applied before pagination. Status counts exclude hidden records and are scoped to that audience; counts.mine spans every audience and status owned by the viewer. Optional audience_counts contains Open totals for the viewer's permitted reader groups, independent of the selected audience, status, Mine filter and pagination."
     },
     {
       "operation": "feedback.ideas.create",
@@ -3754,12 +3822,14 @@
           "description"
         ],
         "optional": [
-          "images"
+          "images",
+          "audience"
         ]
       },
       "response": {
         "schema": "Idea"
-      }
+      },
+      "description": "Audience defaults to public. Every verified author may submit a public or team-only idea; the author retains access to their own private idea. Admins and users with the matching internal role may also create ideas for the corresponding internal audiences. Reader access is independent of creation permission."
     },
     {
       "operation": "feedback.ideas.detail",
@@ -4552,7 +4622,7 @@
       "response": {
         "schema": "TrackingClaimResult"
       },
-      "description": "Claim only this card\u2019s reward. Optional payout_id binds a personal reward request to the displayed receipt; it must belong to the card and user. Welcome cards require quest_id for an initial request to bind the displayed Welcome reward. Retries remain bound to the same reward after the card advances to the next week or Welcome quest."
+      "description": "Claim only this card’s reward. Optional payout_id binds a personal reward request to the displayed receipt; it must belong to the card and user. Welcome cards require quest_id for an initial request to bind the displayed Welcome reward. Retries remain bound to the same reward after the card advances to the next week or Welcome quest."
     },
     {
       "operation": "analytics.visits",
@@ -4589,6 +4659,48 @@
         "schema": "AnalyticsVisitAccepted"
       },
       "description": "Anonymous compact snapshots (32 KiB maximum); accepted_revision is idempotent. Visit writes require the per-visit write_key. Server assigns IP, country and account linkage; telemetry failures do not block auth."
+    },
+    {
+      "operation": "admin.feedback.ideas.audience",
+      "method": "POST",
+      "path": "/admin/feedback/ideas/{id}/audience",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "audience",
+          "expected_updated"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "Idea"
+      },
+      "description": "Changes the readership of the entire existing history. Uses FeedbackAudience. Author always retains access; Readership is hierarchical: Admins include Team and Founders; Team includes Founders (owner). Atomic version check, subscription revocation and audit; 409 leaves all data unchanged."
+    },
+    {
+      "operation": "admin.feedback.bugs.audience",
+      "method": "POST",
+      "path": "/admin/feedback/bugs/{id}/audience",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [
+          "id"
+        ],
+        "required": [
+          "audience",
+          "expected_updated"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "BugReport"
+      },
+      "description": "Changes the readership of the entire existing history. Uses FeedbackAudience. Author always retains access; Readership is hierarchical: Admins include Team and Founders; Team includes Founders (owner). Atomic version check, subscription revocation and audit; 409 leaves all data unchanged."
     }
   ],
   "pocketbase": {
