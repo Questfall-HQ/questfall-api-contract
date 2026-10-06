@@ -553,7 +553,7 @@
           ]
         },
         "config": {
-          "$ref": "#/$defs/QuestAuthorConfig"
+          "type": "object"
         },
         "content_media": {
           "type": "array",
@@ -575,7 +575,12 @@
           "description": "Public uncropped quest cover URL or legacy PocketBase file path for the image viewer. Falls back to the existing display, full legacy file, or space cover when no uncropped variant exists. Optional for older servers; empty if no image exists. The cover field retains its cropped card/detail presentation."
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "$ref": "#/$defs/QuestAuthorConfigRead"
+        }
+      ]
     },
     "AuthorSpaceWorkspace": {
       "type": "object",
@@ -623,6 +628,13 @@
         "email_hint"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -3169,6 +3181,13 @@
         "level"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -3286,6 +3305,13 @@
           "enum": [
             "open",
             "closed"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "pending",
+            "rated",
+            "no_consensus"
           ]
         },
         "closed": {
@@ -3454,6 +3480,10 @@
               "minimum": 0
             },
             "settled": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unrated": {
               "type": "integer",
               "minimum": 0
             },
@@ -4272,6 +4302,13 @@
         "level"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -5005,6 +5042,13 @@
         "own"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -5405,6 +5449,14 @@
         "viewer"
       ],
       "properties": {
+        "avatar_icon": {},
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -5454,6 +5506,14 @@
         "target"
       ],
       "properties": {
+        "avatar_icon": {},
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -5935,6 +5995,13 @@
         "viewer"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -6634,6 +6701,13 @@
         "position"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -7014,6 +7088,13 @@
         "status_message"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -7782,6 +7863,13 @@
         "level"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -9565,6 +9653,9 @@
             }
           },
           "additionalProperties": true
+        },
+        "idempotent": {
+          "type": "boolean"
         }
       },
       "additionalProperties": true
@@ -10267,7 +10358,7 @@
           ]
         },
         "config": {
-          "$ref": "#/$defs/QuestAuthorConfig"
+          "type": "object"
         },
         "content_media": {
           "type": "array",
@@ -10299,7 +10390,12 @@
           "$ref": "#/$defs/QuestCommentSummary"
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "$ref": "#/$defs/QuestAuthorConfigRead"
+        }
+      ]
     },
     "AuthorQuestList": {
       "type": "object",
@@ -10574,6 +10670,9 @@
         },
         "entry": {
           "$ref": "#/$defs/AuthorSpaceBalanceEntry"
+        },
+        "idempotent": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false
@@ -10840,7 +10939,7 @@
           ]
         },
         "config": {
-          "$ref": "#/$defs/QuestAuthorConfig"
+          "type": "object"
         },
         "content_media": {
           "type": "array",
@@ -10875,7 +10974,12 @@
           "$ref": "#/$defs/QuestCommentSummary"
         }
       },
-      "additionalProperties": true
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "$ref": "#/$defs/QuestAuthorConfigRead"
+        }
+      ]
     },
     "AuthorCaseChange": {
       "type": "object",
@@ -12358,6 +12462,16 @@
         "avatar_icon"
       ],
       "properties": {
+        "admin": {
+          "type": "boolean"
+        },
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -15578,6 +15692,13 @@
         "position"
       ],
       "properties": {
+        "role": {
+          "enum": [
+            null,
+            "team",
+            "owner"
+          ]
+        },
         "id": {
           "type": "string"
         },
@@ -16170,6 +16291,22 @@
           }
         },
         "can_moderate_chat": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatTypingReceipt": {
+      "type": "object",
+      "required": [
+        "active",
+        "sent"
+      ],
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "sent": {
           "type": "boolean"
         }
       },
@@ -16966,6 +17103,18 @@
         },
         "more": {
           "type": "boolean"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "per_page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -17590,6 +17739,19 @@
         "milestones": {
           "$ref": "#/$defs/ReferralMilestoneRules"
         },
+        "reward_rules": {
+          "$ref": "#/$defs/ReferralRewardRules"
+        },
+        "incoming_rewards": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferralIncomingRewards"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "incoming": {
           "anyOf": [
             {
@@ -17752,6 +17914,141 @@
               "type": "null"
             }
           ]
+        },
+        "reward_progress": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferralRewardProgress"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralLeaderboard": {
+      "type": "object",
+      "required": [
+        "period",
+        "page",
+        "per_page",
+        "total",
+        "viewer",
+        "items"
+      ],
+      "properties": {
+        "period": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "per_page": {
+          "const": 8
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "object",
+          "required": [
+            "rank",
+            "score",
+            "share",
+            "reward",
+            "gap"
+          ],
+          "properties": {
+            "rank": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0
+            },
+            "share": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "reward": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "gap": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "user",
+              "profile",
+              "rank",
+              "people",
+              "active",
+              "score",
+              "share",
+              "reward",
+              "own"
+            ],
+            "properties": {
+              "user": {
+                "type": "string"
+              },
+              "profile": {
+                "$ref": "#/$defs/ReferralProfile"
+              },
+              "rank": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "people": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "active": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0
+              },
+              "share": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "reward": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "own": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false
@@ -18165,6 +18462,17 @@
             "avatar_icon"
           ],
           "properties": {
+            "role": {
+              "enum": [
+                null,
+                "team",
+                "owner"
+              ]
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 1
+            },
             "id": {
               "type": "string"
             },
@@ -18349,6 +18657,14 @@
           "items": {
             "type": "string"
           }
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "per_page": {
+          "type": "integer",
+          "minimum": 1
         }
       },
       "additionalProperties": false
@@ -18453,6 +18769,419 @@
             "b",
             "a"
           ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralReward": {
+      "type": "object",
+      "required": [
+        "resource",
+        "amount"
+      ],
+      "properties": {
+        "resource": {
+          "enum": [
+            "lootbox_f",
+            "lootbox_e",
+            "lootbox_d",
+            "lootbox_c",
+            "lootbox_b",
+            "lootbox_a",
+            "gold",
+            "silver"
+          ]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralRewardEvent": {
+      "type": "object",
+      "required": [
+        "key",
+        "filters",
+        "target"
+      ],
+      "properties": {
+        "key": {
+          "enum": [
+            "profile.completed",
+            "lootbox.opened",
+            "lootbox.purchased",
+            "item.equipped",
+            "item.scrapped",
+            "item.upgraded",
+            "character.attribute_spent",
+            "character.leveled_up",
+            "economy.gold_to_silver",
+            "marketplace.item_listed",
+            "marketplace.item_purchased",
+            "quest.feed_completed",
+            "quest.completion_approved",
+            "moderation.vote_settled",
+            "welcome.completed",
+            "quest.completed",
+            "moderation.correct",
+            "quest.rating_consensus",
+            "marketplace.item_sold",
+            "gold.purchased"
+          ]
+        },
+        "filters": {
+          "type": "object",
+          "properties": {
+            "box": {
+              "enum": [
+                "lootbox_f",
+                "lootbox_e",
+                "lootbox_d",
+                "lootbox_c",
+                "lootbox_b",
+                "lootbox_a"
+              ]
+            },
+            "rarity": {
+              "enum": [
+                "f",
+                "e",
+                "d",
+                "c",
+                "b",
+                "a"
+              ]
+            },
+            "slot": {
+              "type": "string",
+              "minLength": 1
+            },
+            "attribute": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "enum": [
+                "text",
+                "quiz",
+                "survey",
+                "action",
+                "screenshot"
+              ]
+            },
+            "result": {
+              "enum": [
+                "match",
+                "miss"
+              ]
+            },
+            "official": {
+              "type": "boolean"
+            },
+            "minimum_level": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minimum_gold": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minimum_price": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maximum_price": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minimum_bounty": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          "additionalProperties": false
+        },
+        "target": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "quests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralRewardStage": {
+      "type": "object",
+      "required": [
+        "id",
+        "referred",
+        "inviter"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "level"
+          ]
+        },
+        {
+          "required": [
+            "event",
+            "label"
+          ]
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "event": {
+          "$ref": "#/$defs/ReferralRewardEvent"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "referred": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralReward"
+          }
+        },
+        "inviter": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralReward"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralRewardReceipt": {
+      "type": "object",
+      "required": [
+        "id",
+        "referred",
+        "inviter",
+        "state",
+        "awarded"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "level"
+          ]
+        },
+        {
+          "required": [
+            "event",
+            "label",
+            "progress"
+          ]
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "event": {
+          "$ref": "#/$defs/ReferralRewardEvent"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "progress": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "referred": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralReward"
+          }
+        },
+        "inviter": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralReward"
+          }
+        },
+        "state": {
+          "enum": [
+            "awarded",
+            "pending",
+            "expired"
+          ]
+        },
+        "awarded": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralRewardRules": {
+      "type": "object",
+      "required": [
+        "revision",
+        "months",
+        "stages"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "months": {
+          "const": 6
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ReferralRewardStage"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralRewardProgress": {
+      "type": "object",
+      "required": [
+        "revision",
+        "joined",
+        "expires",
+        "level",
+        "totals",
+        "stages"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "joined": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "totals": {
+          "type": "object",
+          "required": [
+            "referred",
+            "inviter"
+          ],
+          "properties": {
+            "referred": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ReferralReward"
+              }
+            },
+            "inviter": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ReferralReward"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralRewardReceipt"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReferralIncomingRewards": {
+      "type": "object",
+      "required": [
+        "revision",
+        "joined",
+        "expires",
+        "level",
+        "totals",
+        "stages",
+        "inviter"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "joined": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "totals": {
+          "type": "object",
+          "required": [
+            "referred",
+            "inviter"
+          ],
+          "properties": {
+            "referred": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ReferralReward"
+              }
+            },
+            "inviter": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ReferralReward"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReferralRewardReceipt"
+          }
+        },
+        "inviter": {
+          "$ref": "#/$defs/ReferralProfile"
         }
       },
       "additionalProperties": false
@@ -20537,6 +21266,507 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 4096
+        }
+      },
+      "additionalProperties": false
+    },
+    "FounderPackage": {
+      "type": "object",
+      "required": [
+        "tier",
+        "name",
+        "gold",
+        "silver",
+        "lootboxes",
+        "gems",
+        "revision",
+        "points"
+      ],
+      "properties": {
+        "tier": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "name": {
+          "type": "string"
+        },
+        "gold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "silver": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "lootboxes": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "gems": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "points": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "FoundersCatalog": {
+      "type": "object",
+      "required": [
+        "chain_id",
+        "contract",
+        "weeks",
+        "tiers"
+      ],
+      "properties": {
+        "chain_id": {
+          "const": 137
+        },
+        "contract": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{40}$"
+        },
+        "weeks": {
+          "const": 50
+        },
+        "tiers": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/FounderPackage"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FoundersPortfolio": {
+      "type": "object",
+      "required": [
+        "wallet",
+        "status",
+        "counts",
+        "points",
+        "total",
+        "founder",
+        "snapshot",
+        "error",
+        "history",
+        "rewards"
+      ],
+      "properties": {
+        "wallet": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^0x[0-9a-f]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "unlinked",
+            "checking",
+            "ready",
+            "stale"
+          ]
+        },
+        "counts": {
+          "anyOf": [
+            {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "points": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "founder": {
+          "type": "object",
+          "required": [
+            "automatic",
+            "club",
+            "role"
+          ],
+          "properties": {
+            "automatic": {
+              "type": "boolean"
+            },
+            "club": {
+              "type": "boolean"
+            },
+            "role": {
+              "enum": [
+                null,
+                "team",
+                "owner"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "snapshot": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "block",
+                "hash",
+                "synced"
+              ],
+              "properties": {
+                "block": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "hash": {
+                  "type": "string",
+                  "pattern": "^0x[0-9a-fA-F]{64}$"
+                },
+                "synced": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "type": "string"
+        },
+        "history": {
+          "type": "object",
+          "required": [
+            "status",
+            "cursor",
+            "head",
+            "purchases"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "checking",
+                "ready",
+                "stale"
+              ]
+            },
+            "cursor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "head": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "purchases": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "minItems": 6,
+                  "maxItems": 6,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "rewards": {
+          "type": "object",
+          "required": [
+            "gold",
+            "silver",
+            "lootboxes",
+            "gems",
+            "qft",
+            "claimable"
+          ],
+          "properties": {
+            "gold": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "reserved",
+                    "weekly",
+                    "available"
+                  ],
+                  "properties": {
+                    "reserved": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "weekly": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "available": {
+                      "const": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "silver": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "reserved",
+                    "weekly",
+                    "available"
+                  ],
+                  "properties": {
+                    "reserved": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "weekly": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "available": {
+                      "const": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "lootboxes": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "minItems": 6,
+                  "maxItems": 6,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "gems": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "minItems": 6,
+                  "maxItems": 6,
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "qft": {
+              "const": "not_active"
+            },
+            "claimable": {
+              "const": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "QuestAuthorConfigRead": {
+      "description": "Read-only author views preserve raw saved configuration only when lifecycle.retired is true. Current drafts and authoring requests retain QuestAuthorConfig validation.",
+      "anyOf": [
+        {
+          "properties": {
+            "config": {
+              "$ref": "#/$defs/QuestAuthorConfig"
+            }
+          }
+        },
+        {
+          "required": [
+            "lifecycle"
+          ],
+          "properties": {
+            "lifecycle": {
+              "required": [
+                "retired"
+              ],
+              "properties": {
+                "retired": {
+                  "const": true
+                }
+              }
+            },
+            "config": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "ChatPinPage": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChatPin"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChatPin": {
+      "type": "object",
+      "required": [
+        "message",
+        "shared",
+        "personal",
+        "hidden"
+      ],
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/ChatMessage"
+        },
+        "shared": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "created",
+                "actor"
+              ],
+              "properties": {
+                "created": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "actor": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "personal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hidden": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false

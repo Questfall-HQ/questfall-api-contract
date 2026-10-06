@@ -81,6 +81,18 @@ test('Action supports current evidence methods while platform remains a moderati
  expect(validate('QuestAuthorConfig',{link_mode:'unknown'}).length).toBeGreaterThan(0)
 })
 
+test('retired author reads retain frozen config while authoring remains canonical',()=>{
+ for(const verification of ['platform','community']) {
+  const config={verification,link_mode:'shared'}
+  expect(validate('QuestAuthorConfigRead',{config,lifecycle:{retired:true}})).toEqual([])
+  expect(validate('QuestAuthorConfigRead',{config,lifecycle:{retired:false}}).length).toBeGreaterThan(0)
+  expect(validate('QuestAuthorConfigRead',{config}).length).toBeGreaterThan(0)
+  expect(validate('QuestAuthorConfig',config).length).toBeGreaterThan(0)
+ }
+ expect(validate('QuestAuthorConfigRead',{config:{verification:'url'}})).toEqual([])
+ expect(validate('QuestAuthorConfigRead',{config:[],lifecycle:{retired:true}}).length).toBeGreaterThan(0)
+})
+
 
 test('platform identity config is additive and domain resolution includes identity scope',()=>{
  for(const platform_domain of ['youtube.com','']) {

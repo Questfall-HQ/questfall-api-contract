@@ -1,6 +1,6 @@
 {
   "name": "Questfall application API contract",
-  "version": "14.3.0",
+  "version": "15.0.0",
   "routes": [
     {
       "operation": "founders.invitation",
@@ -555,7 +555,8 @@
         "transport": "body",
         "params": [],
         "required": [
-          "gold"
+          "gold",
+          "idempotency_key"
         ],
         "optional": [
           "response_version"
@@ -564,7 +565,7 @@
       "response": {
         "schema": "PlayerResult"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "A persisted idempotency_key identifies one payment intent. Same-key retries return the original receipt with current balances; a different action, amount or target with that key is rejected. Older clients without a key are rejected before mutation with a refresh instruction. Response format 2 is the default."
     },
     {
       "operation": "inventory.load",
@@ -798,6 +799,24 @@
       "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
+      "operation": "marketplace.offer",
+      "method": "GET",
+      "path": "/marketplace/listings/{id}",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [
+          "id"
+        ],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "MarketplaceListing"
+      },
+      "description": "Fresh public active listing; sold, claimed and cancelled listings are unavailable. Reads are not cached. Use its price and currency to confirm a purchase."
+    },
+    {
       "operation": "marketplace.buy",
       "method": "POST",
       "path": "/marketplace/buy",
@@ -806,7 +825,9 @@
         "transport": "body",
         "params": [],
         "required": [
-          "listingId"
+          "listingId",
+          "expected_price",
+          "expected_currency"
         ],
         "optional": [
           "response_version"
@@ -815,7 +836,7 @@
       "response": {
         "schema": "PlayerResult"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "Purchase requires the accepted expected_price and expected_currency. A changed price returns 409 before any debit; refresh the offer and obtain a new confirmation. Requests from older clients without the accepted quote are rejected before mutation with a refresh instruction. Response format 2 is the default."
     },
     {
       "operation": "marketplace.claim",
@@ -940,7 +961,7 @@
       "response": {
         "schema": "QuestFeed"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "Guest reads include the public feed and active Welcome quests without personal progress. Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
     },
     {
       "operation": "quests.feedChanges",
@@ -1869,7 +1890,8 @@
         "params": [],
         "required": [
           "slug",
-          "amount"
+          "amount",
+          "idempotency_key"
         ],
         "optional": [
           "response_version"
@@ -1878,7 +1900,7 @@
       "response": {
         "schema": "AuthorSpaceBalanceMutationResult"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "A persisted idempotency_key identifies one payment intent. Same-key retries return the original receipt with current balances; a different action, amount or target with that key is rejected. Older clients without a key are rejected before mutation with a refresh instruction. Response format 2 is the default."
     },
     {
       "operation": "authorSpaces.balance.history",
@@ -1910,7 +1932,8 @@
         "params": [],
         "required": [
           "slug",
-          "amount"
+          "amount",
+          "idempotency_key"
         ],
         "optional": [
           "response_version"
@@ -1919,7 +1942,7 @@
       "response": {
         "schema": "AuthorSpaceBalanceMutationResult"
       },
-      "description": " Response format 2 is the only supported format and the default when response_version is omitted. Explicit unsupported versions are rejected before the operation."
+      "description": "A persisted idempotency_key identifies one payment intent. Same-key retries return the original receipt with current balances; a different action, amount or target with that key is rejected. Older clients without a key are rejected before mutation with a refresh instruction. Response format 2 is the default."
     },
     {
       "operation": "authorSpaces.groups.create",
@@ -2988,11 +3011,85 @@
       }
     },
     {
+      "operation": "chat.pins",
+      "method": "GET",
+      "path": "/chat/pins",
+      "access": "optional",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatPinPage"
+      },
+      "description": "Current messages referenced by shared pins or the verified viewer personal pins. Guest responses contain no account preferences. Hidden applies only to the shared source; the preference persists across shared unpin and repin. Never cached."
+    },
+    {
+      "operation": "chat.pinPersonal",
+      "method": "POST",
+      "path": "/chat/pins/personal",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "message",
+          "pinned"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatPinPage"
+      },
+      "description": "Idempotently set the verified viewer personal pin state. The server determines the account. Shared pins and permanent hiding are unchanged."
+    },
+    {
+      "operation": "chat.hidePin",
+      "method": "POST",
+      "path": "/chat/pins/hide",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "message"
+        ],
+        "optional": [
+          "unpin_personal"
+        ]
+      },
+      "response": {
+        "schema": "ChatPinPage"
+      },
+      "description": "Permanently hide the shared source of this message for the verified viewer. Optional boolean unpin_personal defaults to false; true also removes the viewer personal pin in the same transaction. Shared pins and other accounts are unchanged. Hiding survives message edits and shared unpin/repin; there is no restore operation."
+    },
+    {
+      "operation": "chat.pinEveryone",
+      "method": "POST",
+      "path": "/admin/chat/pins",
+      "access": "admin",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "message",
+          "pinned"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatPinPage"
+      },
+      "description": "Idempotently set the shared pin state using the existing admin guard, independent of the public team badge. Personal pins and hiding are unchanged. Changed states are audited transactionally."
+    },
+    {
       "operation": "chat.list",
-      "description": "Read recent messages, a page before a cursor, or a bounded window around a message. before and around are mutually exclusive; has_newer is returned for around windows.",
+      "description": "Read recent messages, a page before a cursor, or a bounded window around a message. Guests can read the full community history without personal reaction state. before and around are mutually exclusive; has_newer is returned for around windows.",
       "method": "GET",
       "path": "/chat/messages",
-      "access": "verified",
+      "access": "optional",
       "request": {
         "transport": "query",
         "params": [],
@@ -3268,6 +3365,25 @@
       }
     },
     {
+      "operation": "chat.typing",
+      "description": "Publish an ephemeral typing presence update to verified chat subscribers. active pulses are rate-limited per user, expire after eight seconds and are never persisted; inactive updates end only the supplied browser session.",
+      "method": "POST",
+      "path": "/chat/typing",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "active",
+          "session"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "ChatTypingReceipt"
+      }
+    },
+    {
       "operation": "chat.mark",
       "method": "POST",
       "path": "/chat/read",
@@ -3457,7 +3573,8 @@
       },
       "response": {
         "schema": "BugReport"
-      }
+      },
+      "description": "award_gold is optional and accepts whole numbers from 0 to 1000000 for the first accepted decision. Zero or omission saves the decision without awarding Gold. A later status change does not award Gold again."
     },
     {
       "operation": "admin.feedback.bugs.visibility",
@@ -3566,7 +3683,8 @@
       },
       "response": {
         "schema": "Idea"
-      }
+      },
+      "description": "award_gold is optional and accepts whole numbers from 0 to 1000000 for the first team decision. Zero or omission saves the decision without awarding Gold. A later status change does not award Gold again."
     },
     {
       "operation": "admin.feedback.ideas.visibility",
@@ -3982,7 +4100,8 @@
       },
       "response": {
         "schema": "GoldOrder"
-      }
+      },
+      "description": "One package may reuse an open order. Every accepted request key is durably associated with the returned order, including after fulfillment; replay cannot create a new order."
     },
     {
       "operation": "gold.orders.list",
@@ -4107,6 +4226,27 @@
       },
       "response": {
         "schema": "ReferralCharts"
+      }
+    },
+    {
+      "operation": "referrals.leaderboard",
+      "method": "GET",
+      "path": "/referrals/leaderboard",
+      "access": "verified",
+      "description": "Weekly inviter standings with public identities, aggregate referral activity, pool shares and allocated Gold estimates. Includes unranked zero-score inviters without exposing their individual referrals or reward histories. own=true locates the viewer's page; search preserves global ranks.",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": [
+          "period",
+          "q",
+          "page",
+          "own"
+        ]
+      },
+      "response": {
+        "schema": "ReferralLeaderboard"
       }
     },
     {
@@ -4701,6 +4841,51 @@
         "schema": "BugReport"
       },
       "description": "Changes the readership of the entire existing history. Uses FeedbackAudience. Author always retains access; Readership is hierarchical: Admins include Team and Founders; Team includes Founders (owner). Atomic version check, subscription revocation and audit; 409 leaves all data unchanged."
+    },
+    {
+      "operation": "founders.catalog",
+      "method": "GET",
+      "path": "/founders/catalog",
+      "access": "public",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "FoundersCatalog"
+      }
+    },
+    {
+      "operation": "founders.portfolio",
+      "method": "GET",
+      "path": "/founders/portfolio",
+      "access": "authenticated",
+      "request": {
+        "transport": "query",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "FoundersPortfolio"
+      }
+    },
+    {
+      "operation": "founders.sync",
+      "method": "POST",
+      "path": "/founders/portfolio/sync",
+      "access": "authenticated",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": []
+      },
+      "response": {
+        "schema": "FoundersPortfolio"
+      }
     }
   ],
   "pocketbase": {
@@ -4715,6 +4900,12 @@
         "auth": false
       },
       "tracking_objects": {
+        "auth": false
+      },
+      "chat_pins": {
+        "auth": false
+      },
+      "chat_pin_preferences": {
         "auth": false
       }
     }
