@@ -412,7 +412,7 @@
           "files"
         ],
         "optional": [],
-        "description": "quest_cover_v2 requires thumb (560×840, <=512 KiB) and display (840×1260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000×3000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480×480, <=512 KiB) and display (<=2000×2000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
+        "description": "quest_cover_v2 requires thumb (560\u00d7840, <=512 KiB) and display (840\u00d71260, <=512 KiB), and accepts optional original (uncropped, aspect preserved, <=3000\u00d73000, <=4 MiB). Each cover file contains name, mime=image/webp and bytes. quest_instruction_image accepts thumb (<=480\u00d7480, <=512 KiB) and display (<=2000\u00d72000, <=4 MiB) with preserved aspect ratio: legacy WebP files contain name, mime and bytes; AVIF files additionally require positive integer width/height and a lowercase 64-character SHA-256 checksum. AVIF contents, dimensions, bytes and checksum are verified before completion. Duplicate or unknown variants are rejected. Legacy WebP clients remain supported."
       },
       "response": {
         "schema": "MediaIntent"
@@ -1546,7 +1546,7 @@
       "response": {
         "schema": "ModerationAppealResponse"
       },
-      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8–128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
+      "description": "Appeals require the current decision case_id. Current clients send response_version:2 and an 8\u2013128 character idempotency_key. During the App 0.5.43 rollout, requests omitting both response_version and idempotency_key use a server key scoped to the authenticated actor and decision, so transport retries cannot charge twice. An explicit response_version:2 still requires the key; invalid or empty keys are rejected. All responses use format 2 with entity effects. Author quest details remain restricted to authorized space members; appeal permissions and financial terms are unchanged. Unsupported explicit response versions are rejected before the operation."
     },
     {
       "operation": "moderation.reviews.create",
@@ -2631,7 +2631,7 @@
       "response": {
         "schema": "AuthorQuestCase"
       },
-      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users’ personal finances."
+      "description": "Team-only quest report details, frozen result vote percentages, viewer-personal and space financial events. Does not reveal committee members or other users\u2019 personal finances."
     },
     {
       "operation": "moderation.cases",
@@ -2926,7 +2926,8 @@
       },
       "response": {
         "schema": "NewsList"
-      }
+      },
+      "description": "Published summaries and a catalog version. Local-first readers persist pages and articles. news_changes is a public section hint {section: news} over the existing PocketBase SDK SSE connection; it carries no article body or draft identifiers. Subscribe only while News is visible and catch up after reconnect. Unchanged article revisions need no body download."
     },
     {
       "operation": "news.state",
@@ -2976,7 +2977,8 @@
       },
       "response": {
         "schema": "NewsState"
-      }
+      },
+      "description": "Idempotently mark this published article read for the authenticated account. Durable local read queues replay individual ids. Offline Mark all read captures known unread ids; later publications remain unread."
     },
     {
       "operation": "news.readAll",
@@ -3106,7 +3108,7 @@
     },
     {
       "operation": "chat.search",
-      "description": "Search literal substrings in message text or current public author names. q is trimmed and accepts 3–120 Unicode characters. Results are newest first (created, id descending), limit defaults to 25 and is capped at 50. before is the opaque next cursor and remains valid if its message is deleted.",
+      "description": "Search literal substrings in message text or current public author names. q is trimmed and accepts 3\u2013120 Unicode characters. Results are newest first (created, id descending), limit defaults to 25 and is capped at 50. before is the opaque next cursor and remains valid if its message is deleted.",
       "method": "GET",
       "path": "/chat/search",
       "access": "verified",
@@ -4566,12 +4568,14 @@
         "transport": "query",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "recurrence_version"
+        ]
       },
       "response": {
         "schema": "DailyStatus"
       },
-      "description": "Current live Daily configuration and personal UTC-day progress. Admin saves apply immediately. Disabled tasks are hidden; their earned rewards still settle after the day ends."
+      "description": "Recurring tasks on shared UTC schedules. recurrence_version=2 includes a day/week/month unit and repeat count, anchored multi-unit periods and inventory rewards. Version 1 receives the five earlier supported periods; older clients receive supported daily tasks. Earned rewards survive edits and settle after their period ends."
     },
     {
       "operation": "daily.tasks",
@@ -4582,12 +4586,14 @@
         "transport": "query",
         "params": [],
         "required": [],
-        "optional": []
+        "optional": [
+          "recurrence_version"
+        ]
       },
       "response": {
         "schema": "DailyBoard"
       },
-      "description": "Current live Daily configuration and personal UTC-day progress. Admin saves apply immediately. Disabled tasks are hidden; their earned rewards still settle after the day ends."
+      "description": "Recurring tasks on shared UTC schedules. recurrence_version=2 includes a day/week/month unit and repeat count, anchored multi-unit periods and inventory rewards. Version 1 receives the five earlier supported periods; older clients receive supported daily tasks. Earned rewards survive edits and settle after their period ends."
     },
     {
       "operation": "daily.claim",
@@ -4602,13 +4608,15 @@
           "key"
         ],
         "optional": [
-          "response_version"
+          "response_version",
+          "recurrence_version",
+          "period_end"
         ]
       },
       "response": {
         "schema": "DailyClaim"
       },
-      "description": "UTC daily tasks. Claim identifies a day and opaque stable reward key. Earned rewards retain their original bundle across edits or disabling; replay returns the same award without another payment."
+      "description": "Claim an immutable earned reward by period start (day), period_end and stable key. Omit period_end for legacy daily claims. Concurrent retries return the same award; expired periods remain claimable."
     },
     {
       "operation": "items.dicemerge",
@@ -4762,7 +4770,7 @@
       "response": {
         "schema": "TrackingClaimResult"
       },
-      "description": "Claim only this card’s reward. Optional payout_id binds a personal reward request to the displayed receipt; it must belong to the card and user. Welcome cards require quest_id for an initial request to bind the displayed Welcome reward. Retries remain bound to the same reward after the card advances to the next week or Welcome quest."
+      "description": "Claim only this card\u2019s reward. Optional payout_id binds a personal reward request to the displayed receipt; it must belong to the card and user. Welcome cards require quest_id for an initial request to bind the displayed Welcome reward. Retries remain bound to the same reward after the card advances to the next week or Welcome quest."
     },
     {
       "operation": "analytics.visits",
@@ -4886,6 +4894,50 @@
       "response": {
         "schema": "FoundersPortfolio"
       }
+    },
+    {
+      "operation": "feedback.replica",
+      "method": "POST",
+      "path": "/feedback/replica",
+      "access": "optional",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [],
+        "optional": [
+          "bugs",
+          "ideas",
+          "known",
+          "discussions",
+          "lists"
+        ]
+      },
+      "response": {
+        "schema": "FeedbackReplica"
+      },
+      "description": "Atomic authorized snapshot for up to 6 paged list scopes, 200 known records and 20 discussion pages (plus the legacy 10 ids per kind). Explicit revoked ids purge local content. Anonymous reads contain only public data. feedback_changes is a section hint using the existing SDK SSE connection; reconnect must catch up."
+    },
+    {
+      "operation": "feedback.command",
+      "method": "POST",
+      "path": "/feedback/commands",
+      "access": "verified",
+      "request": {
+        "transport": "body",
+        "params": [],
+        "required": [
+          "key",
+          "kind",
+          "action",
+          "id",
+          "body"
+        ],
+        "optional": []
+      },
+      "response": {
+        "schema": "FeedbackCommandResult"
+      },
+      "description": "Durable idempotent feedback action. kind bugs|ideas|tracker; action create|comment|vote|track|edit|decide|editNote|visibility|audience|remove|read. id is a 15-character client-generated record id for create; otherwise an existing authorized id. body follows the matching existing action contract. Receipt and side effects commit atomically. Keys bind owner, action and exact input; replay rechecks access. Awards remain server authoritative."
     }
   ],
   "pocketbase": {

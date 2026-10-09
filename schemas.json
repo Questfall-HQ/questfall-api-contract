@@ -17458,6 +17458,10 @@
           "type": "integer",
           "minimum": 0,
           "description": "Gold awarded by this decision; not a new payment."
+        },
+        "operation_key": {
+          "type": "string",
+          "description": "Present only on the current account own discussion entries in a replica snapshot. Reconciles an uncertain command outcome without duplicate optimistic comments."
         }
       },
       "additionalProperties": false
@@ -19924,7 +19928,24 @@
             "lootbox_d",
             "lootbox_c",
             "lootbox_b",
-            "lootbox_a"
+            "lootbox_a",
+            "gem_f",
+            "gem_e",
+            "gem_d",
+            "gem_c",
+            "gem_b",
+            "gem_a",
+            "dice_e",
+            "dice_d",
+            "dice_c",
+            "dice_b",
+            "dice_a",
+            "potion_f",
+            "potion_e",
+            "potion_d",
+            "potion_c",
+            "potion_b",
+            "potion_a"
           ]
         },
         "amount": {
@@ -19933,7 +19954,25 @@
           "maximum": 1000000000
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resource": {
+                "pattern": "^(gem|dice|potion)_"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "amount": {
+                "maximum": 1000
+              }
+            }
+          }
+        }
+      ]
     },
     "DailyTier": {
       "type": "object",
@@ -20014,6 +20053,9 @@
           "type": "boolean"
         },
         "higher_level": {
+          "type": "boolean"
+        },
+        "obtained_in_period": {
           "type": "boolean"
         }
       },
@@ -20108,6 +20150,9 @@
         },
         "claimable": {
           "type": "boolean"
+        },
+        "period": {
+          "$ref": "#/$defs/DailyPeriod"
         }
       },
       "additionalProperties": false
@@ -20287,6 +20332,12 @@
         },
         "effects": {
           "$ref": "#/$defs/EntityEffects"
+        },
+        "item_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false
@@ -21767,6 +21818,269 @@
         },
         "hidden": {
           "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackReplica": {
+      "type": "object",
+      "required": [
+        "owner",
+        "server_now",
+        "threads",
+        "tracker"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "server_now": {
+          "type": "integer"
+        },
+        "threads": {
+          "type": "array",
+          "maxItems": 40,
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "item",
+              "discussion"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bugs",
+                  "ideas"
+                ]
+              },
+              "item": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/BugReport"
+                  },
+                  {
+                    "$ref": "#/$defs/Idea"
+                  }
+                ]
+              },
+              "discussion": {
+                "$ref": "#/$defs/FeedbackCommentList"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "tracker": {
+          "type": "object",
+          "required": [
+            "items",
+            "histories"
+          ],
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/TrackingObject"
+              }
+            },
+            "histories": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/TrackingUpdatePage"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 540,
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "item"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bugs",
+                  "ideas"
+                ]
+              },
+              "item": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/BugReport"
+                  },
+                  {
+                    "$ref": "#/$defs/Idea"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "revoked": {
+          "type": "array",
+          "maxItems": 240,
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "bugs",
+                  "ideas"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "lists": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "kind",
+              "result"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "bugs",
+                  "ideas"
+                ]
+              },
+              "result": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/BugReportList"
+                  },
+                  {
+                    "$ref": "#/$defs/IdeaList"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "required": [
+            "admin",
+            "role"
+          ],
+          "properties": {
+            "admin": {
+              "type": "boolean"
+            },
+            "role": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "FeedbackCommandResult": {
+      "type": "object",
+      "required": [
+        "key",
+        "kind",
+        "id",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "bugs",
+            "ideas",
+            "tracker"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BugReport"
+            },
+            {
+              "$ref": "#/$defs/Idea"
+            },
+            {
+              "$ref": "#/$defs/FeedbackComment"
+            },
+            {
+              "$ref": "#/$defs/FeedbackTracking"
+            },
+            {
+              "$ref": "#/$defs/FeedbackDeleteResult"
+            },
+            {
+              "$ref": "#/$defs/TrackingStatus"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "DailyPeriod": {
+      "type": "object",
+      "required": [
+        "kind",
+        "starts_at",
+        "ends_at",
+        "label"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "day",
+            "three_days",
+            "week",
+            "two_weeks",
+            "month"
+          ]
+        },
+        "starts_at": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ends_at": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of calendar days, weeks or months; present with recurrence_version=2."
         }
       },
       "additionalProperties": false
