@@ -1,12 +1,5 @@
 # История изменений API contract
 
-## v15.1.0 — feedback commands and replicas
-
-Compatible additions for the coordinated App/Backend release: feedback command
-responses, replica reads and optional comment operation keys. Existing Daily
-routes and schemas are unchanged; recurring Daily calendars and reward resources
-remain outside this release. Both consumers pin the immutable `v15.1.0` tag.
-
 ## v14.3.0 — chat search, GIFs, translation and feedback readership
 
 Compatible additions for the coordinated App/Backend release. Publish the backend
