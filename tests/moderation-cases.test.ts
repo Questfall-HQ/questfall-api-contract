@@ -20,3 +20,12 @@ test('strict personal case schemas cover every visual fixture and reject private
  expect(validate('ModerationCaseDetail',{...detail,finance_total:-1000,target:{...detail.target,image:'/api/files/quests/id/cover.webp'}})).toEqual([])
  expect(validate('ModerationCaseDetail',{...detail,finance_total:'500'}).length).toBeGreaterThan(0)
 })
+
+test('History carries the saved personal voter independently of the frozen decision',()=>{
+ const voter={id:'viewer',name:'Viewer',avatar:{mode:'generated',version:1,seed:'viewer'},avatar_icon:null,decision:'approve',level:32,trust:5.657,own:true}
+ const item={case_id:'control',closed:1,target:{type:'quest',title:'Saved proof',image:'',avatar:null,avatar_icon:null},consensus:{outcome:'reject',total_votes:2,total_trust:7.69,groups:[],late:[]},voter}
+ const history={items:[item],chains:[],next_cursor:''}
+ expect(validate('ModerationHistory',history)).toEqual([])
+ expect(validate('ModerationHistory',{...history,items:[{...item,voter:{...voter,trust:0}}]}).length).toBeGreaterThan(0)
+ expect(validate('ModerationHistory',{...history,items:[{...item,voter:{...voter,source_case_id:'private'}}]}).length).toBeGreaterThan(0)
+})

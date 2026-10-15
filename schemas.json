@@ -5249,6 +5249,10 @@
               },
               "decision": {
                 "$ref": "#/$defs/ModerationDecisionValue"
+              },
+              "voter": {
+                "$ref": "#/$defs/ModerationHistoryVoter",
+                "description": "The viewer’s saved answer, with assignment-time level and trust. It may be displayed for comparison without changing the frozen consensus."
               }
             }
           }
